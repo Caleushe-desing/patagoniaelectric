@@ -1,0 +1,281 @@
+<%- include('partials/head', { title: sectionMeta.label }) %>
+<div class="admin-shell">
+  <%- include('partials/sidebar', { sections, currentSection }) %>
+  <div class="admin-shell__main">
+    <%- include('partials/topbar', { user, breadcrumb: sectionMeta.label }) %>
+    <main class="admin-content">
+      <div class="admin-page-header">
+        <h1><%= sectionMeta.label %></h1>
+        <p class="admin-lead"><%= sectionMeta.description %></p>
+      </div>
+
+      <div id="admin-alert" class="admin-alert" hidden></div>
+
+      <form id="admin-form" class="admin-form admin-form--wide" data-section="<%= sectionKey %>">
+        <div class="admin-form__intro">
+          Use los botones <strong>+ Agregar</strong> para añadir clientes, servicios, soluciones, proyectos y más elementos. Recuerde pulsar <strong>Guardar cambios</strong> al finalizar.
+        </div>
+
+        <% if (sectionKey === 'general') { %>
+          <fieldset><legend>Datos de la empresa</legend>
+            <label>Eslogan<input name="tagline" value="<%= data.tagline %>"></label>
+            <label>Razón social<input name="legalName" value="<%= data.legalName %>"></label>
+            <label>Email<input name="email" type="email" value="<%= data.email %>"></label>
+            <label>Teléfono (mostrar)<input name="phone" value="<%= data.phone %>"></label>
+            <label>Teléfono (enlace)<input name="phoneRaw" value="<%= data.phoneRaw %>"></label>
+            <label>WhatsApp (sin +)<input name="whatsapp" value="<%= data.whatsapp %>"></label>
+            <label>Horario<textarea name="hours" rows="2"><%= data.hours %></textarea></label>
+            <label>Ciudad<input name="city" value="<%= data.city %>"></label>
+            <label>Región<input name="region" value="<%= data.region %>"></label>
+            <label>País<input name="country" value="<%= data.country %>"></label>
+            <label>Texto footer<textarea name="footerText" rows="4"><%= data.footerText %></textarea></label>
+          </fieldset>
+          <fieldset><legend>Logos del sitio</legend>
+            <%- include('partials/image-field', { name: 'logoHeader', value: data.logoHeader || '/images/logo-color.png', label: 'Logo menú (cabecera)' }) %>
+            <%- include('partials/image-field', { name: 'logoFooter', value: data.logoFooter || '/images/logo.png', label: 'Logo pie de página' }) %>
+            <%- include('partials/image-field', { name: 'logoHero', value: data.logoHero || '/images/logo.png', label: 'Logo principal del inicio' }) %>
+          </fieldset>
+
+        <% } else if (sectionKey === 'home') { %>
+          <fieldset><legend>Hero</legend>
+            <label>Badge<input name="heroBadge" value="<%= data.heroBadge %>"></label>
+            <label>Título (parte 1)<input name="heroTitle" value="<%= data.heroTitle %>"></label>
+            <label>Título destacado<input name="heroTitleHighlight" value="<%= data.heroTitleHighlight %>"></label>
+            <div class="admin-repeater" data-field="heroSlides" data-item-label="Slide">
+              <%- include('partials/repeater-header', { title: 'Imágenes del slider', hint: 'Agregue o elimine slides del carrusel principal', field: 'heroSlides' }) %>
+              <% data.heroSlides.forEach((slide, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Slide <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <%- include('partials/image-field', { name: 'image', value: slide.image, label: 'Imagen' }) %>
+                <label>Texto alternativo<input name="alt" value="<%= slide.alt %>"></label>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar slide</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar slide</button>
+            </div>
+          </fieldset>
+
+          <fieldset><legend>Sección Equipo</legend>
+            <label>Título<input name="aboutTitle" value="<%= data.aboutTitle %>"></label>
+            <div class="admin-paragraph-list" data-field="aboutParagraphs" data-label="Párrafo">
+              <% data.aboutParagraphs.forEach((p, i) => { %>
+              <div class="admin-paragraph-list__item">
+                <label>Párrafo <span class="admin-item-num"><%= i + 1 %></span><textarea name="aboutParagraphs" rows="3"><%= p %></textarea></label>
+                <button type="button" class="admin-btn admin-btn--danger admin-btn--icon admin-paragraph-remove" title="Eliminar">×</button>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-paragraph-add">+ Agregar párrafo</button>
+            </div>
+            <%- include('partials/image-field', { name: 'aboutImage', value: data.aboutImage, label: 'Imagen equipo' }) %>
+          </fieldset>
+
+          <fieldset><legend>Por qué elegirnos</legend>
+            <label>Título<input name="whyTitle" value="<%= data.whyTitle %>"></label>
+            <label>Subtítulo<input name="whySubtitle" value="<%= data.whySubtitle %>"></label>
+            <label>Intro<textarea name="whyIntro" rows="4"><%= data.whyIntro %></textarea></label>
+            <div class="admin-repeater" data-field="features" data-item-label="Ventaja">
+              <%- include('partials/repeater-header', { title: 'Ventajas / servicios destacados', hint: 'Agregue tantas ventajas como necesite', field: 'features' }) %>
+              <% data.features.forEach((f, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Ventaja <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= f.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= f.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: f.image || '/images/equipo.jpg', label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar ventaja</button>
+            </div>
+          </fieldset>
+
+          <fieldset><legend>Divisiones (inicio)</legend>
+            <label>Título<input name="divisionsTitle" value="<%= data.divisionsTitle %>"></label>
+            <label>Subtítulo<input name="divisionsSubtitle" value="<%= data.divisionsSubtitle %>"></label>
+            <div class="admin-repeater" data-field="divisions" data-item-label="División">
+              <%- include('partials/repeater-header', { title: 'Tarjetas de divisiones', hint: 'Cada división con imagen, texto y enlace', field: 'divisions' }) %>
+              <% data.divisions.forEach((d, i) => { %>
+              <div class="admin-repeater__item admin-repeater__item--highlight">
+                <div class="admin-repeater__item-header"><h4>División <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= d.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= d.text %></textarea></label>
+                <label>Enlace<input name="link" value="<%= d.link %>" placeholder="/industrial"></label>
+                <%- include('partials/image-field', { name: 'image', value: d.image, label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar división</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar división</button>
+            </div>
+          </fieldset>
+
+          <fieldset><legend>Proyectos (vista previa)</legend>
+            <label>Título<input name="projectsTitle" value="<%= data.projectsTitle %>"></label>
+            <label>Subtítulo<input name="projectsSubtitle" value="<%= data.projectsSubtitle %>"></label>
+            <div class="admin-repeater" data-field="projectsPreview" data-item-label="Proyecto">
+              <%- include('partials/repeater-header', { title: 'Proyectos destacados', hint: 'Vista previa en la página de inicio', field: 'projectsPreview' }) %>
+              <% data.projectsPreview.forEach((p, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= p.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= p.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: p.image, label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar proyecto</button>
+            </div>
+          </fieldset>
+
+          <fieldset><legend>Clientes (banner inicio)</legend>
+            <label>Título<input name="clientsTitle" value="<%= data.clientsTitle %>"></label>
+            <label>Subtítulo<input name="clientsSubtitle" value="<%= data.clientsSubtitle %>"></label>
+            <%- include('partials/image-field', { name: 'clientsBg', value: data.clientsBg, label: 'Imagen de fondo' }) %>
+            <p class="admin-repeater__hint" style="margin-top:1rem;">Los logos de clientes se gestionan en la sección <a href="/admin/edit/clientes">Clientes</a>.</p>
+          </fieldset>
+
+          <fieldset><legend>CTA final</legend>
+            <label>Título<input name="ctaTitle" value="<%= data.ctaTitle %>"></label>
+            <label>Subtítulo<input name="ctaSubtitle" value="<%= data.ctaSubtitle %>"></label>
+          </fieldset>
+
+        <% } else if (sectionKey === 'nosotros') { %>
+          <fieldset><legend>Encabezado</legend>
+            <%- include('partials/image-field', { name: 'heroImage', value: data.heroImage, label: 'Imagen hero' }) %>
+            <label>Título hero<input name="heroTitle" value="<%= data.heroTitle %>"></label>
+            <label>Subtítulo hero<input name="heroSubtitle" value="<%= data.heroSubtitle %>"></label>
+          </fieldset>
+          <fieldset><legend>Contenido</legend>
+            <label>Título sección<input name="title" value="<%= data.title %>"></label>
+            <div class="admin-paragraph-list" data-field="paragraphs" data-label="Párrafo">
+              <% data.paragraphs.forEach((p, i) => { %>
+              <div class="admin-paragraph-list__item">
+                <label>Párrafo <span class="admin-item-num"><%= i + 1 %></span><textarea name="paragraphs" rows="3"><%= p %></textarea></label>
+                <button type="button" class="admin-btn admin-btn--danger admin-btn--icon admin-paragraph-remove" title="Eliminar">×</button>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-paragraph-add">+ Agregar párrafo</button>
+            </div>
+            <%- include('partials/image-field', { name: 'image', value: data.image, label: 'Imagen principal' }) %>
+          </fieldset>
+          <fieldset><legend>Valores</legend>
+            <label>Título valores<input name="valuesTitle" value="<%= data.valuesTitle %>"></label>
+            <div class="admin-repeater" data-field="values" data-item-label="Valor">
+              <%- include('partials/repeater-header', { title: 'Valores corporativos', hint: 'Agregue o elimine valores de la empresa', field: 'values' }) %>
+              <% data.values.forEach((v, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Valor <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= v.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= v.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: v.image || '/images/proyecto1.jpg', label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar valor</button>
+            </div>
+          </fieldset>
+          <fieldset><legend>Llamada a la acción</legend>
+            <label>CTA título<input name="ctaTitle" value="<%= data.ctaTitle %>"></label>
+            <label>CTA subtítulo<input name="ctaSubtitle" value="<%= data.ctaSubtitle %>"></label>
+          </fieldset>
+
+        <% } else if (sectionMeta.fields === 'division') { %>
+          <fieldset><legend>Encabezado</legend>
+            <%- include('partials/image-field', { name: 'heroImage', value: data.heroImage, label: 'Imagen hero' }) %>
+            <label>Título hero<input name="heroTitle" value="<%= data.heroTitle %>"></label>
+            <label>Subtítulo hero<input name="heroSubtitle" value="<%= data.heroSubtitle %>"></label>
+            <label>Introducción<textarea name="intro" rows="4"><%= data.intro %></textarea></label>
+          </fieldset>
+          <fieldset><legend>Servicios y soluciones</legend>
+            <div class="admin-repeater" data-field="solutions" data-item-label="Solución">
+              <%- include('partials/repeater-header', { title: 'Soluciones con imagen', hint: 'Agregue todos los servicios que ofrece esta división', field: 'solutions' }) %>
+              <% data.solutions.forEach((s, i) => { %>
+              <div class="admin-repeater__item admin-repeater__item--highlight">
+                <div class="admin-repeater__item-header"><h4>Servicio <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= s.title %>"></label>
+                <label>Descripción<textarea name="text" rows="3"><%= s.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: s.image, label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar servicio</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar servicio</button>
+            </div>
+          </fieldset>
+          <fieldset><legend>Llamada a la acción</legend>
+            <label>CTA título<input name="ctaTitle" value="<%= data.ctaTitle %>"></label>
+            <label>CTA botón<input name="ctaButton" value="<%= data.ctaButton %>"></label>
+          </fieldset>
+
+        <% } else if (sectionKey === 'proyectos') { %>
+          <fieldset><legend>Encabezado</legend>
+            <%- include('partials/image-field', { name: 'heroImage', value: data.heroImage, label: 'Imagen hero' }) %>
+            <label>Título hero<input name="heroTitle" value="<%= data.heroTitle %>"></label>
+            <label>Subtítulo hero<input name="heroSubtitle" value="<%= data.heroSubtitle %>"></label>
+            <label>Título sección<input name="title" value="<%= data.title %>"></label>
+            <label>Subtítulo sección<input name="subtitle" value="<%= data.subtitle %>"></label>
+          </fieldset>
+          <fieldset><legend>Galería de proyectos</legend>
+            <div class="admin-repeater" data-field="items" data-item-label="Proyecto">
+              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Agregue o elimine proyectos de la galería', field: 'items' }) %>
+              <% data.items.forEach((p, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= p.title %>"></label>
+                <label>Descripción<textarea name="text" rows="2"><%= p.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: p.image, label: 'Imagen' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar proyecto</button>
+            </div>
+          </fieldset>
+          <fieldset><legend>Llamada a la acción</legend>
+            <label>CTA título<input name="ctaTitle" value="<%= data.ctaTitle %>"></label>
+            <label>CTA botón<input name="ctaButton" value="<%= data.ctaButton %>"></label>
+          </fieldset>
+
+        <% } else if (sectionKey === 'clientes') { %>
+          <fieldset><legend>Logos de clientes</legend>
+            <div class="admin-repeater" data-field="items" data-item-label="Cliente">
+              <%- include('partials/repeater-header', { title: 'Clientes y marcas', hint: 'Agregue todos los clientes que desee mostrar en el sitio', field: 'items' }) %>
+              <% data.items.forEach((c, i) => { %>
+              <div class="admin-repeater__item admin-repeater__item--highlight">
+                <div class="admin-repeater__item-header"><h4>Cliente <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Nombre<input name="name" value="<%= c.name %>"></label>
+                <%- include('partials/image-field', { name: 'logo', value: c.logo, label: 'Logo' }) %>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar cliente</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar cliente</button>
+            </div>
+          </fieldset>
+
+        <% } else if (sectionKey === 'contacto') { %>
+          <fieldset><legend>Encabezado</legend>
+            <%- include('partials/image-field', { name: 'heroImage', value: data.heroImage, label: 'Imagen hero' }) %>
+            <label>Título hero<input name="heroTitle" value="<%= data.heroTitle %>"></label>
+            <label>Subtítulo hero<input name="heroSubtitle" value="<%= data.heroSubtitle %>"></label>
+          </fieldset>
+          <fieldset><legend>Política de privacidad</legend>
+            <label>Título privacidad<input name="privacyTitle" value="<%= data.privacyTitle %>"></label>
+            <div class="admin-paragraph-list" data-field="privacyParagraphs" data-label="Párrafo">
+              <% data.privacyParagraphs.forEach((p, i) => { %>
+              <div class="admin-paragraph-list__item">
+                <label>Párrafo <span class="admin-item-num"><%= i + 1 %></span><textarea name="privacyParagraphs" rows="3"><%= p %></textarea></label>
+                <button type="button" class="admin-btn admin-btn--danger admin-btn--icon admin-paragraph-remove" title="Eliminar">×</button>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-paragraph-add">+ Agregar párrafo</button>
+            </div>
+          </fieldset>
+        <% } %>
+
+        <div class="admin-form__actions">
+          <button type="submit" class="admin-btn admin-btn--primary">Guardar cambios</button>
+          <span class="admin-form__actions-hint">Los cambios se publican inmediatamente en el sitio web</span>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+</html>

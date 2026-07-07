@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<% const p = c.habitacional; %>
+
+<section class="page-hero">
+  <div class="page-hero__bg" style="background-image:url('<%= p.heroImage %>')" <%- cmsAttr('habitacional', 'heroImage', { type: 'bg-image' }) %>></div>
+  <div class="page-hero__overlay"></div>
+  <div class="container page-hero__content">
+    <h1 class="page-hero__title" <%- cmsAttr('habitacional', 'heroTitle') %>><%= p.heroTitle %></h1>
+    <p class="page-hero__subtitle" <%- cmsAttr('habitacional', 'heroSubtitle') %>><%= p.heroSubtitle %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="page-content">
+      <p class="intro-text" <%- cmsAttr('habitacional', 'intro') %>><%= p.intro %></p>
+      <%- include('../partials/solutions', { solutions: p.solutions, cmsSectionOverride: 'habitacional' }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section section--gray">
+  <div class="container" style="text-align:center;">
+    <h2 class="section__title section__title--green" <%- cmsAttr('habitacional', 'ctaTitle') %>><%= p.ctaTitle %></h2>
+    <a href="/contacto" class="btn btn--primary cms-allow-link"><span <%- cmsAttr('habitacional', 'ctaButton') %>><%= p.ctaButton %></span></a>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/whatsapp') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

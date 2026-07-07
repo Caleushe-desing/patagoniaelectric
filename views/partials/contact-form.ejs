@@ -1,0 +1,39 @@
+<form class="contact-form" id="contact-form" novalidate>
+  <div id="form-message" class="form-message" role="alert" aria-live="polite"></div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="nombre">Nombre *</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Su nombre" required autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail *</label>
+      <input type="email" id="email" name="email" placeholder="su@email.com" required autocomplete="email">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" placeholder="+56 9 ..." autocomplete="tel">
+    </div>
+    <div class="form-group">
+      <label for="asunto">Asunto</label>
+      <select id="asunto" name="asunto">
+        <option value="">Seleccione un asunto</option>
+        <option value="Cotización" <%= typeof defaultAsunto !== 'undefined' && defaultAsunto === 'Cotización' ? 'selected' : '' %>>Solicitud de cotización</option>
+        <option value="Industrial" <%= typeof defaultAsunto !== 'undefined' && defaultAsunto === 'Industrial' ? 'selected' : '' %>>División Industrial</option>
+        <option value="Ecológica" <%= typeof defaultAsunto !== 'undefined' && defaultAsunto === 'Ecológica' ? 'selected' : '' %>>División Ecológica</option>
+        <option value="Habitacional" <%= typeof defaultAsunto !== 'undefined' && defaultAsunto === 'Habitacional' ? 'selected' : '' %>>División Habitacional</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="mensaje">Mensaje *</label>
+    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntenos sobre su proyecto..." required></textarea>
+  </div>
+  <label class="form-checkbox">
+    <input type="checkbox" name="privacidad" value="1" required>
+    <span>He leído y entiendo la <a href="/contacto#privacidad">política de privacidad</a>.</span>
+  </label>
+  <button type="submit" class="btn btn--primary" id="submit-btn">Enviar Mensaje</button>
+</form>

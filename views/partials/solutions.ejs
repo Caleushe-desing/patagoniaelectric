@@ -1,0 +1,15 @@
+<% const cmsSection = typeof cmsSectionOverride !== 'undefined' ? cmsSectionOverride : 'industrial'; %>
+<div class="solutions-list" <%- cmsList(cmsSection, 'solutions') %>>
+  <% solutions.forEach((item, index) => { %>
+  <article class="solution-card <%= index % 2 === 1 ? 'solution-card--reverse' : '' %>" data-cms-item="<%= index %>">
+    <div class="solution-card__image">
+      <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr(cmsSection, 'image', { arrayField: 'solutions', index, type: 'image' }) %>>
+      <span class="solution-card__index"><%= String(index + 1).padStart(2, '0') %></span>
+    </div>
+    <div class="solution-card__body">
+      <h3 class="solution-card__title" <%- cmsAttr(cmsSection, 'title', { arrayField: 'solutions', index }) %>><%= item.title %></h3>
+      <p class="solution-card__text" <%- cmsAttr(cmsSection, 'text', { arrayField: 'solutions', index }) %>><%= item.text %></p>
+    </div>
+  </article>
+  <% }) %>
+</div>

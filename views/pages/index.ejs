@@ -1,0 +1,151 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<% const h = c.home; %>
+
+<section class="hero" id="inicio">
+  <div class="hero__slides" <%- cmsList('home', 'heroSlides') %>>
+    <% h.heroSlides.forEach((slide, i) => { %>
+    <div class="hero__slide <%= i === 0 ? 'active' : '' %>" data-cms-item="<%= i %>">
+      <img src="<%= slide.image %>" alt="<%= slide.alt %>" width="1920" height="1080" style="object-position: <%= slide.position || '50% 50%' %>" <%- cmsAttr('home', 'image', { arrayField: 'heroSlides', index: i, type: 'image' }) %> data-cms-position-field="position">
+    </div>
+    <% }) %>
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__scanlines" aria-hidden="true"></div>
+  <div class="hero__content">
+    <span class="hero__badge" <%- cmsAttr('home', 'heroBadge') %>><%= h.heroBadge %></span>
+    <img src="<%= c.general.logoHero || '/images/logo.png' %>" alt="Logo Patagonia Electric" class="hero__logo" width="280" height="318" <%- cmsAttr('general', 'logoHero', { type: 'image' }) %>>
+    <h1 class="hero__title">
+      <span class="text-glow" <%- cmsAttr('home', 'heroTitle') %>><%= h.heroTitle %></span>
+      <span <%- cmsAttr('home', 'heroTitleHighlight') %>><%= h.heroTitleHighlight %></span>
+    </h1>
+    <p class="hero__subtitle" <%- cmsAttr('general', 'tagline') %>><%= site.tagline %></p>
+    <div class="hero__actions">
+      <a href="/contacto" class="btn btn--primary cms-allow-link">+ Contacto</a>
+      <a href="/nosotros" class="btn btn--outline cms-allow-link">Conocer más</a>
+    </div>
+  </div>
+  <a href="#nosotros" class="hero__scroll cms-allow-link" aria-label="Desplazarse hacia abajo">
+    <svg viewBox="0 0 320 170" aria-hidden="true"><path d="M301 0l19 21-160 171-160-171 19-21 141 150z"/></svg>
+  </a>
+</section>
+
+<section class="section" id="nosotros">
+  <div class="container">
+    <div class="about">
+      <div class="about__content">
+        <h2 <%- cmsAttr('home', 'aboutTitle') %>><%= h.aboutTitle %></h2>
+        <% h.aboutParagraphs.forEach((p, i) => { %><p <%- cmsAttr('home', '_self', { arrayField: 'aboutParagraphs', index: i }) %>><%= p %></p><br><% }) %>
+        <a href="/nosotros" class="btn btn--primary cms-allow-link" style="margin-top:1.5rem;">Ver más sobre nosotros</a>
+      </div>
+      <div class="about__image">
+        <img src="<%= h.aboutImage %>" alt="<%= h.aboutTitle %>" width="683" height="457" loading="lazy" <%- cmsAttr('home', 'aboutImage', { type: 'image' }) %>>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__header">
+      <svg class="section__icon" viewBox="0 0 256 148" aria-hidden="true"><path d="M136.5 3.1L252.5 120.9c4.7 4.7 4.7 12.3 0 17L245.4 145c-4.7 4.7-12.3 4.7-17 0L128 42.7 27.6 144.9c-4.7 4.7-12.3 4.7-17 0L3.5 137.8c-4.7-4.7-4.7-12.3 0-17L119.5 3c4.7-4.6 12.3-4.6 17 0z"/></svg>
+      <h2 class="section__title" <%- cmsAttr('home', 'whyTitle') %>><%= h.whyTitle %></h2>
+      <h3 class="section__title section__title--green" <%- cmsAttr('home', 'whySubtitle') %>><%= h.whySubtitle %></h3>
+    </div>
+    <p class="intro-text" <%- cmsAttr('home', 'whyIntro') %>><%= h.whyIntro %></p>
+    <div class="features" <%- cmsList('home', 'features') %>>
+      <% h.features.forEach((f, i) => { %>
+      <div class="feature-card" data-cms-item="<%= i %>">
+        <div class="feature-card__image">
+          <img src="<%= f.image || '/images/equipo.jpg' %>" alt="<%= f.title %>" loading="lazy" <%- cmsAttr('home', 'image', { arrayField: 'features', index: i, type: 'image' }) %>>
+        </div>
+        <div>
+          <h4 class="feature-card__title <%= i % 2 === 1 ? 'feature-card__title--right' : '' %>" <%- cmsAttr('home', 'title', { arrayField: 'features', index: i }) %>><%= f.title %></h4>
+          <p class="feature-card__text <%= i % 2 === 1 ? 'feature-card__text--right' : '' %>" <%- cmsAttr('home', 'text', { arrayField: 'features', index: i }) %>><%= f.text %></p>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="divisiones">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title section__title--green" <%- cmsAttr('home', 'divisionsTitle') %>><%= h.divisionsTitle %></h2>
+      <p class="section__subtitle" <%- cmsAttr('home', 'divisionsSubtitle') %>><%= h.divisionsSubtitle %></p>
+    </div>
+    <div class="divisions" <%- cmsList('home', 'divisions') %>>
+      <% h.divisions.forEach((d, i) => { %>
+      <article class="division-card" data-cms-item="<%= i %>">
+        <div class="division-card__image">
+          <img src="<%= d.image %>" alt="<%= d.title %>" loading="lazy" <%- cmsAttr('home', 'image', { arrayField: 'divisions', index: i, type: 'image' }) %>>
+        </div>
+        <div class="division-card__body">
+          <h3 class="division-card__title" <%- cmsAttr('home', 'title', { arrayField: 'divisions', index: i }) %>><%= d.title %></h3>
+          <p class="division-card__text" <%- cmsAttr('home', 'text', { arrayField: 'divisions', index: i }) %>><%= d.text %></p>
+          <a href="<%= d.link %>" class="btn btn--primary btn--sm cms-allow-link">Ver división</a>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section section--gray" id="proyectos-preview">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title" <%- cmsAttr('home', 'projectsTitle') %>><%= h.projectsTitle %></h2>
+      <p class="section__subtitle" <%- cmsAttr('home', 'projectsSubtitle') %>><%= h.projectsSubtitle %></p>
+    </div>
+    <div class="projects" <%- cmsList('home', 'projectsPreview') %>>
+      <% h.projectsPreview.forEach((p, i) => { %>
+      <article class="project-card" data-cms-item="<%= i %>">
+        <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy" <%- cmsAttr('home', 'image', { arrayField: 'projectsPreview', index: i, type: 'image' }) %>>
+        <div class="project-card__overlay">
+          <h4 class="project-card__title" <%- cmsAttr('home', 'title', { arrayField: 'projectsPreview', index: i }) %>><%= p.title %></h4>
+          <p class="project-card__desc" <%- cmsAttr('home', 'text', { arrayField: 'projectsPreview', index: i }) %>><%= p.text %></p>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="/proyectos" class="btn btn--primary cms-allow-link">Ver todos los proyectos</a>
+    </div>
+  </div>
+</section>
+
+<section class="clients-banner" id="clientes">
+  <div class="clients-banner__bg"><img src="<%= h.clientsBg %>" alt="" loading="lazy" aria-hidden="true" <%- cmsAttr('home', 'clientsBg', { type: 'image' }) %>></div>
+  <div class="clients-banner__overlay"></div>
+  <div class="container clients-banner__content">
+    <h2 class="section__title section__title--green" <%- cmsAttr('home', 'clientsTitle') %>><%= h.clientsTitle %></h2>
+    <p class="section__subtitle" <%- cmsAttr('home', 'clientsSubtitle') %>><%= h.clientsSubtitle %></p>
+    <div class="clients-logos" <%- cmsList('clientes', 'items') %>>
+      <% c.clientes.items.forEach((cl, i) => { %>
+      <span class="clients-logos__item" data-cms-item="<%= i %>">
+        <img src="<%= cl.logo %>" alt="<%= cl.name %>" loading="lazy" <%- cmsAttr('clientes', 'logo', { arrayField: 'items', index: i, type: 'image' }) %>>
+      </span>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contacto-preview">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title section__title--green" <%- cmsAttr('home', 'ctaTitle') %>><%= h.ctaTitle %></h2>
+      <p class="section__subtitle" <%- cmsAttr('home', 'ctaSubtitle') %>><%= h.ctaSubtitle %></p>
+    </div>
+    <div style="text-align:center;">
+      <a href="/contacto" class="btn btn--primary cms-allow-link">Ir a contacto</a>
+      <a href="https://wa.me/<%= site.whatsapp %>" class="btn btn--outline-dark cms-allow-link" target="_blank" rel="noopener noreferrer" style="margin-left:1rem;">WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/whatsapp') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

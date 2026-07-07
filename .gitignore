@@ -1,0 +1,7 @@
+node_modules/
+data/messages.json
+data/auth.json
+.env
+*.log
+public/uploads/*
+!public/uploads/.gitkeep

@@ -1,0 +1,59 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<% const p = c.nosotros; %>
+
+<section class="page-hero">
+  <div class="page-hero__bg" style="background-image:url('<%= p.heroImage %>')" <%- cmsAttr('nosotros', 'heroImage', { type: 'bg-image' }) %>></div>
+  <div class="page-hero__overlay"></div>
+  <div class="container page-hero__content">
+    <h1 class="page-hero__title" <%- cmsAttr('nosotros', 'heroTitle') %>><%= p.heroTitle %></h1>
+    <p class="page-hero__subtitle" <%- cmsAttr('nosotros', 'heroSubtitle') %>><%= p.heroSubtitle %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="about">
+      <div class="about__content">
+        <h2 <%- cmsAttr('nosotros', 'title') %>><%= p.title %></h2>
+        <% p.paragraphs.forEach((para, i) => { %><p <%- cmsAttr('nosotros', '_self', { arrayField: 'paragraphs', index: i }) %>><%= para %></p><br><% }) %>
+      </div>
+      <div class="about__image">
+        <img src="<%= p.image %>" alt="<%= p.title %>" width="683" height="457" loading="lazy" <%- cmsAttr('nosotros', 'image', { type: 'image' }) %>>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title section__title--green" <%- cmsAttr('nosotros', 'valuesTitle') %>><%= p.valuesTitle %></h2>
+    </div>
+    <div class="values-grid" <%- cmsList('nosotros', 'values') %>>
+      <% p.values.forEach((v, i) => { %>
+      <div class="value-card" data-cms-item="<%= i %>">
+        <div class="value-card__image">
+          <img src="<%= v.image || '/images/proyecto1.jpg' %>" alt="<%= v.title %>" loading="lazy" <%- cmsAttr('nosotros', 'image', { arrayField: 'values', index: i, type: 'image' }) %>>
+        </div>
+        <h3 <%- cmsAttr('nosotros', 'title', { arrayField: 'values', index: i }) %>><%= v.title %></h3>
+        <p <%- cmsAttr('nosotros', 'text', { arrayField: 'values', index: i }) %>><%= v.text %></p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="text-align:center;">
+    <h2 class="section__title section__title--green" <%- cmsAttr('nosotros', 'ctaTitle') %>><%= p.ctaTitle %></h2>
+    <p class="section__subtitle" style="margin-bottom:2rem;" <%- cmsAttr('nosotros', 'ctaSubtitle') %>><%= p.ctaSubtitle %></p>
+    <a href="/contacto" class="btn btn--primary cms-allow-link">Solicitar cotización</a>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/whatsapp') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

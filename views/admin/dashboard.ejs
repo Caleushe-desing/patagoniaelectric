@@ -1,0 +1,38 @@
+<%- include('partials/head', { title: 'Dashboard' }) %>
+<div class="admin-shell">
+  <%- include('partials/sidebar', { sections, currentSection }) %>
+  <div class="admin-shell__main">
+    <%- include('partials/topbar', { user, pageTitle: 'Dashboard' }) %>
+    <main class="admin-content">
+      <div class="admin-page-header">
+        <h1>Gestionar contenido</h1>
+        <p class="admin-lead">Edite textos, imágenes, clientes, servicios y soluciones. Use el <strong>editor visual</strong> para ver la web y cambiar el contenido directamente, como en Wix.</p>
+        <a href="/admin/visual" class="admin-btn" style="margin-top:1.25rem;display:inline-flex;">Abrir editor visual →</a>
+      </div>
+
+      <% const groups = [
+        { title: 'Configuración', keys: ['general'] },
+        { title: 'Páginas del sitio', keys: ['home', 'nosotros', 'contacto'] },
+        { title: 'Divisiones y servicios', keys: ['industrial', 'ecologica', 'habitacional'] },
+        { title: 'Portafolio y clientes', keys: ['proyectos', 'clientes'] },
+      ]; %>
+
+      <% groups.forEach((group) => { %>
+      <section class="admin-section-group">
+        <h2 class="admin-section-group__title"><%= group.title %></h2>
+        <div class="admin-grid">
+          <% group.keys.forEach((key) => { const meta = sections[key]; %>
+          <a href="/admin/edit/<%= key %>" class="admin-card">
+            <h2><%= meta.label %></h2>
+            <p><%= meta.description %></p>
+            <span class="admin-card__action">Editar contenido →</span>
+          </a>
+          <% }) %>
+        </div>
+      </section>
+      <% }) %>
+    </main>
+  </div>
+</div>
+</body>
+</html>

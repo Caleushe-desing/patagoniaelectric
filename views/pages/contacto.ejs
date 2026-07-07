@@ -1,0 +1,63 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<% const p = c.contacto; %>
+
+<section class="page-hero page-hero--short">
+  <div class="page-hero__bg" style="background-image:url('<%= p.heroImage %>')" <%- cmsAttr('contacto', 'heroImage', { type: 'bg-image' }) %>></div>
+  <div class="page-hero__overlay"></div>
+  <div class="container page-hero__content">
+    <h1 class="page-hero__title" <%- cmsAttr('contacto', 'heroTitle') %>><%= p.heroTitle %></h1>
+    <p class="page-hero__subtitle" <%- cmsAttr('contacto', 'heroSubtitle') %>><%= p.heroSubtitle %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-info__block">
+          <h2 class="contact-info__title">Horario de Atención</h2>
+          <p class="contact-info__text" <%- cmsAttr('general', 'hours') %>><%= site.hours %></p>
+        </div>
+        <div class="contact-info__block">
+          <h2 class="contact-info__title">Datos de Contacto</h2>
+          <p class="contact-info__text">
+            <strong>Email:</strong> <span <%- cmsAttr('general', 'email') %>><%= site.email %></span><br>
+            <strong>Teléfono:</strong> <span <%- cmsAttr('general', 'phone') %>><%= site.phone %></span><br>
+            <strong>WhatsApp:</strong> <span <%- cmsAttr('general', 'phone') %>><%= site.phone %></span><br>
+            <strong>Ubicación:</strong> <span <%- cmsAttr('general', 'city') %>><%= site.address.city %></span>, <%= site.address.region %>, <%= site.address.country %>
+          </p>
+        </div>
+        <a href="https://wa.me/<%= site.whatsapp %>" class="btn btn--primary cms-allow-link" target="_blank" rel="noopener noreferrer">
+          Escríbenos por WhatsApp
+        </a>
+      </div>
+      <%- include('../partials/contact-form') %>
+    </div>
+  </div>
+</section>
+
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title section__title--green">Nuestra Ubicación</h2>
+      <p class="section__subtitle"><%= site.address.city %>, <%= site.address.region %>, Chile</p>
+    </div>
+    <%- include('../partials/map') %>
+  </div>
+</section>
+
+<section class="section" id="privacidad">
+  <div class="container">
+    <h2 class="section__title section__title--green" <%- cmsAttr('contacto', 'privacyTitle') %>><%= p.privacyTitle %></h2>
+    <div class="page-content" style="margin-top:1.5rem;">
+      <% p.privacyParagraphs.forEach((para, i) => { %><p <%- cmsAttr('contacto', '_self', { arrayField: 'privacyParagraphs', index: i }) %>><%= para %></p><br><% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/whatsapp') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>

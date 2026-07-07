@@ -1,0 +1,19 @@
+<%- include('partials/head', { title: 'Iniciar sesión' }) %>
+<main class="admin-login">
+  <div class="admin-login__card">
+    <div class="admin-login__brand">
+      <img src="/images/logo.png" alt="Patagonia Electric">
+      <h1>Panel de administración</h1>
+      <p>Gestione el contenido de su sitio web</p>
+    </div>
+    <% if (error) { %><div class="admin-alert admin-alert--error"><%= error %></div><% } %>
+    <form method="POST" action="/admin/login" class="admin-form">
+      <label>Usuario<input type="text" name="username" required autocomplete="username" placeholder="admin"></label>
+      <label>Contraseña<input type="password" name="password" required autocomplete="current-password" placeholder="••••••••"></label>
+      <button type="submit" class="admin-btn" style="width:100%;margin-top:0.5rem;">Ingresar al panel</button>
+    </form>
+    <p style="text-align:center;margin-top:1.5rem;"><a href="/" class="admin-back">← Volver al sitio web</a></p>
+  </div>
+</main>
+</body>
+</html>

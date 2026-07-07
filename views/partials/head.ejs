@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= seo.title %></title>
+  <meta name="description" content="<%= seo.description %>">
+  <meta name="keywords" content="<%= seo.keywordsStr %>">
+  <meta name="author" content="Patagonia Electric">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="googlebot" content="index, follow">
+  <meta name="geo.region" content="CL-LL">
+  <meta name="geo.placename" content="Frutillar, Región de los Lagos, Chile">
+  <meta name="geo.position" content="<%= site.geo.latitude %>;<%= site.geo.longitude %>">
+  <meta name="ICBM" content="<%= site.geo.latitude %>, <%= site.geo.longitude %>">
+  <link rel="canonical" href="<%= seo.canonical %>">
+  <link rel="alternate" hreflang="es-CL" href="<%= seo.canonical %>">
+  <link rel="alternate" hreflang="es" href="<%= seo.canonical %>">
+  <link rel="alternate" hreflang="x-default" href="<%= seo.canonical %>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="<%= seo.ogType %>">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:site_name" content="Patagonia Electric">
+  <meta property="og:title" content="<%= seo.title %>">
+  <meta property="og:description" content="<%= seo.description %>">
+  <meta property="og:url" content="<%= seo.canonical %>">
+  <meta property="og:image" content="<%= seo.image %>">
+  <meta property="og:image:alt" content="Logo Patagonia Electric - Ingeniería y Montaje Eléctrico">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= seo.title %>">
+  <meta name="twitter:description" content="<%= seo.description %>">
+  <meta name="twitter:image" content="<%= seo.image %>">
+
+  <link rel="icon" type="image/png" href="/images/logo-color.png">
+  <link rel="apple-touch-icon" href="/images/logo-color.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <% if (typeof editMode !== 'undefined' && editMode) { %>
+  <link rel="stylesheet" href="/css/visual-editor.css">
+  <% } %>
+  <%- include('schema') %>
+</head>
+<body class="theme-future<%= typeof editMode !== 'undefined' && editMode ? ' cms-edit-mode' : '' %>">
+  <div class="fx-bg" aria-hidden="true">
+    <canvas id="fx-canvas"></canvas>
+    <div class="fx-bg__grid"></div>
+    <div class="fx-bg__glow fx-bg__glow--1"></div>
+    <div class="fx-bg__glow fx-bg__glow--2"></div>
+  </div>

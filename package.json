@@ -1,0 +1,22 @@
+{
+  "name": "patagonia-electric-web",
+  "version": "2.0.0",
+  "description": "Sitio web corporativo Patagonia Electric",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:restart": "pm2 restart patagonia-web",
+    "pm2:logs": "pm2 logs patagonia-web"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16"
+  }
+}

@@ -1,0 +1,22 @@
+<header class="admin-topbar">
+  <div class="admin-topbar__left">
+    <% if (typeof breadcrumb !== 'undefined') { %>
+    <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+      <a href="/admin">Dashboard</a>
+      <span>/</span>
+      <span><%= breadcrumb %></span>
+    </nav>
+    <% } else { %>
+    <h1 class="admin-topbar__title"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></h1>
+    <% } %>
+  </div>
+  <div class="admin-topbar__right">
+    <span class="admin-user">
+      <span class="admin-user__avatar"><%= (user || 'A').charAt(0).toUpperCase() %></span>
+      <span class="admin-user__name"><%= user %></span>
+    </span>
+    <form method="POST" action="/admin/logout">
+      <button type="submit" class="admin-btn admin-btn--sm admin-btn--ghost">Cerrar sesión</button>
+    </form>
+  </div>
+</header>

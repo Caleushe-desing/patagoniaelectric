@@ -1,0 +1,71 @@
+<% const publicPath = (visualPages.find(p => p.key === currentPage) || { path: '/' }).path %>
+<div id="cms-toolbar" class="cms-toolbar">
+  <div class="cms-toolbar__left">
+    <img src="/images/logo.png" alt="" class="cms-toolbar__logo">
+    <span class="cms-toolbar__badge">Modo edición</span>
+    <select id="cms-page-select" class="cms-toolbar__select" aria-label="Cambiar página">
+      <% visualPages.forEach((p) => { %>
+      <option value="<%= p.key %>" <%= currentPage === p.key ? 'selected' : '' %>><%= p.label %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="cms-toolbar__center">
+    <span id="cms-status" class="cms-toolbar__status">Pulse «Imágenes» arriba a la derecha para ver y cambiar todas las fotos de esta página</span>
+  </div>
+  <div class="cms-toolbar__right">
+    <button type="button" id="cms-images-toggle" class="cms-toolbar__btn cms-toolbar__btn--primary">📷 Imágenes (<span id="cms-images-count">0</span>)</button>
+    <a href="/admin" class="cms-toolbar__btn cms-toolbar__btn--ghost">Panel clásico</a>
+    <a href="<%= publicPath %>" class="cms-toolbar__btn cms-toolbar__btn--ghost" target="_blank">Vista pública</a>
+    <button type="button" id="cms-exit" class="cms-toolbar__btn cms-toolbar__btn--ghost">Salir</button>
+  </div>
+</div>
+
+<!-- Modal cambiar imagen (igual lógica que dashboard) -->
+<div id="cms-modal" class="cms-modal" hidden>
+  <div class="cms-modal__backdrop" id="cms-modal-backdrop"></div>
+  <div class="cms-modal__box" role="dialog" aria-labelledby="cms-modal-title">
+    <div class="cms-modal__header">
+      <div>
+        <span class="cms-modal__eyebrow">Está editando</span>
+        <strong id="cms-modal-title">Imagen</strong>
+      </div>
+      <button type="button" id="cms-modal-close" class="cms-modal__close" aria-label="Cerrar">×</button>
+    </div>
+    <div class="cms-modal__body">
+      <img id="cms-modal-preview" class="cms-modal__preview" src="" alt="Vista previa">
+      <label class="cms-modal__label">URL de la imagen
+        <input type="text" id="cms-modal-url" class="cms-modal__input" placeholder="/images/foto.jpg o /uploads/...">
+      </label>
+      <label class="cms-modal__upload">
+        <span class="cms-modal__btn cms-modal__btn--primary">📷 Subir imagen desde su PC</span>
+        <input type="file" id="cms-modal-file" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" hidden>
+      </label>
+      <div class="cms-modal__actions">
+        <button type="button" id="cms-modal-cancel" class="cms-modal__btn cms-modal__btn--ghost">Cancelar</button>
+        <button type="button" id="cms-modal-save" class="cms-modal__btn cms-modal__btn--primary">Guardar imagen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cms-toast" class="cms-toast" hidden></div>
+
+<!-- Panel: todas las imágenes de la página actual -->
+<aside id="cms-image-panel" class="cms-image-panel" hidden>
+  <div class="cms-image-panel__header">
+    <div>
+      <strong>Imágenes de esta página</strong>
+      <span class="cms-image-panel__hint">Seleccione una para cambiarla o subir una nueva</span>
+    </div>
+    <button type="button" id="cms-image-panel-close" class="cms-image-panel__close" aria-label="Cerrar">×</button>
+  </div>
+  <ul id="cms-image-list" class="cms-image-panel__list"></ul>
+</aside>
+
+<script>
+  window.__CMS_VISUAL__ = {
+    page: '<%= currentPage %>',
+    scrollTo: '<%= typeof scrollTo !== "undefined" && scrollTo ? scrollTo : "" %>',
+    pages: <%- JSON.stringify(visualPages.map(p => ({ key: p.key, label: p.label }))) %>
+  };
+</script>
