@@ -1,4 +1,4 @@
-name: Deploy to FTP (production)
+name: Deploy to hosting (SFTP)
 
 on:
   push:
@@ -12,27 +12,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy files via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps-legacy
-          port: 21
-          security: loose
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}/
-          local-dir: ./
-          log-level: minimal
-          exclude: |
-            **/.git*
-            **/.github/**
-            **/node_modules/**
-            **/.env
-            **/.env.*
-            !**/.env.example
-            **/data/auth.json
-            **/data/messages.json
-            **/public/uploads/**
-            !**/public/uploads/.gitkeep
-            **/*.log
+          port: 22
+          sftp_only: true
+          local_path: ./
+          remote_path: ${{ secrets.FTP_SERVER_DIR }}
+          sftpArgs: -o ConnectTimeout=30 -o StrictHostKeyChecking=no
+          rsyncArgs: >-
+            --exclude=.git
+            --exclude=.github
+            --exclude=node_modules
+            --exclude=.env
+            --exclude=data/auth.json
+            --exclude=data/messages.json
+            --exclude=public/uploads/*
+            --exclude=*.log
