@@ -776,28 +776,29 @@ img { max-width: 100%; display: block; }
 
 .dossier-ribbon__text {
   margin: 0;
-  padding: 0.45rem var(--dossier-pad) 0.55rem;
+  padding: 0.5rem var(--dossier-pad) 0.6rem;
   font-size: 0.68rem;
   line-height: 1.35;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 500;
-  position: relative;
+  text-align: center;
 }
 
-.dossier-ribbon__text::before {
-  content: '';
-  position: absolute;
-  left: var(--dossier-pad);
-  top: 0.35rem;
-  width: 18px;
-  height: 2px;
-  background: var(--dossier-neon);
-  box-shadow: 0 0 8px rgba(0, 168, 0, 0.7);
+.dossier-div-row__icon--solo {
+  position: static;
+  width: 88px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  background: var(--dossier-soft);
+  border: 1px solid var(--dossier-line);
+  box-shadow: none;
 }
 
-.dossier-ribbon__text {
-  padding-left: calc(var(--dossier-pad) + 28px);
+.dossier-div-row__icon--solo svg {
+  width: 48px;
+  height: 48px;
 }
 
 /* Impresión */
