@@ -1,7 +1,11 @@
 <header class="header">
   <div class="container header__inner">
     <a href="/" class="logo">
-      <img src="<%= (typeof c !== 'undefined' && c.general.logoHeader) ? c.general.logoHeader : '/images/logo-color.png' %>" alt="Patagonia Electric - Ingeniería y Montaje Eléctrico" class="logo__img" width="106" height="120" <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoHeader', { type: 'image' }) : '' %>>
+      <img src="<%= (typeof c !== 'undefined' && c.general.logoHeader) ? c.general.logoHeader : '/images/logo-color.png' %>" alt="" class="logo__img" width="106" height="120" <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoHeader', { type: 'image' }) : '' %>>
+      <span class="brand-name" aria-label="Patagonia Electric">
+        <span class="brand-name__patagonia">Patagonia</span>
+        <span class="brand-name__electric">Electric</span>
+      </span>
     </a>
     <nav class="nav" aria-label="Navegación principal">
       <ul class="nav__list">

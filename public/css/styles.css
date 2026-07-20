@@ -131,19 +131,69 @@ ul { list-style: none; }
   gap: 1.5rem;
 }
 
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  min-width: 0;
+}
+
 .logo img,
 .logo__img {
   height: 48px;
   width: auto;
-  max-width: 120px;
+  max-width: 56px;
   object-fit: contain;
   object-position: left center;
   display: block;
+  flex-shrink: 0;
   filter: drop-shadow(0 0 12px var(--neon-glow));
   transition: filter var(--transition);
 }
 
-.logo:hover img { filter: drop-shadow(0 0 20px var(--neon-glow)); }
+.logo:hover img,
+.logo:hover .logo__img { filter: drop-shadow(0 0 20px var(--neon-glow)); }
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.brand-name__patagonia {
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.brand-name__electric {
+  color: #3a3a3a;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.logo--footer {
+  margin-bottom: 1rem;
+}
+
+.logo--footer .logo__img,
+.logo--footer .footer__logo {
+  height: 64px;
+  max-width: 72px;
+  margin-bottom: 0;
+  filter: drop-shadow(0 0 10px var(--neon-glow));
+}
+
+.logo--footer .brand-name__patagonia {
+  font-size: 1.2rem;
+}
+
+.logo--footer .brand-name__electric {
+  font-size: 1.02rem;
+}
 
 .nav { display: flex; align-items: center; gap: 2rem; }
 .nav__list { display: flex; align-items: center; gap: 0.25rem; }
@@ -1081,13 +1131,16 @@ ul { list-style: none; }
 .footer__brand img,
 .footer__logo {
   display: block;
-  height: 72px;
+  height: 64px;
   width: auto;
-  max-width: 140px;
+  max-width: 72px;
   object-fit: contain;
   object-position: left center;
-  margin-bottom: 1rem;
   filter: drop-shadow(0 0 10px var(--neon-glow));
+}
+
+.footer__brand > .logo {
+  margin-bottom: 1rem;
 }
 
 .footer__brand p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.8; }

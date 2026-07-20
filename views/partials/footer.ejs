@@ -2,15 +2,21 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img
-          src="<%= (typeof c !== 'undefined' && c.general.logoFooter) ? c.general.logoFooter : '/images/logo.png' %>"
-          alt="Patagonia Electric"
-          class="footer__logo"
-          width="106"
-          height="120"
-          loading="lazy"
-          <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoFooter', { type: 'image' }) : '' %>
-        >
+        <a href="/" class="logo logo--footer">
+          <img
+            src="<%= (typeof c !== 'undefined' && c.general.logoFooter) ? c.general.logoFooter : '/images/logo.png' %>"
+            alt=""
+            class="footer__logo"
+            width="106"
+            height="120"
+            loading="lazy"
+            <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoFooter', { type: 'image' }) : '' %>
+          >
+          <span class="brand-name" aria-label="Patagonia Electric">
+            <span class="brand-name__patagonia">Patagonia</span>
+            <span class="brand-name__electric">Electric</span>
+          </span>
+        </a>
         <p><%= typeof c !== 'undefined' ? c.general.footerText : site.legalName %></p>
       </div>
       <div>
