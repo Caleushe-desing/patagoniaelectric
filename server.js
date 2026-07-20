@@ -87,7 +87,7 @@ app.get('/portafolio.pdf', async (req, res) => {
     res.send(pdf);
   } catch (err) {
     console.error('Error al servir PDF del portafolio:', err);
-    res.status(500).send('No se pudo generar el PDF.');
+    res.status(500).send(err.message || 'No se pudo generar el PDF.');
   }
 });
 

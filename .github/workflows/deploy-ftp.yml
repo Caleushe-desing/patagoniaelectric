@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Instalar dependencias Node (para subir al hosting)
+        run: npm ci --omit=dev
+
       - name: Subir archivos al hosting por FTP nativo
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
@@ -26,6 +29,7 @@ jobs:
           import os
           import time
           from pathlib import Path
+          from io import BytesIO
 
           local_root = Path(".").resolve()
           remote_root = (os.environ.get("FTP_SERVER_DIR") or "/public_html").strip()
@@ -41,12 +45,12 @@ jobs:
           user = os.environ["FTP_USERNAME"]
           password = os.environ["FTP_PASSWORD"]
 
-          EXCLUDE_DIRS = {".git", ".github", "node_modules", "__pycache__"}
+          EXCLUDE_DIRS = {".git", ".github", "__pycache__"}
           EXCLUDE_FILES = {".env"}
           EXCLUDE_SUFFIXES = {".log"}
 
           MAX_ATTEMPTS = 5
-          TIMEOUT = 120
+          TIMEOUT = 300
 
           def should_skip(path: Path) -> bool:
               parts = set(path.parts)
@@ -97,46 +101,26 @@ jobs:
               ftp = connect()
               try:
                   print(f"FTP pwd inicial: {ftp.pwd()}")
-                  try:
-                      print("Listado raíz FTP:")
-                      ftp.retrlines("LIST", lambda line: print(f"  {line}"))
-                  except Exception as list_error:
-                      print(f"No se pudo listar raíz FTP: {list_error}")
-
                   print(f"Usando remote_root={remote_root}")
                   upload_dir(ftp, local_root, remote_root)
-                  # Reinicia Phusion Passenger para cargar el nuevo código Node
+
                   restart_dir = f"{remote_root.rstrip('/')}/tmp"
                   ensure_dir(ftp, restart_dir)
                   restart_path = f"{restart_dir}/restart.txt"
                   payload = f"restart {time.time()}\n".encode("utf-8")
-                  from io import BytesIO
                   print(f"Tocando {restart_path} para reiniciar Passenger")
                   ftp.storbinary(f"STOR {restart_path}", BytesIO(payload))
 
-                  # Verificación mínima: confirmar que el portafolio quedó en el remoto
                   marker = f"{remote_root.rstrip('/')}/public/css/portfolio.css"
-                  try:
-                      size = ftp.size(marker)
-                      print(f"Verificación OK: {marker} ({size} bytes)")
-                  except Exception as verify_error:
-                      raise SystemExit(
-                          f"Los archivos no quedaron en la ruta esperada ({marker}): {verify_error}. "
-                          "Revise el secret FTP_SERVER_DIR."
-                      )
+                  size = ftp.size(marker)
+                  print(f"Verificación OK: {marker} ({size} bytes)")
 
-                  # Marcador único para correlacionar carpeta FTP vs sitio público
-                  stamp = f"deploy-stamp-{int(time.time())}.txt"
-                  stamp_payload = f"patagonia-deploy {time.time()}\n".encode("utf-8")
-                  for candidate in [
-                      f"{remote_root.rstrip('/')}/public/{stamp}",
-                      f"{remote_root.rstrip('/')}/{stamp}",
-                  ]:
-                      try:
-                          ftp.storbinary(f"STOR {candidate}", BytesIO(stamp_payload))
-                          print(f"Stamp subido: {candidate} (probar https://www.patagoniaelectric.com/{stamp})")
-                      except Exception as stamp_error:
-                          print(f"No se pudo subir stamp {candidate}: {stamp_error}")
+                  pdfkit_marker = f"{remote_root.rstrip('/')}/node_modules/pdfkit/package.json"
+                  try:
+                      size = ftp.size(pdfkit_marker)
+                      print(f"Verificación pdfkit OK: {pdfkit_marker} ({size} bytes)")
+                  except Exception as verify_error:
+                      raise SystemExit(f"pdfkit no quedó instalado en el remoto: {verify_error}")
               finally:
                   try:
                       ftp.quit()
