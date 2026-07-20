@@ -1244,6 +1244,14 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .menu-toggle { display: flex; }
 
+  .logo__img {
+    height: 42px;
+    max-width: 48px;
+  }
+
+  .brand-name__patagonia { font-size: 0.95rem; }
+  .brand-name__electric { font-size: 0.84rem; }
+
   .nav {
     position: fixed;
     top: 0; right: -100%;

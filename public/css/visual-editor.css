@@ -437,7 +437,9 @@ img.cms-img-host {
 }
 
 .header .logo.cms-img-host {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 .cms-hero-bar__add,
