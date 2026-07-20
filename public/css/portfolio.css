@@ -672,15 +672,48 @@ body.pf-print-mode .pf-hero__media {
   transform: none;
 }
 
-/* ── Impresión: conservar layout, colores e imágenes de la web ── */
+/* Captura PDF visual (html2canvas) */
+.pf-pdf-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.pf-pdf-capturing .pf-export-toolbar,
+body.pf-pdf-capturing .header,
+body.pf-pdf-capturing .footer,
+body.pf-pdf-capturing .whatsapp-float,
+body.pf-pdf-capturing .fx-bg {
+  display: none !important;
+}
+
+body.pf-pdf-capturing .pf-hero__badge,
+body.pf-pdf-capturing .pf-hero__year,
+body.pf-pdf-capturing .pf-hero__title,
+body.pf-pdf-capturing .pf-hero__subtitle,
+body.pf-pdf-capturing .pf-hero__actions {
+  opacity: 1 !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+body.pf-pdf-capturing .pf-hero__media {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* ── Impresión de respaldo: conservar colores e imágenes ── */
 @media print {
   @page {
-    size: A4 landscape;
-    margin: 8mm;
+    size: A4 portrait;
+    margin: 0;
   }
 
   html, body {
-    background: #fff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
@@ -696,13 +729,12 @@ body.pf-print-mode .pf-hero__media {
     display: none !important;
   }
 
-  body.pf-print-mode,
-  body.theme-future {
-    background: #fff !important;
-  }
-
   .pf,
-  .pf * {
+  .pf *,
+  .pf-hero__media,
+  .pf-cta__media,
+  .pf-section--dark,
+  .pf-stats {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
@@ -720,7 +752,7 @@ body.pf-print-mode .pf-hero__media {
   .pf-project { grid-template-columns: 0.9fr 1.1fr !important; }
 
   .pf-hero {
-    min-height: 170mm;
+    min-height: 100vh;
     page-break-after: always;
     break-after: page;
   }
@@ -746,20 +778,12 @@ body.pf-print-mode .pf-hero__media {
     break-inside: avoid;
   }
 
-  .pf-section { padding: 12mm 0; }
-  .pf-stats { padding: 8mm 0; }
-
   .pf-division,
   .pf-strength,
   .pf-project,
   .pf-service {
     page-break-inside: avoid;
     break-inside: avoid;
-  }
-
-  .pf-cta {
-    min-height: 110mm;
-    page-break-before: always;
   }
 
   .pf-about__visual img,
@@ -770,5 +794,5 @@ body.pf-print-mode .pf-hero__media {
     max-width: 100%;
   }
 
-  a { text-decoration: none !important; color: inherit !important; }
+  a { text-decoration: none !important; }
 }

@@ -48,7 +48,7 @@
   <% } %>
   <%- include('schema') %>
 </head>
-<body class="theme-future<%= typeof editMode !== 'undefined' && editMode ? ' cms-edit-mode' : '' %><%= typeof printMode !== 'undefined' && printMode ? ' pf-print-mode' : '' %>">
+<body class="theme-future<%= typeof editMode !== 'undefined' && editMode ? ' cms-edit-mode' : '' %><%= typeof printMode !== 'undefined' && printMode ? ' pf-print-mode' : '' %>"<%- typeof autoPrint !== 'undefined' && autoPrint ? ' data-auto-pdf="1"' : '' %>>
   <% if (!(typeof printMode !== 'undefined' && printMode)) { %>
   <div class="fx-bg" aria-hidden="true">
     <canvas id="fx-canvas"></canvas>
