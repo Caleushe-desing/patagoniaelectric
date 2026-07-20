@@ -154,7 +154,6 @@ img.cms-img-host {
 .cms-edit-mode .hero__overlay,
 .cms-edit-mode .hero__scanlines,
 .cms-edit-mode .page-hero__overlay,
-.cms-edit-mode .project-card__overlay,
 .cms-edit-mode .clients-banner__overlay {
   pointer-events: none !important;
 }
