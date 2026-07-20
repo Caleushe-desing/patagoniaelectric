@@ -252,9 +252,9 @@
           <div class="admin-portfolio-toolbar">
             <div class="admin-portfolio-toolbar__status">
               <span class="admin-badge <%= data.published ? 'admin-badge--ok' : 'admin-badge--warn' %>">
-                <%= data.published ? 'Publicado en la web' : 'Borrador (no público)' %>
+                <%= data.published ? 'Publicado (enlace directo)' : 'Borrador (no público)' %>
               </span>
-              <span class="admin-muted">URL: <code>/portafolio</code> · PDF: <code>/portafolio.pdf</code> (imprimir / guardar como PDF)</span>
+              <span class="admin-muted">No aparece en el menú. URL: <code>/portafolio</code> · PDF: <code>/portafolio.pdf</code></span>
             </div>
             <div class="admin-portfolio-toolbar__actions">
               <a href="/portafolio" target="_blank" class="admin-btn admin-btn--outline admin-btn--sm">Ver digital ↗</a>
@@ -266,25 +266,41 @@
           <fieldset><legend>Publicación</legend>
             <label class="admin-check">
               <input type="checkbox" name="published" value="1" <%= data.published ? 'checked' : '' %>>
-              Publicar portafolio en la web (<code>/portafolio</code>)
-            </label>
-            <label class="admin-check">
-              <input type="checkbox" name="showInNav" value="1" <%= data.showInNav ? 'checked' : '' %>>
-              Mostrar enlace “Portafolio” en menú y pie de página
+              Publicar portafolio en la web (acceso por enlace, sin menú)
             </label>
           </fieldset>
 
           <fieldset><legend>Portada</legend>
             <%- include('partials/image-field', { name: 'coverImage', value: data.coverImage, label: 'Imagen de portada' }) %>
+            <label>Badge / etiqueta<input name="coverBadge" value="<%= data.coverBadge || '' %>"></label>
             <label>Título portada<input name="coverTitle" value="<%= data.coverTitle %>"></label>
-            <label>Subtítulo portada<input name="coverSubtitle" value="<%= data.coverSubtitle %>"></label>
+            <label>Subtítulo portada<textarea name="coverSubtitle" rows="2"><%= data.coverSubtitle %></textarea></label>
             <label>Año / edición<input name="coverYear" value="<%= data.coverYear %>"></label>
+            <label>Texto botón CTA<input name="coverCta" value="<%= data.coverCta || 'Descargar PDF' %>"></label>
+          </fieldset>
+
+          <fieldset><legend>Cifras / stats</legend>
+            <label>Título stats<input name="statsTitle" value="<%= data.statsTitle || '' %>"></label>
+            <div class="admin-repeater" data-field="stats" data-item-label="Dato">
+              <%- include('partials/repeater-header', { title: 'Indicadores', hint: 'Ej: +10 años, 3 divisiones', field: 'stats' }) %>
+              <% (data.stats || [{ value: '', label: '' }]).forEach((item, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Dato <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Valor<input name="value" value="<%= item.value %>"></label>
+                <label>Etiqueta<input name="label" value="<%= item.label %>"></label>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar dato</button>
+            </div>
           </fieldset>
 
           <fieldset><legend>Quiénes somos</legend>
             <label>Título sección<input name="introTitle" value="<%= data.introTitle %>"></label>
+            <label>Lead / bajada<input name="introLead" value="<%= data.introLead || '' %>"></label>
+            <%- include('partials/image-field', { name: 'introImage', value: data.introImage || '/images/portfolio/pf-team.jpg', label: 'Imagen sección' }) %>
             <div class="admin-paragraph-list" data-field="introParagraphs" data-label="Párrafo">
-              <% (data.introParagraphs || []).forEach((p, i) => { %>
+              <% (data.introParagraphs || ['']).forEach((p, i) => { %>
               <div class="admin-paragraph-list__item">
                 <label>Párrafo <span class="admin-item-num"><%= i + 1 %></span><textarea name="introParagraphs" rows="3"><%= p %></textarea></label>
                 <button type="button" class="admin-btn admin-btn--danger admin-btn--icon admin-paragraph-remove" title="Eliminar">×</button>
@@ -294,15 +310,24 @@
             </div>
           </fieldset>
 
+          <fieldset><legend>Misión y visión</legend>
+            <label>Título misión<input name="missionTitle" value="<%= data.missionTitle || '' %>"></label>
+            <label>Texto misión<textarea name="missionText" rows="3"><%= data.missionText || '' %></textarea></label>
+            <label>Título visión<input name="visionTitle" value="<%= data.visionTitle || '' %>"></label>
+            <label>Texto visión<textarea name="visionText" rows="3"><%= data.visionText || '' %></textarea></label>
+          </fieldset>
+
           <fieldset><legend>Fortalezas</legend>
             <label>Título sección<input name="strengthsTitle" value="<%= data.strengthsTitle %>"></label>
+            <label>Subtítulo<input name="strengthsSubtitle" value="<%= data.strengthsSubtitle || '' %>"></label>
             <div class="admin-repeater" data-field="strengths" data-item-label="Fortaleza">
-              <%- include('partials/repeater-header', { title: 'Fortalezas', hint: 'Pilares comerciales del portafolio', field: 'strengths' }) %>
+              <%- include('partials/repeater-header', { title: 'Fortalezas', hint: 'Con imagen para el diseño gráfico', field: 'strengths' }) %>
               <% (data.strengths || []).forEach((item, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Fortaleza <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
                 <label>Texto<textarea name="text" rows="2"><%= item.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-icon-energy.jpg', label: 'Imagen' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -310,15 +335,34 @@
             </div>
           </fieldset>
 
+          <fieldset><legend>Capacidades técnicas</legend>
+            <label>Título sección<input name="servicesTitle" value="<%= data.servicesTitle || '' %>"></label>
+            <label>Subtítulo<input name="servicesSubtitle" value="<%= data.servicesSubtitle || '' %>"></label>
+            <div class="admin-repeater" data-field="services" data-item-label="Servicio">
+              <%- include('partials/repeater-header', { title: 'Servicios', hint: 'Capacidades de ingeniería y montaje', field: 'services' }) %>
+              <% (data.services || [{ title: '', text: '' }]).forEach((item, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Servicio <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= item.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= item.text %></textarea></label>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar servicio</button>
+            </div>
+          </fieldset>
+
           <fieldset><legend>Divisiones</legend>
             <label>Título sección<input name="divisionsTitle" value="<%= data.divisionsTitle %>"></label>
+            <label>Subtítulo<input name="divisionsSubtitle" value="<%= data.divisionsSubtitle || '' %>"></label>
             <div class="admin-repeater" data-field="divisions" data-item-label="División">
-              <%- include('partials/repeater-header', { title: 'Divisiones', hint: 'Resumen de áreas de negocio', field: 'divisions' }) %>
+              <%- include('partials/repeater-header', { title: 'Divisiones', hint: 'Con imagen full-bleed', field: 'divisions' }) %>
               <% (data.divisions || []).forEach((item, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>División <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
                 <label>Texto<textarea name="text" rows="3"><%= item.text %></textarea></label>
+                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-industrial.jpg', label: 'Imagen' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -326,18 +370,36 @@
             </div>
           </fieldset>
 
+          <fieldset><legend>Proceso de trabajo</legend>
+            <label>Título sección<input name="processTitle" value="<%= data.processTitle || '' %>"></label>
+            <label>Subtítulo<input name="processSubtitle" value="<%= data.processSubtitle || '' %>"></label>
+            <div class="admin-repeater" data-field="processSteps" data-item-label="Paso">
+              <%- include('partials/repeater-header', { title: 'Pasos', hint: 'Metodología del proyecto', field: 'processSteps' }) %>
+              <% (data.processSteps || [{ title: '', text: '' }]).forEach((item, i) => { %>
+              <div class="admin-repeater__item">
+                <div class="admin-repeater__item-header"><h4>Paso <span class="admin-item-num"><%= i + 1 %></span></h4></div>
+                <label>Título<input name="title" value="<%= item.title %>"></label>
+                <label>Texto<textarea name="text" rows="2"><%= item.text %></textarea></label>
+                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
+              </div>
+              <% }) %>
+              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar paso</button>
+            </div>
+          </fieldset>
+
           <fieldset><legend>Proyectos destacados</legend>
             <label>Título sección<input name="projectsTitle" value="<%= data.projectsTitle %>"></label>
             <label>Subtítulo<input name="projectsSubtitle" value="<%= data.projectsSubtitle %>"></label>
             <div class="admin-repeater" data-field="projects" data-item-label="Proyecto">
-              <%- include('partials/repeater-header', { title: 'Proyectos del portafolio', hint: 'Casos para digital y PDF. Puede agregar categoría y cliente.', field: 'projects' }) %>
+              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Categoría, cliente, alcance e imagen', field: 'projects' }) %>
               <% (data.projects || []).forEach((item, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
                 <label>Descripción<textarea name="text" rows="2"><%= item.text %></textarea></label>
-                <label>Categoría<input name="category" value="<%= item.category || '' %>" placeholder="Industrial, Habitacional..."></label>
-                <label>Cliente<input name="client" value="<%= item.client || '' %>" placeholder="Opcional"></label>
+                <label>Categoría<input name="category" value="<%= item.category || '' %>"></label>
+                <label>Cliente<input name="client" value="<%= item.client || '' %>"></label>
+                <label>Alcance<input name="scope" value="<%= item.scope || '' %>" placeholder="Fuerza · Control · Puesta en marcha"></label>
                 <%- include('partials/image-field', { name: 'image', value: item.image, label: 'Imagen' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
@@ -350,7 +412,7 @@
             <label>Título sección<input name="clientsTitle" value="<%= data.clientsTitle %>"></label>
             <label>Subtítulo<input name="clientsSubtitle" value="<%= data.clientsSubtitle %>"></label>
             <div class="admin-repeater" data-field="clients" data-item-label="Cliente">
-              <%- include('partials/repeater-header', { title: 'Clientes', hint: 'Marcas que aparecerán en el portafolio comercial', field: 'clients' }) %>
+              <%- include('partials/repeater-header', { title: 'Clientes', hint: 'Logos del portafolio comercial', field: 'clients' }) %>
               <% (data.clients || []).forEach((item, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Cliente <span class="admin-item-num"><%= i + 1 %></span></h4></div>
@@ -364,6 +426,7 @@
           </fieldset>
 
           <fieldset><legend>Cierre / contacto</legend>
+            <%- include('partials/image-field', { name: 'closingImage', value: data.closingImage || data.coverImage, label: 'Imagen de cierre' }) %>
             <label>Título cierre<input name="closingTitle" value="<%= data.closingTitle %>"></label>
             <label>Texto cierre<textarea name="closingText" rows="3"><%= data.closingText %></textarea></label>
             <label>Datos de contacto (línea)<input name="contactNote" value="<%= data.contactNote %>"></label>

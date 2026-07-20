@@ -138,7 +138,12 @@ router.post('/api/content/:section', requireAuth, async (req, res) => {
   const key = req.params.section;
   if (!SECTIONS[key]) return res.status(404).json({ ok: false, error: 'Sección no encontrada' });
   try {
-    await updateSection(key, req.body);
+    const payload = { ...req.body };
+    if (key === 'portafolio') {
+      payload.showInNav = false;
+      payload.published = Boolean(payload.published);
+    }
+    await updateSection(key, payload);
     res.json({ ok: true, message: 'Contenido guardado correctamente' });
   } catch (err) {
     console.error(err);

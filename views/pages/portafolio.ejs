@@ -2,134 +2,208 @@
 <%- include('../partials/header') %>
 <% const p = c.portafolio; %>
 
-<section class="pf-hero">
-  <div class="pf-hero__media" style="background-image:url('<%= p.coverImage %>')" <%- cmsAttr('portafolio', 'coverImage', { type: 'bg-image' }) %>></div>
-  <div class="pf-hero__veil"></div>
-  <div class="container pf-hero__content">
-    <p class="pf-hero__eyebrow" <%- cmsAttr('portafolio', 'coverYear') %>><%= p.coverYear %></p>
-    <h1 class="pf-hero__title" <%- cmsAttr('portafolio', 'coverTitle') %>><%= p.coverTitle %></h1>
-    <p class="pf-hero__subtitle" <%- cmsAttr('portafolio', 'coverSubtitle') %>><%= p.coverSubtitle %></p>
-    <div class="pf-hero__actions">
-      <a href="/portafolio.pdf" class="btn btn--primary" target="_blank" rel="noopener">Descargar PDF</a>
-      <a href="/contacto" class="btn btn--outline-light">Contactar</a>
+<article class="pf">
+  <section class="pf-hero">
+    <div class="pf-hero__media" style="background-image:url('<%= p.coverImage %>')" <%- cmsAttr('portafolio', 'coverImage', { type: 'bg-image' }) %>></div>
+    <div class="pf-hero__veil"></div>
+    <div class="pf-hero__grid" aria-hidden="true"></div>
+    <div class="container pf-hero__content">
+      <p class="pf-hero__badge" <%- cmsAttr('portafolio', 'coverBadge') %>><%= p.coverBadge %></p>
+      <p class="pf-hero__year" <%- cmsAttr('portafolio', 'coverYear') %>><%= p.coverYear %></p>
+      <h1 class="pf-hero__title" <%- cmsAttr('portafolio', 'coverTitle') %>><%= p.coverTitle %></h1>
+      <p class="pf-hero__subtitle" <%- cmsAttr('portafolio', 'coverSubtitle') %>><%= p.coverSubtitle %></p>
+      <div class="pf-hero__actions">
+        <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener"><span <%- cmsAttr('portafolio', 'coverCta') %>><%= p.coverCta || 'Descargar PDF' %></span></a>
+        <a href="/contacto" class="pf-btn pf-btn--ghost">Hablar con un ingeniero</a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section pf-section" id="nosotros">
-  <div class="container pf-split">
-    <div>
-      <h2 class="section__title" <%- cmsAttr('portafolio', 'introTitle') %>><%= p.introTitle %></h2>
-      <div class="pf-prose" <%- cmsList('portafolio', 'introParagraphs') %>>
-        <% (p.introParagraphs || []).forEach((para, i) => { %>
-        <p data-cms-item="<%= i %>" <%- cmsAttr('portafolio', '_self', { arrayField: 'introParagraphs', index: i }) %>><%= para %></p>
+  <section class="pf-stats">
+    <div class="container">
+      <p class="pf-kicker" <%- cmsAttr('portafolio', 'statsTitle') %>><%= p.statsTitle %></p>
+      <div class="pf-stats__grid" <%- cmsList('portafolio', 'stats') %>>
+        <% (p.stats || []).forEach((item, i) => { %>
+        <div class="pf-stat" data-cms-item="<%= i %>">
+          <strong <%- cmsAttr('portafolio', 'value', { arrayField: 'stats', index: i }) %>><%= item.value %></strong>
+          <span <%- cmsAttr('portafolio', 'label', { arrayField: 'stats', index: i }) %>><%= item.label %></span>
+        </div>
         <% }) %>
       </div>
     </div>
-    <aside class="pf-aside">
-      <p class="pf-aside__label">Empresa</p>
-      <p class="pf-aside__value"><%= site.legalName || site.name %></p>
-      <p class="pf-aside__label">Ubicación</p>
-      <p class="pf-aside__value"><%= site.address.city %>, <%= site.address.region %></p>
-      <p class="pf-aside__label">Contacto</p>
-      <p class="pf-aside__value"><a href="mailto:<%= site.email %>"><%= site.email %></a><br><a href="tel:<%= site.phoneRaw %>"><%= site.phone %></a></p>
-    </aside>
-  </div>
-</section>
+  </section>
 
-<section class="section section--gray pf-section" id="fortalezas">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title" <%- cmsAttr('portafolio', 'strengthsTitle') %>><%= p.strengthsTitle %></h2>
-    </div>
-    <div class="pf-grid pf-grid--4" <%- cmsList('portafolio', 'strengths') %>>
-      <% (p.strengths || []).forEach((item, i) => { %>
-      <article class="pf-card" data-cms-item="<%= i %>">
-        <h3 class="pf-card__title" <%- cmsAttr('portafolio', 'title', { arrayField: 'strengths', index: i }) %>><%= item.title %></h3>
-        <p class="pf-card__text" <%- cmsAttr('portafolio', 'text', { arrayField: 'strengths', index: i }) %>><%= item.text %></p>
-      </article>
-      <% }) %>
-    </div>
-  </div>
-</section>
-
-<section class="section pf-section" id="divisiones">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title" <%- cmsAttr('portafolio', 'divisionsTitle') %>><%= p.divisionsTitle %></h2>
-    </div>
-    <div class="pf-grid pf-grid--3" <%- cmsList('portafolio', 'divisions') %>>
-      <% (p.divisions || []).forEach((item, i) => { %>
-      <article class="pf-panel" data-cms-item="<%= i %>">
-        <span class="pf-panel__index"><%= String(i + 1).padStart(2, '0') %></span>
-        <h3 class="pf-panel__title" <%- cmsAttr('portafolio', 'title', { arrayField: 'divisions', index: i }) %>><%= item.title %></h3>
-        <p class="pf-panel__text" <%- cmsAttr('portafolio', 'text', { arrayField: 'divisions', index: i }) %>><%= item.text %></p>
-      </article>
-      <% }) %>
-    </div>
-  </div>
-</section>
-
-<section class="section section--gray pf-section" id="proyectos">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title" <%- cmsAttr('portafolio', 'projectsTitle') %>><%= p.projectsTitle %></h2>
-      <p class="section__subtitle" <%- cmsAttr('portafolio', 'projectsSubtitle') %>><%= p.projectsSubtitle %></p>
-    </div>
-    <div class="pf-projects" <%- cmsList('portafolio', 'projects') %>>
-      <% (p.projects || []).forEach((item, i) => { %>
-      <article class="pf-project" data-cms-item="<%= i %>">
-        <div class="pf-project__image">
-          <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('portafolio', 'image', { arrayField: 'projects', index: i, type: 'image' }) %>>
+  <section class="pf-section pf-about" id="nosotros">
+    <div class="container pf-about__grid">
+      <div class="pf-about__copy">
+        <p class="pf-kicker">Empresa</p>
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'introTitle') %>><%= p.introTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'introLead') %>><%= p.introLead %></p>
+        <div class="pf-prose" <%- cmsList('portafolio', 'introParagraphs') %>>
+          <% (p.introParagraphs || []).forEach((para, i) => { %>
+          <p data-cms-item="<%= i %>" <%- cmsAttr('portafolio', '_self', { arrayField: 'introParagraphs', index: i }) %>><%= para %></p>
+          <% }) %>
         </div>
-        <div class="pf-project__body">
-          <% if (item.category || item.client) { %>
-          <p class="pf-project__meta">
-            <% if (item.category) { %><span <%- cmsAttr('portafolio', 'category', { arrayField: 'projects', index: i }) %>><%= item.category %></span><% } %>
-            <% if (item.category && item.client) { %> · <% } %>
-            <% if (item.client) { %><span <%- cmsAttr('portafolio', 'client', { arrayField: 'projects', index: i }) %>><%= item.client %></span><% } %>
-          </p>
-          <% } %>
-          <h3 class="pf-project__title" <%- cmsAttr('portafolio', 'title', { arrayField: 'projects', index: i }) %>><%= item.title %></h3>
-          <p class="pf-project__text" <%- cmsAttr('portafolio', 'text', { arrayField: 'projects', index: i }) %>><%= item.text %></p>
-        </div>
+      </div>
+      <div class="pf-about__visual">
+        <img src="<%= p.introImage %>" alt="<%= p.introTitle %>" <%- cmsAttr('portafolio', 'introImage', { type: 'image' }) %>>
+        <div class="pf-about__frame" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pf-section pf-mission">
+    <div class="container pf-mission__grid">
+      <article class="pf-mission__card">
+        <h3 <%- cmsAttr('portafolio', 'missionTitle') %>><%= p.missionTitle %></h3>
+        <p <%- cmsAttr('portafolio', 'missionText') %>><%= p.missionText %></p>
       </article>
-      <% }) %>
+      <article class="pf-mission__card pf-mission__card--alt">
+        <h3 <%- cmsAttr('portafolio', 'visionTitle') %>><%= p.visionTitle %></h3>
+        <p <%- cmsAttr('portafolio', 'visionText') %>><%= p.visionText %></p>
+      </article>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section pf-section" id="clientes">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title" <%- cmsAttr('portafolio', 'clientsTitle') %>><%= p.clientsTitle %></h2>
-      <p class="section__subtitle" <%- cmsAttr('portafolio', 'clientsSubtitle') %>><%= p.clientsSubtitle %></p>
+  <section class="pf-section" id="fortalezas">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'strengthsTitle') %>><%= p.strengthsTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'strengthsSubtitle') %>><%= p.strengthsSubtitle %></p>
+      </div>
+      <div class="pf-strengths" <%- cmsList('portafolio', 'strengths') %>>
+        <% (p.strengths || []).forEach((item, i) => { %>
+        <article class="pf-strength" data-cms-item="<%= i %>">
+          <div class="pf-strength__media">
+            <img src="<%= item.image || '/images/portfolio/pf-icon-energy.jpg' %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('portafolio', 'image', { arrayField: 'strengths', index: i, type: 'image' }) %>>
+          </div>
+          <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'strengths', index: i }) %>><%= item.title %></h3>
+          <p <%- cmsAttr('portafolio', 'text', { arrayField: 'strengths', index: i }) %>><%= item.text %></p>
+        </article>
+        <% }) %>
+      </div>
     </div>
-    <div class="pf-clients" <%- cmsList('portafolio', 'clients') %>>
-      <% (p.clients || []).forEach((item, i) => { %>
-      <figure class="pf-client" data-cms-item="<%= i %>">
-        <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('portafolio', 'logo', { arrayField: 'clients', index: i, type: 'image' }) %>>
-        <figcaption <%- cmsAttr('portafolio', 'name', { arrayField: 'clients', index: i }) %>><%= item.name %></figcaption>
-      </figure>
-      <% }) %>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="section pf-cta">
-  <div class="container pf-cta__inner">
-    <div>
-      <h2 class="pf-cta__title" <%- cmsAttr('portafolio', 'closingTitle') %>><%= p.closingTitle %></h2>
-      <p class="pf-cta__text" <%- cmsAttr('portafolio', 'closingText') %>><%= p.closingText %></p>
-      <p class="pf-cta__note" <%- cmsAttr('portafolio', 'contactNote') %>><%= p.contactNote %></p>
+  <section class="pf-section pf-section--dark" id="servicios">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title pf-title--light" <%- cmsAttr('portafolio', 'servicesTitle') %>><%= p.servicesTitle %></h2>
+        <p class="pf-lead pf-lead--muted" <%- cmsAttr('portafolio', 'servicesSubtitle') %>><%= p.servicesSubtitle %></p>
+      </div>
+      <div class="pf-services" <%- cmsList('portafolio', 'services') %>>
+        <% (p.services || []).forEach((item, i) => { %>
+        <article class="pf-service" data-cms-item="<%= i %>">
+          <span class="pf-service__num"><%= String(i + 1).padStart(2, '0') %></span>
+          <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'services', index: i }) %>><%= item.title %></h3>
+          <p <%- cmsAttr('portafolio', 'text', { arrayField: 'services', index: i }) %>><%= item.text %></p>
+        </article>
+        <% }) %>
+      </div>
     </div>
-    <div class="pf-cta__actions">
-      <a href="/portafolio.pdf" class="btn btn--primary" target="_blank" rel="noopener">Exportar PDF</a>
-      <a href="/contacto" class="btn btn--outline-light">Ir a contacto</a>
-      <button type="button" class="btn btn--outline-light pf-share" data-share-url="<%= site.url %>/portafolio">Copiar enlace</button>
+  </section>
+
+  <section class="pf-section" id="divisiones">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'divisionsTitle') %>><%= p.divisionsTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'divisionsSubtitle') %>><%= p.divisionsSubtitle %></p>
+      </div>
+      <div class="pf-divisions" <%- cmsList('portafolio', 'divisions') %>>
+        <% (p.divisions || []).forEach((item, i) => { %>
+        <article class="pf-division" data-cms-item="<%= i %>">
+          <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('portafolio', 'image', { arrayField: 'divisions', index: i, type: 'image' }) %>>
+          <div class="pf-division__body">
+            <span><%= String(i + 1).padStart(2, '0') %></span>
+            <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'divisions', index: i }) %>><%= item.title %></h3>
+            <p <%- cmsAttr('portafolio', 'text', { arrayField: 'divisions', index: i }) %>><%= item.text %></p>
+          </div>
+        </article>
+        <% }) %>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="pf-section pf-process">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'processTitle') %>><%= p.processTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'processSubtitle') %>><%= p.processSubtitle %></p>
+      </div>
+      <ol class="pf-process__list" <%- cmsList('portafolio', 'processSteps') %>>
+        <% (p.processSteps || []).forEach((item, i) => { %>
+        <li data-cms-item="<%= i %>">
+          <strong <%- cmsAttr('portafolio', 'title', { arrayField: 'processSteps', index: i }) %>><%= item.title %></strong>
+          <span <%- cmsAttr('portafolio', 'text', { arrayField: 'processSteps', index: i }) %>><%= item.text %></span>
+        </li>
+        <% }) %>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pf-section pf-section--soft" id="proyectos">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'projectsTitle') %>><%= p.projectsTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'projectsSubtitle') %>><%= p.projectsSubtitle %></p>
+      </div>
+      <div class="pf-projects" <%- cmsList('portafolio', 'projects') %>>
+        <% (p.projects || []).forEach((item, i) => { %>
+        <article class="pf-project" data-cms-item="<%= i %>">
+          <div class="pf-project__image">
+            <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('portafolio', 'image', { arrayField: 'projects', index: i, type: 'image' }) %>>
+          </div>
+          <div class="pf-project__body">
+            <p class="pf-project__meta">
+              <span <%- cmsAttr('portafolio', 'category', { arrayField: 'projects', index: i }) %>><%= item.category %></span>
+              <% if (item.client) { %> · <span <%- cmsAttr('portafolio', 'client', { arrayField: 'projects', index: i }) %>><%= item.client %></span><% } %>
+            </p>
+            <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'projects', index: i }) %>><%= item.title %></h3>
+            <p <%- cmsAttr('portafolio', 'text', { arrayField: 'projects', index: i }) %>><%= item.text %></p>
+            <% if (item.scope) { %>
+            <p class="pf-project__scope" <%- cmsAttr('portafolio', 'scope', { arrayField: 'projects', index: i }) %>><%= item.scope %></p>
+            <% } %>
+          </div>
+        </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="pf-section" id="clientes">
+    <div class="container">
+      <div class="pf-section__head">
+        <h2 class="pf-title" <%- cmsAttr('portafolio', 'clientsTitle') %>><%= p.clientsTitle %></h2>
+        <p class="pf-lead" <%- cmsAttr('portafolio', 'clientsSubtitle') %>><%= p.clientsSubtitle %></p>
+      </div>
+      <div class="pf-clients" <%- cmsList('portafolio', 'clients') %>>
+        <% (p.clients || []).forEach((item, i) => { %>
+        <figure class="pf-client" data-cms-item="<%= i %>">
+          <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('portafolio', 'logo', { arrayField: 'clients', index: i, type: 'image' }) %>>
+          <figcaption <%- cmsAttr('portafolio', 'name', { arrayField: 'clients', index: i }) %>><%= item.name %></figcaption>
+        </figure>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="pf-cta">
+    <div class="pf-cta__media" style="background-image:url('<%= p.closingImage || p.coverImage %>')" <%- cmsAttr('portafolio', 'closingImage', { type: 'bg-image' }) %>></div>
+    <div class="pf-cta__veil"></div>
+    <div class="container pf-cta__inner">
+      <div>
+        <h2 class="pf-cta__title" <%- cmsAttr('portafolio', 'closingTitle') %>><%= p.closingTitle %></h2>
+        <p class="pf-cta__text" <%- cmsAttr('portafolio', 'closingText') %>><%= p.closingText %></p>
+        <p class="pf-cta__note" <%- cmsAttr('portafolio', 'contactNote') %>><%= p.contactNote %></p>
+      </div>
+      <div class="pf-cta__actions">
+        <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener">Exportar PDF</a>
+        <a href="/contacto" class="pf-btn pf-btn--ghost">Ir a contacto</a>
+        <button type="button" class="pf-btn pf-btn--ghost pf-share" data-share-url="<%= site.url %>/portafolio">Copiar enlace</button>
+      </div>
+    </div>
+  </section>
+</article>
 
 <script>
 document.querySelectorAll('.pf-share').forEach((btn) => {
