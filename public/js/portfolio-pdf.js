@@ -1,9 +1,11 @@
 /**
- * Genera un PDF visualmente idéntico al portafolio web
- * (colores, fotos, tipografía y layout de escritorio).
+ * Genera un PDF vertical (A4 portrait) del portafolio.
+ * Misma identidad visual (colores, tipografía, fotos) que la web,
+ * pero en layout de una columna para lectura en formato vertical.
  */
 (function () {
-  const CAPTURE_WIDTH = 1440;
+  // Ancho tipo móvil/tablet: activa grillas verticales del CSS (@media max-width: 1000px)
+  const CAPTURE_WIDTH = 794;
   const SCRIPT_SRCS = {
     html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
     jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
@@ -113,7 +115,7 @@
     }
 
     setBusy(true);
-    setStatus('Preparando PDF idéntico a la web…');
+    setStatus('Preparando PDF vertical (A4)…');
 
     const prevTitle = document.title;
     let bgImgs = [];
@@ -125,7 +127,7 @@
       await waitForImages(target);
 
       document.body.classList.add('pf-pdf-capturing');
-      setStatus('Capturando diseño, fotos y colores…');
+      setStatus('Capturando fotos, colores y layout vertical…');
 
       const canvas = await window.html2canvas(target, {
         scale: 2,
@@ -143,7 +145,6 @@
           cloned.style.width = CAPTURE_WIDTH + 'px';
           cloned.style.maxWidth = CAPTURE_WIDTH + 'px';
           cloned.style.margin = '0 auto';
-          // Forzar grillas de escritorio en el clon
           const style = doc.createElement('style');
           style.textContent = `
             .pf-pdf-bg-img {
@@ -155,16 +156,38 @@
               z-index: 0 !important;
             }
             .pf-hero__media, .pf-cta__media { background-image: none !important; }
-            .pf-stats__grid { grid-template-columns: repeat(4, 1fr) !important; }
-            .pf-strengths { grid-template-columns: repeat(4, 1fr) !important; }
-            .pf-services { grid-template-columns: repeat(3, 1fr) !important; }
-            .pf-divisions { grid-template-columns: repeat(3, 1fr) !important; }
-            .pf-process__list { grid-template-columns: repeat(5, 1fr) !important; }
-            .pf-projects { grid-template-columns: repeat(2, 1fr) !important; }
-            .pf-about__grid { grid-template-columns: 1.1fr 0.9fr !important; }
-            .pf-mission__grid { grid-template-columns: 1fr 1fr !important; }
-            .pf-project { grid-template-columns: 0.9fr 1.1fr !important; }
-            .pf-hero { min-height: 720px !important; }
+
+            /* Layout vertical (a diferencia de la web de escritorio) */
+            .pf-stats__grid,
+            .pf-strengths,
+            .pf-services,
+            .pf-divisions,
+            .pf-process__list,
+            .pf-projects,
+            .pf-about__grid,
+            .pf-mission__grid,
+            .pf-project,
+            .pf-clients {
+              grid-template-columns: 1fr !important;
+            }
+
+            .pf-hero {
+              min-height: 520px !important;
+              align-items: flex-end !important;
+            }
+            .pf-hero__title {
+              max-width: none !important;
+              font-size: 2.4rem !important;
+            }
+            .pf-hero__content { padding: 2.5rem 0 2rem !important; }
+            .pf-section { padding: 2.4rem 0 !important; }
+            .pf-stats { padding: 1.6rem 0 !important; }
+            .pf-division { min-height: 280px !important; }
+            .pf-project__image { min-height: 200px !important; }
+            .pf-cta { min-height: 320px !important; }
+            .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
+            .pf-about__visual img { aspect-ratio: 16/10 !important; }
+
             .pf-hero__badge, .pf-hero__year, .pf-hero__title,
             .pf-hero__subtitle, .pf-hero__actions {
               opacity: 1 !important;
@@ -178,7 +201,7 @@
         },
       });
 
-      setStatus('Componiendo archivo PDF…');
+      setStatus('Componiendo PDF vertical…');
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({
@@ -192,8 +215,6 @@
       const pageHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-      // JPEG de alta calidad: más liviano que PNG y conserva el look
       const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
 
       let heightLeft = imgHeight;
@@ -209,9 +230,8 @@
         heightLeft -= pageHeight;
       }
 
-      const filename = 'Patagonia-Electric-Portafolio.pdf';
-      pdf.save(filename);
-      setStatus('PDF descargado — misma apariencia que la web.');
+      pdf.save('Patagonia-Electric-Portafolio.pdf');
+      setStatus('PDF vertical descargado (A4).');
     } catch (err) {
       console.error(err);
       setStatus('No se pudo generar el PDF automático. Use Imprimir → Guardar como PDF.');

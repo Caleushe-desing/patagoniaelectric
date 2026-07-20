@@ -1,12 +1,17 @@
 <div class="admin-image-field">
-  <label><%= label %>
-    <div class="admin-image-field__row">
-      <input type="text" name="<%= name %>" value="<%= value %>" class="admin-image-url" placeholder="/images/... o /uploads/...">
-      <label class="admin-btn admin-btn--sm admin-upload-btn">
-        Subir
-        <input type="file" accept="image/*" class="admin-upload-input" hidden>
-      </label>
-    </div>
-  </label>
-  <% if (value) { %><img src="<%= value %>" alt="Vista previa" class="admin-preview"><% } %>
+  <span class="admin-image-field__label"><%= label %></span>
+  <div class="admin-image-field__row">
+    <input type="text" name="<%= name %>" value="<%= value %>" class="admin-image-url" placeholder="/images/... o /uploads/...">
+    <label class="admin-btn admin-btn--sm admin-btn--primary admin-upload-btn">
+      Cambiar foto
+      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-input" hidden>
+    </label>
+  </div>
+  <div class="admin-image-field__preview">
+    <% if (value) { %>
+    <img src="<%= value %>" alt="Vista previa" class="admin-preview">
+    <% } else { %>
+    <div class="admin-preview admin-preview--empty">Sin foto — use «Cambiar foto»</div>
+    <% } %>
+  </div>
 </div>

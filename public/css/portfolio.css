@@ -740,19 +740,22 @@ body.pf-pdf-capturing .pf-hero__media {
     color-adjust: exact !important;
   }
 
-  /* Forzar grillas de escritorio (igual que la web) */
-  .pf-stats__grid { grid-template-columns: repeat(4, 1fr) !important; }
-  .pf-strengths { grid-template-columns: repeat(4, 1fr) !important; }
-  .pf-services { grid-template-columns: repeat(3, 1fr) !important; }
-  .pf-divisions { grid-template-columns: repeat(3, 1fr) !important; }
-  .pf-process__list { grid-template-columns: repeat(5, 1fr) !important; }
-  .pf-projects { grid-template-columns: repeat(2, 1fr) !important; }
-  .pf-about__grid { grid-template-columns: 1.1fr 0.9fr !important; }
-  .pf-mission__grid { grid-template-columns: 1fr 1fr !important; }
-  .pf-project { grid-template-columns: 0.9fr 1.1fr !important; }
+  /* Forzar layout vertical (PDF ≠ web escritorio) */
+  .pf-stats__grid,
+  .pf-strengths,
+  .pf-services,
+  .pf-divisions,
+  .pf-process__list,
+  .pf-projects,
+  .pf-about__grid,
+  .pf-mission__grid,
+  .pf-project,
+  .pf-clients {
+    grid-template-columns: 1fr !important;
+  }
 
   .pf-hero {
-    min-height: 100vh;
+    min-height: 70vh;
     page-break-after: always;
     break-after: page;
   }

@@ -128,6 +128,24 @@ img.cms-img-host {
   transform: none;
 }
 
+/* Portafolio: botones visibles sobre fotos full-bleed */
+.pf-hero.cms-img-host .cms-img-edit-btn,
+.pf-cta.cms-img-host .cms-img-edit-btn,
+.pf-division.cms-img-host .cms-img-edit-btn {
+  top: auto;
+  bottom: 1.25rem;
+  left: auto;
+  right: 1.25rem;
+  transform: none;
+}
+
+.pf-strength__media.cms-img-host,
+.pf-project__image.cms-img-host,
+.pf-about__visual.cms-img-host,
+.pf-client.cms-img-host {
+  position: relative !important;
+}
+
 .cms-edit-mode .page-hero,
 .cms-edit-mode .clients-banner {
   position: relative;

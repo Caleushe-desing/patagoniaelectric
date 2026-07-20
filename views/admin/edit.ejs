@@ -254,13 +254,18 @@
               <span class="admin-badge <%= data.published ? 'admin-badge--ok' : 'admin-badge--warn' %>">
                 <%= data.published ? 'Publicado (enlace directo)' : 'Borrador (no público)' %>
               </span>
-              <span class="admin-muted">No aparece en el menú. URL: <code>/portafolio</code> · PDF: <code>/portafolio.pdf</code> (descarga visual idéntica a la web)</span>
+              <span class="admin-muted">No aparece en el menú. URL: <code>/portafolio</code> · PDF vertical: <code>/portafolio.pdf</code></span>
             </div>
             <div class="admin-portfolio-toolbar__actions">
+              <a href="/admin/visual/portafolio" target="_blank" class="admin-btn admin-btn--outline admin-btn--sm">Editor visual (fotos) ↗</a>
               <a href="/portafolio" target="_blank" class="admin-btn admin-btn--outline admin-btn--sm">Ver digital ↗</a>
               <a href="/portafolio.pdf" target="_blank" class="admin-btn admin-btn--primary admin-btn--sm">Exportar PDF</a>
               <button type="button" class="admin-btn admin-btn--outline admin-btn--sm" id="admin-copy-portfolio-link" data-url="/portafolio">Copiar enlace</button>
             </div>
+          </div>
+
+          <div class="admin-notice">
+            <strong>Fotografías:</strong> en cada bloque use <em>Cambiar foto</em> para subir una imagen nueva (JPG, PNG o WebP). También puede editarlas en el editor visual. Guarde los cambios al terminar.
           </div>
 
           <fieldset><legend>Publicación</legend>
@@ -271,7 +276,7 @@
           </fieldset>
 
           <fieldset><legend>Portada</legend>
-            <%- include('partials/image-field', { name: 'coverImage', value: data.coverImage, label: 'Imagen de portada' }) %>
+            <%- include('partials/image-field', { name: 'coverImage', value: data.coverImage, label: 'Fotografía de portada (hero)' }) %>
             <label>Badge / etiqueta<input name="coverBadge" value="<%= data.coverBadge || '' %>"></label>
             <label>Título portada<input name="coverTitle" value="<%= data.coverTitle %>"></label>
             <label>Subtítulo portada<textarea name="coverSubtitle" rows="2"><%= data.coverSubtitle %></textarea></label>
@@ -298,7 +303,7 @@
           <fieldset><legend>Quiénes somos</legend>
             <label>Título sección<input name="introTitle" value="<%= data.introTitle %>"></label>
             <label>Lead / bajada<input name="introLead" value="<%= data.introLead || '' %>"></label>
-            <%- include('partials/image-field', { name: 'introImage', value: data.introImage || '/images/portfolio/pf-team.jpg', label: 'Imagen sección' }) %>
+            <%- include('partials/image-field', { name: 'introImage', value: data.introImage || '/images/portfolio/pf-team.jpg', label: 'Fotografía sección Quiénes somos' }) %>
             <div class="admin-paragraph-list" data-field="introParagraphs" data-label="Párrafo">
               <% (data.introParagraphs || ['']).forEach((p, i) => { %>
               <div class="admin-paragraph-list__item">
@@ -327,7 +332,7 @@
                 <div class="admin-repeater__item-header"><h4>Fortaleza <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
                 <label>Texto<textarea name="text" rows="2"><%= item.text %></textarea></label>
-                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-icon-energy.jpg', label: 'Imagen' }) %>
+                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-icon-energy.jpg', label: 'Fotografía de la fortaleza' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -362,7 +367,7 @@
                 <div class="admin-repeater__item-header"><h4>División <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
                 <label>Texto<textarea name="text" rows="3"><%= item.text %></textarea></label>
-                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-industrial.jpg', label: 'Imagen' }) %>
+                <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-industrial.jpg', label: 'Fotografía de la división' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -400,7 +405,7 @@
                 <label>Categoría<input name="category" value="<%= item.category || '' %>"></label>
                 <label>Cliente<input name="client" value="<%= item.client || '' %>"></label>
                 <label>Alcance<input name="scope" value="<%= item.scope || '' %>" placeholder="Fuerza · Control · Puesta en marcha"></label>
-                <%- include('partials/image-field', { name: 'image', value: item.image, label: 'Imagen' }) %>
+                <%- include('partials/image-field', { name: 'image', value: item.image, label: 'Fotografía del proyecto' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -417,7 +422,7 @@
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Cliente <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Nombre<input name="name" value="<%= item.name %>"></label>
-                <%- include('partials/image-field', { name: 'logo', value: item.logo, label: 'Logo' }) %>
+                <%- include('partials/image-field', { name: 'logo', value: item.logo, label: 'Logo / fotografía del cliente' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -426,7 +431,7 @@
           </fieldset>
 
           <fieldset><legend>Cierre / contacto</legend>
-            <%- include('partials/image-field', { name: 'closingImage', value: data.closingImage || data.coverImage, label: 'Imagen de cierre' }) %>
+            <%- include('partials/image-field', { name: 'closingImage', value: data.closingImage || data.coverImage, label: 'Fotografía de cierre' }) %>
             <label>Título cierre<input name="closingTitle" value="<%= data.closingTitle %>"></label>
             <label>Texto cierre<textarea name="closingText" rows="3"><%= data.closingText %></textarea></label>
             <label>Datos de contacto (línea)<input name="contactNote" value="<%= data.contactNote %>"></label>

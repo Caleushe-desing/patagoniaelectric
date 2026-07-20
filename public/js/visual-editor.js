@@ -22,6 +22,7 @@
     habitacional: 'División Habitacional',
     proyectos: 'Proyectos',
     clientes: 'Clientes',
+    portafolio: 'Portafolio comercial',
     contacto: 'Contacto',
   };
 
@@ -34,6 +35,9 @@
     heroImage: 'Imagen del banner',
     aboutImage: 'Imagen del equipo',
     clientsBg: 'Fondo de clientes',
+    coverImage: 'Fotografía de portada',
+    introImage: 'Fotografía Quiénes somos',
+    closingImage: 'Fotografía de cierre',
   };
 
   const ADD_LABELS = {
@@ -47,6 +51,12 @@
     aboutParagraphs: '+ Agregar párrafo',
     paragraphs: '+ Agregar párrafo',
     privacyParagraphs: '+ Agregar párrafo',
+    strengths: '+ Agregar fortaleza',
+    services: '+ Agregar servicio',
+    processSteps: '+ Agregar paso',
+    projects: '+ Agregar proyecto',
+    clients: '+ Agregar cliente',
+    introParagraphs: '+ Agregar párrafo',
   };
 
   document.body.classList.add('cms-edit-mode');
@@ -155,6 +165,10 @@
     if (arrayField === 'values') return `${page} — Valor ${index + 1} (imagen)`;
     if (arrayField === 'items' && section === 'proyectos') return `${page} — Proyecto ${index + 1}`;
     if (arrayField === 'items' && section === 'clientes') return `Cliente ${index + 1} — Logo`;
+    if (section === 'portafolio' && arrayField === 'strengths') return `Portafolio — Fortaleza ${index + 1} (foto)`;
+    if (section === 'portafolio' && arrayField === 'projects') return `Portafolio — Proyecto ${index + 1} (foto)`;
+    if (section === 'portafolio' && arrayField === 'clients') return `Portafolio — Cliente ${index + 1} (logo)`;
+    if (section === 'portafolio' && arrayField === 'divisions') return `Portafolio — División ${index + 1} (foto)`;
 
     const fieldLabel = FIELD_NAMES[field] || 'Imagen';
     return `${page} — ${fieldLabel}`;
@@ -163,6 +177,16 @@
   function getImageButtonHost(el) {
     if (el.closest('.hero__slides')) return null;
     if (el.dataset.cmsType === 'bg-image' && el.closest('.page-hero')) return null;
+
+    // Portafolio comercial: hosts con posición relativa para no romper layouts absolute
+    if (el.closest('.pf-hero__media')) return el.closest('.pf-hero');
+    if (el.closest('.pf-cta__media')) return el.closest('.pf-cta');
+    if (el.closest('.pf-division')) return el.closest('.pf-division');
+    if (el.closest('.pf-strength__media')) return el.closest('.pf-strength__media');
+    if (el.closest('.pf-project__image')) return el.closest('.pf-project__image');
+    if (el.closest('.pf-about__visual')) return el.closest('.pf-about__visual');
+    if (el.closest('.pf-client')) return el.closest('.pf-client');
+
     if (el.dataset.cmsType === 'bg-image') {
       return el.closest('.page-hero, .clients-banner') || el;
     }

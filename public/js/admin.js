@@ -14,7 +14,20 @@ function initUploads() {
 
     const input = field.querySelector('.admin-image-url');
     const fileInput = field.querySelector('.admin-upload-input');
-    let preview = field.querySelector('.admin-preview');
+    const previewWrap = field.querySelector('.admin-image-field__preview') || field;
+
+    const setPreview = (url) => {
+      let preview = previewWrap.querySelector('img.admin-preview');
+      const empty = previewWrap.querySelector('.admin-preview--empty');
+      if (empty) empty.remove();
+      if (!preview) {
+        preview = document.createElement('img');
+        preview.className = 'admin-preview';
+        preview.alt = 'Vista previa';
+        previewWrap.appendChild(preview);
+      }
+      preview.src = url;
+    };
 
     fileInput?.addEventListener('change', async () => {
       const file = fileInput.files?.[0];
@@ -28,13 +41,8 @@ function initUploads() {
         const data = await res.json();
         if (data.ok) {
           input.value = data.url;
-          if (!preview) {
-            preview = document.createElement('img');
-            preview.className = 'admin-preview';
-            field.appendChild(preview);
-          }
-          preview.src = data.url;
-          showAlert('Imagen subida correctamente', 'success');
+          setPreview(data.url);
+          showAlert('Fotografía actualizada — recuerde Guardar cambios', 'success');
         } else {
           showAlert(data.error || 'Error al subir', 'error');
         }
@@ -45,14 +53,7 @@ function initUploads() {
     });
 
     input?.addEventListener('change', () => {
-      if (input.value) {
-        if (!preview) {
-          preview = document.createElement('img');
-          preview.className = 'admin-preview';
-          field.appendChild(preview);
-        }
-        preview.src = input.value;
-      }
+      if (input.value) setPreview(input.value);
     });
   });
 }
@@ -86,8 +87,15 @@ function addRepeaterItem(repeater) {
   clone.querySelectorAll('input, textarea').forEach((el) => {
     if (el.type !== 'file') el.value = '';
   });
-  clone.querySelectorAll('.admin-preview').forEach((el) => el.remove());
-  clone.querySelectorAll('.admin-image-field').forEach((el) => delete el.dataset.uploadBound);
+  clone.querySelectorAll('.admin-image-field').forEach((el) => {
+    delete el.dataset.uploadBound;
+    const previewWrap = el.querySelector('.admin-image-field__preview');
+    if (previewWrap) {
+      previewWrap.innerHTML = '<div class="admin-preview admin-preview--empty">Sin foto — use «Cambiar foto»</div>';
+    } else {
+      el.querySelectorAll('.admin-preview').forEach((img) => img.remove());
+    }
+  });
 
   const addBtn = repeater.querySelector('.admin-add');
   repeater.insertBefore(clone, addBtn);
