@@ -99,7 +99,7 @@
       <p class="section__subtitle" <%- cmsAttr('home', 'projectsSubtitle') %>><%= h.projectsSubtitle %></p>
     </div>
     <div class="projects">
-      <% const homeProjects = ((c.proyectos && c.proyectos.items) || []).slice(0, 3); %>
+      <% const homeProjects = ((c.proyectos && c.proyectos.items) || []).slice(0, 4); %>
       <% homeProjects.forEach((p, i) => { %>
       <article class="project-card" data-cms-item="<%= i %>">
         <div class="project-card__media">
