@@ -29,6 +29,10 @@ jobs:
 
           local_root = Path(".").resolve()
           remote_root = (os.environ.get("FTP_SERVER_DIR") or "/public_html").strip()
+          # La app Node/Passenger de Patagonia vive en /patagonia (cPanel nodevenv).
+          # Si el secret apunta a public_html, forzar la carpeta correcta de la app.
+          if remote_root.rstrip("/") in {"/public_html", "public_html", "/"}:
+              remote_root = "/patagonia"
           if not remote_root.startswith("/"):
               remote_root = f"/{remote_root}"
 
