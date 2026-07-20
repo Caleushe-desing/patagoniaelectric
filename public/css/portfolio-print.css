@@ -1,0 +1,211 @@
+@page { size: A4; margin: 14mm; }
+
+body.pf-print {
+  margin: 0;
+  color: #1a2332;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.55;
+  background: #fff;
+}
+
+.pf-print-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  background: #f5f8f6;
+  border-bottom: 1px solid rgba(0, 168, 0, 0.25);
+}
+
+.pf-print-toolbar p {
+  margin: 0.2rem 0 0;
+  color: #5a6a78;
+  font-size: 0.9rem;
+  font-family: system-ui, sans-serif;
+}
+
+.pf-print-toolbar__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.pf-print-btn {
+  appearance: none;
+  border: 0;
+  background: #008f00;
+  color: #fff;
+  padding: 0.7rem 1.1rem;
+  font: 600 0.9rem system-ui, sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pf-print-btn--ghost {
+  background: transparent;
+  color: #008f00;
+  border: 1px solid #008f00;
+}
+
+.pf-print-cover {
+  min-height: 90vh;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  page-break-after: always;
+  background: linear-gradient(160deg, #1a2332 0%, #243447 100%);
+  color: #fff;
+}
+
+.pf-print-cover__logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+.pf-print-cover__brand {
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9dff9d;
+  margin: 0 0 0.4rem;
+}
+
+.pf-print-cover__tag {
+  margin: 0 0 2rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pf-print-cover h1 {
+  font-size: 2.4rem;
+  line-height: 1.15;
+  margin: 0 0 0.8rem;
+  max-width: 16ch;
+}
+
+.pf-print-cover__sub {
+  max-width: 36rem;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.pf-print-cover__year {
+  margin-top: 2rem;
+  color: #9dff9d;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.pf-print-cover__place {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.95rem;
+}
+
+.pf-print-section {
+  padding: 1.5rem 1.25rem;
+  page-break-inside: avoid;
+}
+
+.pf-print-section h2 {
+  color: #008f00;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 2px solid #008f00;
+  padding-bottom: 0.35rem;
+  margin: 0 0 1rem;
+}
+
+.pf-print-section h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.pf-print-section p {
+  margin: 0 0 0.85rem;
+  color: #3a4654;
+}
+
+.pf-print-lead {
+  color: #5a6a78 !important;
+}
+
+.pf-print-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem 1.2rem;
+}
+
+.pf-print-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.pf-print-num {
+  color: #008f00;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.pf-print-project {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.pf-print-project img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+}
+
+.pf-print-meta {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  color: #008f00 !important;
+  font-family: system-ui, sans-serif;
+  margin-bottom: 0.2rem !important;
+}
+
+.pf-print-clients {
+  font-size: 1.05rem;
+  color: #1a2332 !important;
+}
+
+.pf-print-closing {
+  margin: 1rem 1.25rem 2rem;
+  padding: 1.5rem;
+  background: #1a2332;
+  color: #fff;
+  page-break-inside: avoid;
+}
+
+.pf-print-closing h2 {
+  margin: 0 0 0.6rem;
+  color: #9dff9d;
+}
+
+.pf-print-closing p { margin: 0 0 0.6rem; color: rgba(255, 255, 255, 0.88); }
+.pf-print-contact { color: #9dff9d !important; font-weight: 700; }
+.pf-print-url { color: rgba(255, 255, 255, 0.65) !important; font-size: 0.9rem; }
+
+@media print {
+  .no-print { display: none !important; }
+  body.pf-print { background: #fff; }
+  .pf-print-cover { min-height: auto; padding: 2rem 0; }
+  .pf-print-section,
+  .pf-print-closing { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+}
+
+@media (max-width: 700px) {
+  .pf-print-grid,
+  .pf-print-project { grid-template-columns: 1fr; }
+}

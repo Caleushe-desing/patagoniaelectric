@@ -2,10 +2,9 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
-const { getContent, updateSection, applyChange, addArrayItem, removeArrayItem, mergeSiteConfig } = require('../lib/content');
+const { getContent, updateSection, applyChange, addArrayItem, removeArrayItem } = require('../lib/content');
 const { verifyLogin, requireAuth } = require('../lib/auth');
 const { renderPage, VISUAL_PAGES, PAGE_KEYS } = require('../lib/render');
-const { site: staticSite } = require('../config/seo');
 
 const router = express.Router();
 const UPLOAD_DIR = path.join(__dirname, '..', 'public', 'uploads');
@@ -152,22 +151,8 @@ router.post('/api/upload', requireAuth, upload.single('image'), (req, res) => {
   res.json({ ok: true, url: `/uploads/${req.file.filename}` });
 });
 
-router.get('/portafolio/pdf', requireAuth, async (req, res) => {
-  try {
-    const { buildPortfolioPdf } = require('../lib/portfolio-pdf');
-    const content = await getContent();
-    const site = mergeSiteConfig(staticSite, content.general);
-    site.logo = content.general.logoFooter || content.general.logoHero || '/images/logo.png';
-    const pdf = await buildPortfolioPdf(content.portafolio, site);
-    const year = content.portafolio.coverYear || new Date().getFullYear();
-    const filename = `Patagonia-Electric-Portafolio-${year}.pdf`;
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.send(pdf);
-  } catch (err) {
-    console.error('Error al generar PDF del portafolio:', err);
-    res.status(500).send(err.message || 'No se pudo generar el PDF. Intente nuevamente.');
-  }
+router.get('/portafolio/pdf', requireAuth, (req, res) => {
+  res.redirect('/portafolio.pdf');
 });
 
 module.exports = router;

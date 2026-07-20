@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= c.portafolio.coverTitle || 'Portafolio' %> | <%= site.name %></title>
+  <link rel="stylesheet" href="/css/portfolio-print.css">
+</head>
+<body class="pf-print<%= autoPrint ? ' pf-print--auto' : '' %>">
+  <% const portfolio = c.portafolio; %>
+
+  <div class="pf-print-toolbar no-print">
+    <div>
+      <strong>Exportar portafolio a PDF</strong>
+      <p>Use “Guardar como PDF” en el diálogo de impresión del navegador.</p>
+    </div>
+    <div class="pf-print-toolbar__actions">
+      <button type="button" class="pf-print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+      <a class="pf-print-btn pf-print-btn--ghost" href="/portafolio">Volver al portafolio digital</a>
+    </div>
+  </div>
+
+  <section class="pf-print-cover">
+    <img src="<%= c.general.logoFooter || c.general.logoHero || '/images/logo.png' %>" alt="<%= site.name %>" class="pf-print-cover__logo">
+    <p class="pf-print-cover__brand"><%= site.name %></p>
+    <p class="pf-print-cover__tag"><%= site.tagline %></p>
+    <h1><%= portfolio.coverTitle %></h1>
+    <p class="pf-print-cover__sub"><%= portfolio.coverSubtitle %></p>
+    <p class="pf-print-cover__year"><%= portfolio.coverYear %></p>
+    <p class="pf-print-cover__place"><%= site.address.city %>, <%= site.address.region %> · <%= site.address.country %></p>
+  </section>
+
+  <section class="pf-print-section">
+    <h2><%= portfolio.introTitle %></h2>
+    <% (portfolio.introParagraphs || []).forEach((para) => { %>
+    <p><%= para %></p>
+    <% }) %>
+  </section>
+
+  <% if ((portfolio.strengths || []).length) { %>
+  <section class="pf-print-section">
+    <h2><%= portfolio.strengthsTitle %></h2>
+    <div class="pf-print-grid">
+      <% portfolio.strengths.forEach((item) => { %>
+      <article>
+        <h3><%= item.title %></h3>
+        <p><%= item.text %></p>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+  <% } %>
+
+  <% if ((portfolio.divisions || []).length) { %>
+  <section class="pf-print-section">
+    <h2><%= portfolio.divisionsTitle %></h2>
+    <% portfolio.divisions.forEach((item, i) => { %>
+    <div class="pf-print-row">
+      <span class="pf-print-num"><%= String(i + 1).padStart(2, '0') %></span>
+      <div>
+        <h3><%= item.title %></h3>
+        <p><%= item.text %></p>
+      </div>
+    </div>
+    <% }) %>
+  </section>
+  <% } %>
+
+  <% if ((portfolio.projects || []).length) { %>
+  <section class="pf-print-section">
+    <h2><%= portfolio.projectsTitle %></h2>
+    <% if (portfolio.projectsSubtitle) { %><p class="pf-print-lead"><%= portfolio.projectsSubtitle %></p><% } %>
+    <% portfolio.projects.forEach((item) => { %>
+    <article class="pf-print-project">
+      <% if (item.image) { %>
+      <img src="<%= item.image %>" alt="<%= item.title %>">
+      <% } %>
+      <div>
+        <% if (item.category || item.client) { %>
+        <p class="pf-print-meta"><%= [item.category, item.client].filter(Boolean).join(' · ') %></p>
+        <% } %>
+        <h3><%= item.title %></h3>
+        <p><%= item.text %></p>
+      </div>
+    </article>
+    <% }) %>
+  </section>
+  <% } %>
+
+  <% if ((portfolio.clients || []).length) { %>
+  <section class="pf-print-section">
+    <h2><%= portfolio.clientsTitle %></h2>
+    <% if (portfolio.clientsSubtitle) { %><p class="pf-print-lead"><%= portfolio.clientsSubtitle %></p><% } %>
+    <p class="pf-print-clients"><%= portfolio.clients.map((item) => item.name).filter(Boolean).join(' · ') %></p>
+  </section>
+  <% } %>
+
+  <section class="pf-print-closing">
+    <h2><%= portfolio.closingTitle %></h2>
+    <p><%= portfolio.closingText %></p>
+    <p class="pf-print-contact"><%= portfolio.contactNote %></p>
+    <p class="pf-print-url"><%= site.url %></p>
+  </section>
+
+  <script>
+    if (document.body.classList.contains('pf-print--auto')) {
+      window.addEventListener('load', () => {
+        setTimeout(() => window.print(), 400);
+      });
+    }
+  </script>
+</body>
+</html>

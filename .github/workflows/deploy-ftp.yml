@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias Node (para subir al hosting)
-        run: npm ci --omit=dev
-
       - name: Subir archivos al hosting por FTP nativo
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
@@ -26,7 +23,6 @@ jobs:
         run: |
           python - <<'PY'
           import ftplib
-          import json
           import os
           import time
           from pathlib import Path
@@ -50,7 +46,7 @@ jobs:
           EXCLUDE_SUFFIXES = {".log"}
 
           MAX_ATTEMPTS = 5
-          TIMEOUT = 180
+          TIMEOUT = 120
 
           def should_skip(path: Path) -> bool:
               parts = set(path.parts)
@@ -84,76 +80,37 @@ jobs:
                       if not str(error).startswith("550"):
                           raise
 
-          def upload_file(ftp, local_file: Path, remote_path: str):
-              if local_file.is_symlink():
-                  print(f"Omitiendo symlink {local_file}")
-                  return
-              with local_file.open("rb") as file:
-                  print(f"Subiendo {local_file} -> {remote_path}")
-                  ftp.storbinary(f"STOR {remote_path}", file)
-
-          def upload_dir(ftp, local_dir: Path, remote_dir: str, skip_fn=should_skip):
+          def upload_dir(ftp, local_dir, remote_dir):
               ensure_dir(ftp, remote_dir)
               for item in sorted(local_dir.iterdir()):
-                  rel = item.relative_to(local_root) if item.is_relative_to(local_root) else item
-                  if skip_fn(rel if isinstance(rel, Path) else Path(str(rel))):
+                  if should_skip(item.relative_to(local_root)):
                       continue
                   remote_path = f"{remote_dir.rstrip('/')}/{item.name}"
                   if item.is_symlink():
                       print(f"Omitiendo symlink {item}")
                       continue
                   if item.is_dir():
-                      upload_dir(ftp, item, remote_path, skip_fn=skip_fn)
+                      upload_dir(ftp, item, remote_path)
                       continue
-                  upload_file(ftp, item, remote_path)
-
-          def collect_pkg_deps(name: str, seen=None):
-              if seen is None:
-                  seen = set()
-              if name in seen:
-                  return seen
-              pkg_file = local_root / "node_modules" / name / "package.json"
-              if not pkg_file.exists():
-                  return seen
-              seen.add(name)
-              pkg = json.loads(pkg_file.read_text())
-              for dep in (pkg.get("dependencies") or {}):
-                  collect_pkg_deps(dep, seen)
-              return seen
-
-          def upload_pdfkit_deps(ftp):
-              packages = sorted(collect_pkg_deps("pdfkit"))
-              print(f"Subiendo dependencias PDF ({len(packages)}): {', '.join(packages)}")
-              ensure_dir(ftp, f"{remote_root.rstrip('/')}/node_modules")
-              for name in packages:
-                  local_pkg = local_root / "node_modules" / name
-                  if not local_pkg.exists():
-                      raise SystemExit(f"Falta paquete local {name}")
-                  remote_pkg = f"{remote_root.rstrip('/')}/node_modules/{name}"
-                  # skip_fn: never skip inside these packages except symlinks (handled in upload_dir)
-                  upload_dir(ftp, local_pkg, remote_pkg, skip_fn=lambda p: False)
+                  with item.open("rb") as file:
+                      print(f"Subiendo {item} -> {remote_path}")
+                      ftp.storbinary(f"STOR {remote_path}", file)
 
           def deploy():
               ftp = connect()
               try:
                   print(f"Usando remote_root={remote_root}")
                   upload_dir(ftp, local_root, remote_root)
-                  upload_pdfkit_deps(ftp)
 
                   restart_dir = f"{remote_root.rstrip('/')}/tmp"
                   ensure_dir(ftp, restart_dir)
                   restart_path = f"{restart_dir}/restart.txt"
-                  payload = f"restart {time.time()}\n".encode("utf-8")
                   print(f"Tocando {restart_path} para reiniciar Passenger")
-                  ftp.storbinary(f"STOR {restart_path}", BytesIO(payload))
+                  ftp.storbinary(f"STOR {restart_path}", BytesIO(f"restart {time.time()}\n".encode("utf-8")))
 
                   marker = f"{remote_root.rstrip('/')}/public/css/portfolio.css"
                   size = ftp.size(marker)
                   print(f"Verificación OK: {marker} ({size} bytes)")
-
-                  pdfkit_marker = f"{remote_root.rstrip('/')}/node_modules/pdfkit/package.json"
-                  size = ftp.size(pdfkit_marker)
-                  print(f"Verificación pdfkit OK: {pdfkit_marker} ({size} bytes)")
               finally:
                   try:
                       ftp.quit()

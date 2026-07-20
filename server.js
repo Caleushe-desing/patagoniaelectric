@@ -70,26 +70,23 @@ app.get('/portafolio', async (req, res) => {
   return renderPage(res, 'portafolio');
 });
 
-app.get('/portafolio.pdf', async (req, res) => {
-  const { buildPortfolioPdf } = require('./lib/portfolio-pdf');
-  try {
-    const content = await getContent();
-    const isAdmin = Boolean(req.session?.admin);
-    if (!content.portafolio?.published && !isAdmin) {
-      return res.status(404).send('Portafolio no publicado');
-    }
-    const site = mergeSiteConfig(staticSite, content.general);
-    site.logo = content.general.logoFooter || content.general.logoHero || '/images/logo.png';
-    const pdf = await buildPortfolioPdf(content.portafolio, site);
-    const year = content.portafolio.coverYear || new Date().getFullYear();
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="Patagonia-Electric-Portafolio-${year}.pdf"`);
-    res.send(pdf);
-  } catch (err) {
-    console.error('Error al servir PDF del portafolio:', err);
-    res.status(500).send(err.message || 'No se pudo generar el PDF.');
+async function renderPortfolioPrint(req, res, { autoPrint = false } = {}) {
+  const content = await getContent();
+  const isAdmin = Boolean(req.session?.admin);
+  if (!content.portafolio?.published && !isAdmin) {
+    return res.status(404).send('Portafolio no publicado');
   }
-});
+  const site = mergeSiteConfig(staticSite, content.general);
+  return res.render('pages/portafolio-print', {
+    site,
+    content,
+    c: content,
+    autoPrint,
+  });
+}
+
+app.get('/portafolio/imprimir', (req, res) => renderPortfolioPrint(req, res, { autoPrint: false }));
+app.get('/portafolio.pdf', (req, res) => renderPortfolioPrint(req, res, { autoPrint: true }));
 
 app.use('/admin', adminRoutes);
 

@@ -254,11 +254,11 @@
               <span class="admin-badge <%= data.published ? 'admin-badge--ok' : 'admin-badge--warn' %>">
                 <%= data.published ? 'Publicado en la web' : 'Borrador (no público)' %>
               </span>
-              <span class="admin-muted">URL: <code>/portafolio</code> · PDF: <code>/portafolio.pdf</code></span>
+              <span class="admin-muted">URL: <code>/portafolio</code> · PDF: <code>/portafolio.pdf</code> (imprimir / guardar como PDF)</span>
             </div>
             <div class="admin-portfolio-toolbar__actions">
               <a href="/portafolio" target="_blank" class="admin-btn admin-btn--outline admin-btn--sm">Ver digital ↗</a>
-              <a href="/admin/portafolio/pdf" class="admin-btn admin-btn--primary admin-btn--sm">Exportar PDF</a>
+              <a href="/portafolio.pdf" target="_blank" class="admin-btn admin-btn--primary admin-btn--sm">Exportar PDF</a>
               <button type="button" class="admin-btn admin-btn--outline admin-btn--sm" id="admin-copy-portfolio-link" data-url="/portafolio">Copiar enlace</button>
             </div>
           </div>
