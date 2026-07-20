@@ -325,8 +325,12 @@
         "logo": "/images/cliente-nestle.png"
       },
       {
+        "name": "Papa John's",
+        "logo": "/images/cliente-papajohns.png"
+      },
+      {
         "name": "Zero Corp",
-        "logo": "/images/cliente-zero.jpg"
+        "logo": "/images/cliente-zero.png"
       }
     ]
   },
@@ -561,7 +565,7 @@
       },
       {
         "name": "Zero Corp",
-        "logo": "/images/cliente-zero.jpg"
+        "logo": "/images/cliente-zero.png"
       }
     ],
     "closingTitle": "Construyamos su próximo proyecto eléctrico",

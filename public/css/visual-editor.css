@@ -473,10 +473,25 @@ img.cms-img-host {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+}
+
+.clients-logos__item.cms-img-host {
+  position: relative !important;
+}
+
+.cms-edit-mode .clients-banner {
+  overflow: visible;
 }
 
 .cms-edit-mode .clients-logos {
   gap: 2rem;
+  overflow: visible;
+}
+
+.cms-edit-mode .clients-logos__item {
+  outline: 1px dashed rgba(0, 168, 0, 0.35);
+  outline-offset: 4px;
 }
 
 .cms-list-controls {

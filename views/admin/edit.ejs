@@ -235,12 +235,12 @@
         <% } else if (sectionKey === 'clientes') { %>
           <fieldset><legend>Logos de clientes</legend>
             <div class="admin-repeater" data-field="items" data-item-label="Cliente">
-              <%- include('partials/repeater-header', { title: 'Clientes y marcas', hint: 'Agregue todos los clientes que desee mostrar en el sitio', field: 'items' }) %>
+              <%- include('partials/repeater-header', { title: 'Clientes y marcas', hint: 'Use logos PNG con fondo transparente; se muestran todos al mismo tamaño', field: 'items' }) %>
               <% data.items.forEach((c, i) => { %>
               <div class="admin-repeater__item admin-repeater__item--highlight">
                 <div class="admin-repeater__item-header"><h4>Cliente <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Nombre<input name="name" value="<%= c.name %>"></label>
-                <%- include('partials/image-field', { name: 'logo', value: c.logo, label: 'Logo' }) %>
+                <%- include('partials/image-field', { name: 'logo', value: c.logo, label: 'Logo (PNG transparente preferido)' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar cliente</button></div>
               </div>
               <% }) %>

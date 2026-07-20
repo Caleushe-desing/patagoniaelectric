@@ -186,6 +186,8 @@
     if (el.closest('.pf-project__image')) return el.closest('.pf-project__image');
     if (el.closest('.pf-about__visual')) return el.closest('.pf-about__visual');
     if (el.closest('.pf-client')) return el.closest('.pf-client');
+    if (el.closest('.clients-logos__item')) return el.closest('.clients-logos__item');
+    if (el.closest('.dossier-client')) return el.closest('.dossier-client');
 
     if (el.dataset.cmsType === 'bg-image') {
       return el.closest('.page-hero, .clients-banner') || el;
@@ -220,7 +222,7 @@
       btn.type = 'button';
       btn.dataset.cmsBtnFor = btnId;
       btn.className = 'cms-img-edit-btn' + (host !== el ? ' cms-img-edit-btn--corner' : '');
-      if (el.classList.contains('hero__logo') || el.closest('.header .logo')) {
+      if (el.classList.contains('hero__logo') || el.closest('.header .logo') || el.closest('.clients-logos__item') || el.closest('.pf-client')) {
         btn.classList.add('cms-img-edit-btn--compact');
       }
       btn.textContent = '📷 Cambiar imagen';
@@ -525,7 +527,7 @@
   }
 
   function initLists() {
-    const IMAGE_ARRAY_FIELDS = new Set(['divisions', 'projectsPreview', 'solutions', 'items', 'features', 'values']);
+    const IMAGE_ARRAY_FIELDS = new Set(['divisions', 'projectsPreview', 'solutions', 'items', 'features', 'values', 'clients']);
 
     document.querySelectorAll('[data-cms-list]').forEach((list) => {
       const section = list.dataset.cmsSection;
