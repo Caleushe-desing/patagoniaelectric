@@ -172,56 +172,42 @@
   }
 
   /**
-   * Parte cada sección en unidades atómicas (encabezado + tarjetas)
-   * para poder empaquetarlas sin cortar bloques.
+   * Parte secciones largas en unidades atómicas (encabezado + tarjetas).
+   * Secciones compactas se capturan enteras para no perder fondos ni dejar huecos raros.
    */
   function collectUnits(root) {
     const units = [];
     const sections = getPortfolioSections(root);
 
     sections.forEach((section, sectionIndex) => {
+      const keepWhole =
+        section.classList.contains('pf-hero') ||
+        section.classList.contains('pf-stats') ||
+        section.classList.contains('pf-about') ||
+        section.classList.contains('pf-mission') ||
+        section.classList.contains('pf-cta');
+
       const cards = [...section.querySelectorAll(CARD_SELECTORS)].filter((card) => {
-        // Evitar anidar (p.ej. stats dentro de otra cosa)
         return !card.parentElement?.closest(CARD_SELECTORS);
       });
 
-      if (cards.length >= 2) {
-        const headParts = [];
+      if (!keepWhole && cards.length >= 2) {
         const head = section.querySelector('.pf-section__head');
-        const kickerOnly = section.querySelector(':scope > .container > .pf-kicker');
-        if (head) headParts.push(head);
-        else if (kickerOnly) headParts.push(kickerOnly);
-
-        if (headParts.length) {
+        if (head) {
           units.push({
-            els: headParts,
+            els: [head],
             breakBefore: sectionIndex > 0,
-            background: getComputedStyle(section).backgroundColor || '#ffffff',
           });
-        } else {
-          // Sin head explícito: primera tarjeta abre sección
-          units.push({
-            els: [cards[0]],
-            breakBefore: sectionIndex > 0,
-            background: '#ffffff',
-          });
-          cards.slice(1).forEach((card) => {
-            units.push({ els: [card], breakBefore: false, background: '#ffffff' });
+          cards.forEach((card) => {
+            units.push({ els: [card], breakBefore: false });
           });
           return;
         }
-
-        cards.forEach((card) => {
-          units.push({ els: [card], breakBefore: false, background: '#ffffff' });
-        });
-        return;
       }
 
-      // Sección completa (hero, about, mission corta, cta…)
       units.push({
         els: [section],
         breakBefore: sectionIndex > 0,
-        background: '#ffffff',
       });
     });
 
