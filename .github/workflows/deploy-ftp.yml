@@ -93,6 +93,25 @@ jobs:
               ftp = connect()
               try:
                   upload_dir(ftp, local_root, remote_root)
+                  # Reinicia Phusion Passenger para cargar el nuevo código Node
+                  restart_dir = f"{remote_root.rstrip('/')}/tmp"
+                  ensure_dir(ftp, restart_dir)
+                  restart_path = f"{restart_dir}/restart.txt"
+                  payload = f"restart {time.time()}\n".encode("utf-8")
+                  from io import BytesIO
+                  print(f"Tocando {restart_path} para reiniciar Passenger")
+                  ftp.storbinary(f"STOR {restart_path}", BytesIO(payload))
+
+                  # Verificación mínima: confirmar que el portafolio quedó en el remoto
+                  marker = f"{remote_root.rstrip('/')}/public/css/portfolio.css"
+                  try:
+                      size = ftp.size(marker)
+                      print(f"Verificación OK: {marker} ({size} bytes)")
+                  except Exception as verify_error:
+                      raise SystemExit(
+                          f"Los archivos no quedaron en la ruta esperada ({marker}): {verify_error}. "
+                          "Revise el secret FTP_SERVER_DIR."
+                      )
               finally:
                   try:
                       ftp.quit()

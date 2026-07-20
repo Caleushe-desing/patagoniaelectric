@@ -5,7 +5,6 @@ const fs = require('fs').promises;
 const { getContent, updateSection, applyChange, addArrayItem, removeArrayItem, mergeSiteConfig } = require('../lib/content');
 const { verifyLogin, requireAuth } = require('../lib/auth');
 const { renderPage, VISUAL_PAGES, PAGE_KEYS } = require('../lib/render');
-const { buildPortfolioPdf } = require('../lib/portfolio-pdf');
 const { site: staticSite } = require('../config/seo');
 
 const router = express.Router();
@@ -155,6 +154,7 @@ router.post('/api/upload', requireAuth, upload.single('image'), (req, res) => {
 
 router.get('/portafolio/pdf', requireAuth, async (req, res) => {
   try {
+    const { buildPortfolioPdf } = require('../lib/portfolio-pdf');
     const content = await getContent();
     const site = mergeSiteConfig(staticSite, content.general);
     site.logo = content.general.logoFooter || content.general.logoHero || '/images/logo.png';
@@ -166,7 +166,7 @@ router.get('/portafolio/pdf', requireAuth, async (req, res) => {
     res.send(pdf);
   } catch (err) {
     console.error('Error al generar PDF del portafolio:', err);
-    res.status(500).send('No se pudo generar el PDF. Intente nuevamente.');
+    res.status(500).send(err.message || 'No se pudo generar el PDF. Intente nuevamente.');
   }
 });
 
