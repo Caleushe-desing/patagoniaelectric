@@ -339,5 +339,114 @@
       "En Patagonia Electric respetamos su privacidad. Los datos personales enviados a través del formulario de contacto (nombre, email, teléfono y mensaje) serán utilizados exclusivamente para responder a su consulta y gestionar la relación comercial solicitada.",
       "No compartimos sus datos con terceros sin su consentimiento. Puede solicitar la eliminación de sus datos escribiendo a contacto@patagoniaelectric.com."
     ]
+  },
+  "portafolio": {
+    "published": true,
+    "showInNav": true,
+    "coverTitle": "Portafolio Corporativo",
+    "coverSubtitle": "Ingeniería eléctrica, automatización industrial y montaje eléctrico",
+    "coverYear": "2026",
+    "coverImage": "/images/hero1.jpg",
+    "introTitle": "Quiénes somos",
+    "introParagraphs": [
+      "Un grupo multidisciplinario de profesionales de distintas áreas componen nuestro equipo: seguridad, logística, ingeniería, técnicos y ayudantes en constante capacitación constituyen la pieza fundamental de nuestra compañía, el equipo humano.",
+      "Patagonia Eléctric es una empresa chilena con capitales chilenos de la ciudad de Frutillar en la Región de los Lagos.",
+      "Contamos con más de 10 años de experiencia en el desarrollo de proyectos eléctricos y en automatización industrial."
+    ],
+    "strengthsTitle": "Por qué trabajar con nosotros",
+    "strengths": [
+      {
+        "title": "Equipo Multidisciplinario",
+        "text": "Capacitamos a nuestro equipo de manera continua."
+      },
+      {
+        "title": "Certificaciones",
+        "text": "Certificaciones para el personal técnico."
+      },
+      {
+        "title": "Alianzas",
+        "text": "Cooperación comercial con las principales marcas eléctricas de Chile."
+      },
+      {
+        "title": "Garantía Post venta",
+        "text": "Una vez que se convierten en nuestros clientes, siempre lo serán; respaldamos nuestros trabajos de por vida."
+      }
+    ],
+    "divisionsTitle": "Nuestras divisiones",
+    "divisions": [
+      {
+        "title": "Industrial",
+        "text": "Diseño y ejecución de instalaciones eléctricas industriales, tableros de potencia, comando y control. Mantenimientos preventivos y predictivos hasta media tensión."
+      },
+      {
+        "title": "División Ecológica",
+        "text": "Energías renovables y soluciones sustentables. Paneles solares fotovoltaicos y eficiencia energética para reducir el impacto ambiental."
+      },
+      {
+        "title": "Habitacional",
+        "text": "Instalaciones eléctricas para viviendas y edificaciones. Acometida, distribución, protecciones e iluminación certificada."
+      }
+    ],
+    "projectsTitle": "Proyectos destacados",
+    "projectsSubtitle": "Más de 10 años desarrollando proyectos eléctricos de excelencia",
+    "projects": [
+      {
+        "title": "Proyecto Industrial",
+        "text": "Instalación y montaje eléctrico para planta industrial.",
+        "image": "/images/proyecto1.jpg",
+        "category": "",
+        "client": ""
+      },
+      {
+        "title": "Tableros de Control",
+        "text": "Diseño y montaje de tableros eléctricos de potencia.",
+        "image": "/images/proyecto2.jpg",
+        "category": "",
+        "client": ""
+      },
+      {
+        "title": "Montaje Eléctrico",
+        "text": "Ejecución de proyectos de ingeniería eléctrica integral.",
+        "image": "/images/proyecto3.jpg",
+        "category": "",
+        "client": ""
+      },
+      {
+        "title": "Infraestructura",
+        "text": "Proyectos de infraestructura eléctrica de gran escala.",
+        "image": "/images/hero1.jpg",
+        "category": "",
+        "client": ""
+      },
+      {
+        "title": "Equipo en Terreno",
+        "text": "Profesionales capacitados ejecutando proyectos en terreno.",
+        "image": "/images/equipo.jpg",
+        "category": "",
+        "client": ""
+      },
+      {
+        "title": "Redes Eléctricas",
+        "text": "Instalaciones de transmisión y distribución eléctrica.",
+        "image": "/images/hero2.jpg",
+        "category": "",
+        "client": ""
+      }
+    ],
+    "clientsTitle": "Clientes que confían en nosotros",
+    "clientsSubtitle": "Empresas que respaldan nuestro trabajo",
+    "clients": [
+      {
+        "name": "Nestlé",
+        "logo": "/images/cliente-nestle.png"
+      },
+      {
+        "name": "Zero Corp",
+        "logo": "/images/cliente-zero.jpg"
+      }
+    ],
+    "closingTitle": "¿Tiene un proyecto?",
+    "closingText": "Contáctenos y reciba asesoría experta para su próximo proyecto eléctrico.",
+    "contactNote": "contacto@patagoniaelectric.com · +56 9 6227 4047 · Frutillar, Región de los Lagos"
   }
 }

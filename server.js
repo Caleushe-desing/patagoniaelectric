@@ -42,6 +42,55 @@ routes.forEach(([route, page]) => {
   app.get(route, (req, res) => renderPage(res, page));
 });
 
+app.get('/portafolio', async (req, res) => {
+  const content = await getContent();
+  const isAdmin = Boolean(req.session?.admin);
+  if (!content.portafolio?.published && !isAdmin) {
+    return res.status(404).render('pages/portafolio-unavailable', {
+      seo: {
+        title: 'Portafolio no disponible | Patagonia Electric',
+        description: 'El portafolio corporativo no está publicado en este momento.',
+        canonical: `${staticSite.url}/portafolio`,
+        keywordsStr: '',
+        image: `${staticSite.url}/images/logo-color.png`,
+        path: '/portafolio',
+        ogType: 'website',
+      },
+      site: mergeSiteConfig(staticSite, content.general),
+      content,
+      c: content,
+      currentPage: 'portafolio',
+      editMode: false,
+      cmsAttr: () => '',
+      cmsList: () => '',
+      visualPages: [],
+      scrollTo: null,
+    });
+  }
+  return renderPage(res, 'portafolio');
+});
+
+app.get('/portafolio.pdf', async (req, res) => {
+  const { buildPortfolioPdf } = require('./lib/portfolio-pdf');
+  try {
+    const content = await getContent();
+    const isAdmin = Boolean(req.session?.admin);
+    if (!content.portafolio?.published && !isAdmin) {
+      return res.status(404).send('Portafolio no publicado');
+    }
+    const site = mergeSiteConfig(staticSite, content.general);
+    site.logo = content.general.logoFooter || content.general.logoHero || '/images/logo.png';
+    const pdf = await buildPortfolioPdf(content.portafolio, site);
+    const year = content.portafolio.coverYear || new Date().getFullYear();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="Patagonia-Electric-Portafolio-${year}.pdf"`);
+    res.send(pdf);
+  } catch (err) {
+    console.error('Error al servir PDF del portafolio:', err);
+    res.status(500).send('No se pudo generar el PDF.');
+  }
+});
+
 app.use('/admin', adminRoutes);
 
 app.get('/robots.txt', (req, res) => {
@@ -56,9 +105,13 @@ Sitemap: ${staticSite.url}/sitemap.xml
 app.get('/sitemap.xml', async (req, res) => {
   const content = await getContent();
   const baseUrl = staticSite.url;
-  const urls = Object.values(pages)
+  const pageList = Object.entries(pages).filter(([key]) => {
+    if (key === 'portafolio') return Boolean(content.portafolio?.published);
+    return true;
+  });
+  const urls = pageList
     .map(
-      (p) => `  <url>
+      ([, p]) => `  <url>
     <loc>${baseUrl}${p.path}</loc>
     <changefreq>monthly</changefreq>
     <priority>${p.path === '/' ? '1.0' : '0.8'}</priority>

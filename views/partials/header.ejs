@@ -16,6 +16,9 @@
           </ul>
         </li>
         <li><a href="/proyectos" class="nav__link <%= currentPage === 'proyectos' ? 'active' : '' %>">Proyectos</a></li>
+        <% if (typeof c !== 'undefined' && c.portafolio && (c.portafolio.published || (typeof editMode !== 'undefined' && editMode)) && c.portafolio.showInNav) { %>
+        <li><a href="/portafolio" class="nav__link <%= currentPage === 'portafolio' ? 'active' : '' %>">Portafolio</a></li>
+        <% } %>
         <li><a href="/#clientes" class="nav__link">Clientes</a></li>
         <li><a href="/contacto" class="nav__link <%= currentPage === 'contacto' ? 'active' : '' %>">Contacto</a></li>
       </ul>

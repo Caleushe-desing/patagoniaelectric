@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRepeaters();
   initParagraphLists();
   initForm();
+  initPortfolioToolbar();
   document.querySelectorAll('.admin-repeater').forEach(updateRepeaterCount);
 });
 
@@ -172,7 +173,6 @@ function reindexParagraphs(list) {
 }
 
 function collectForm(form) {
-  const section = form.dataset.section;
   const data = {};
   const repeaters = new Set([...form.querySelectorAll('.admin-repeater')].map((r) => r.dataset.field));
 
@@ -180,6 +180,12 @@ function collectForm(form) {
     const name = el.name;
     if (!name || el.closest('.admin-repeater__item')) return;
     if (repeaters.has(name)) return;
+    if (el.type === 'file') return;
+
+    if (el.type === 'checkbox') {
+      data[name] = el.checked;
+      return;
+    }
 
     if (data[name] !== undefined) {
       if (!Array.isArray(data[name])) data[name] = [data[name]];
@@ -196,13 +202,17 @@ function collectForm(form) {
       const obj = {};
       item.querySelectorAll('input[name], textarea[name]').forEach((el) => {
         if (el.type === 'file') return;
+        if (el.type === 'checkbox') {
+          obj[el.name] = el.checked;
+          return;
+        }
         obj[el.name] = el.value;
       });
       if (Object.keys(obj).length) data[field].push(obj);
     });
   });
 
-  ['aboutParagraphs', 'paragraphs', 'privacyParagraphs'].forEach((key) => {
+  ['aboutParagraphs', 'paragraphs', 'privacyParagraphs', 'introParagraphs'].forEach((key) => {
     if (data[key] && !Array.isArray(data[key])) data[key] = [data[key]];
   });
 
@@ -246,4 +256,18 @@ function showAlert(text, type) {
   el.className = `admin-alert admin-alert--${type}`;
   el.hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function initPortfolioToolbar() {
+  const copyBtn = document.getElementById('admin-copy-portfolio-link');
+  if (!copyBtn) return;
+  copyBtn.addEventListener('click', async () => {
+    const url = new URL(copyBtn.dataset.url || '/portafolio', window.location.origin).href;
+    try {
+      await navigator.clipboard.writeText(url);
+      showAlert('Enlace del portafolio copiado', 'success');
+    } catch {
+      window.prompt('Copie el enlace:', url);
+    }
+  });
 }

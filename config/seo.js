@@ -89,6 +89,20 @@ const pages = {
     path: '/proyectos',
     ogType: 'website',
   },
+  portafolio: {
+    title: 'Portafolio Corporativo | Patagonia Electric',
+    description:
+      'Portafolio comercial de Patagonia Electric: experiencia, divisiones, proyectos destacados y clientes. Descargable en PDF para compartir.',
+    keywords: [
+      ...site.defaultKeywords,
+      'portafolio Patagonia Electric',
+      'brochure eléctrico',
+      'presentación corporativa eléctrica',
+      'PDF portafolio eléctrico',
+    ],
+    path: '/portafolio',
+    ogType: 'website',
+  },
   contacto: {
     title: 'Contacto | Patagonia Electric - Frutillar, Los Lagos',
     description:
