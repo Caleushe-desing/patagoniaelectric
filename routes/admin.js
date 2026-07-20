@@ -5,17 +5,29 @@ const fs = require('fs').promises;
 const { getContent, updateSection, applyChange, addArrayItem, removeArrayItem } = require('../lib/content');
 const { verifyLogin, requireAuth } = require('../lib/auth');
 const { renderPage, VISUAL_PAGES, PAGE_KEYS } = require('../lib/render');
+const { isAllowedImage, finalizeUploadedImage, normalizeExt } = require('../lib/upload');
 
 const router = express.Router();
 const UPLOAD_DIR = path.join(__dirname, '..', 'public', 'uploads');
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    cb(null, UPLOAD_DIR);
+    try {
+      await fs.mkdir(UPLOAD_DIR, { recursive: true });
+      cb(null, UPLOAD_DIR);
+    } catch (err) {
+      cb(err);
+    }
   },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
+    let ext = normalizeExt(file.originalname);
+    if (ext === '.jpeg') ext = '.jpg';
+    if (!ext) {
+      const mime = String(file.mimetype || '').toLowerCase();
+      if (mime.includes('png')) ext = '.png';
+      else if (mime.includes('svg')) ext = '.svg';
+      else ext = '.jpg';
+    }
     const safe = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
     cb(null, safe);
   },
@@ -25,8 +37,8 @@ const upload = multer({
   storage,
   limits: { fileSize: 8 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (/^image\/(jpeg|jpg|png|gif|webp)$/i.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Solo se permiten imágenes'));
+    if (isAllowedImage(file)) cb(null, true);
+    else cb(new Error('Solo se permiten imágenes JPG, PNG o SVG'));
   },
 });
 
@@ -151,9 +163,40 @@ router.post('/api/content/:section', requireAuth, async (req, res) => {
   }
 });
 
-router.post('/api/upload', requireAuth, upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ ok: false, error: 'No se recibió imagen' });
-  res.json({ ok: true, url: `/uploads/${req.file.filename}` });
+router.post('/api/upload', requireAuth, (req, res) => {
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      const message =
+        err.code === 'LIMIT_FILE_SIZE'
+          ? 'La imagen supera el tamaño máximo (8 MB)'
+          : err.message || 'Error al subir la imagen';
+      return res.status(400).json({ ok: false, error: message });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ ok: false, error: 'No se recibió imagen. Use JPG, PNG o SVG.' });
+    }
+
+    try {
+      await finalizeUploadedImage(req.file);
+      return res.json({
+        ok: true,
+        url: `/uploads/${req.file.filename}`,
+        format: normalizeExt(req.file.filename).replace('.', '') || 'jpg',
+      });
+    } catch (processErr) {
+      try {
+        await fs.unlink(req.file.path);
+      } catch {
+        /* ignore */
+      }
+      console.error(processErr);
+      return res.status(400).json({
+        ok: false,
+        error: processErr.message || 'No se pudo procesar la imagen',
+      });
+    }
+  });
 });
 
 router.get('/portafolio/pdf', requireAuth, (req, res) => {

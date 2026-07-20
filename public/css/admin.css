@@ -590,6 +590,12 @@
   min-height: 72px;
 }
 
+.admin-image-field__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #5a6a78;
+}
+
 .admin-preview {
   margin-top: 0;
   max-width: 280px;
@@ -599,6 +605,13 @@
   border-radius: 8px;
   border: 1px solid var(--admin-border);
   display: block;
+  background: #fff;
+}
+
+.admin-preview--svg {
+  object-fit: contain;
+  padding: 0.6rem;
+  background: #fff;
 }
 
 .admin-preview--empty {

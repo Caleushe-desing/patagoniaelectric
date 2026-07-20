@@ -437,8 +437,19 @@
   }
 
   async function uploadFile(file) {
-    if (!file || !file.type.startsWith('image/')) {
+    if (!file) {
       showToast('Seleccione un archivo de imagen', true);
+      return;
+    }
+    const name = String(file.name || '').toLowerCase();
+    const type = String(file.type || '').toLowerCase();
+    const okExt = /\.(jpe?g|png|svg)$/.test(name);
+    const okMime =
+      !type ||
+      type === 'application/octet-stream' ||
+      /^image\/(jpeg|jpg|pjpeg|png|x-png|svg\+xml|svg)$/.test(type);
+    if (!okExt || !okMime) {
+      showToast('Formato no permitido. Use JPG, PNG o SVG.', true);
       return;
     }
     const fd = new FormData();
@@ -451,6 +462,7 @@
         modalUrl.value = data.url;
         modalPreview.src = data.url;
         modalPreview.style.display = 'block';
+        modalPreview.classList.toggle('cms-modal__preview--svg', /\.svg($|\?)/i.test(data.url));
         showToast('Imagen subida — pulse Guardar imagen');
       } else {
         showToast(data.error || 'Error al subir', true);

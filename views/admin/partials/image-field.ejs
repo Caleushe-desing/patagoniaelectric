@@ -4,12 +4,13 @@
     <input type="text" name="<%= name %>" value="<%= value %>" class="admin-image-url" placeholder="/images/... o /uploads/...">
     <label class="admin-btn admin-btn--sm admin-btn--primary admin-upload-btn">
       Cambiar foto
-      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-input" hidden>
+      <input type="file" accept=".jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml" class="admin-upload-input" hidden>
     </label>
   </div>
+  <p class="admin-image-field__hint">Formatos permitidos: JPG, PNG y SVG (máx. 8 MB).</p>
   <div class="admin-image-field__preview">
     <% if (value) { %>
-    <img src="<%= value %>" alt="Vista previa" class="admin-preview">
+    <img src="<%= value %>" alt="Vista previa" class="admin-preview<%= String(value).toLowerCase().endsWith('.svg') ? ' admin-preview--svg' : '' %>">
     <% } else { %>
     <div class="admin-preview admin-preview--empty">Sin foto — use «Cambiar foto»</div>
     <% } %>

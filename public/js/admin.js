@@ -7,6 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.admin-repeater').forEach(updateRepeaterCount);
 });
 
+function isAllowedUploadFile(file) {
+  if (!file) return false;
+  const name = String(file.name || '').toLowerCase();
+  const type = String(file.type || '').toLowerCase();
+  const okExt = /\.(jpe?g|png|svg)$/.test(name);
+  const okMime =
+    !type ||
+    type === 'application/octet-stream' ||
+    /^image\/(jpeg|jpg|pjpeg|png|x-png|svg\+xml|svg)$/.test(type);
+  return okExt && okMime;
+}
+
 function initUploads() {
   document.querySelectorAll('.admin-image-field').forEach((field) => {
     if (field.dataset.uploadBound) return;
@@ -27,11 +39,18 @@ function initUploads() {
         previewWrap.appendChild(preview);
       }
       preview.src = url;
+      preview.classList.toggle('admin-preview--svg', /\.svg($|\?)/i.test(url));
     };
 
     fileInput?.addEventListener('change', async () => {
       const file = fileInput.files?.[0];
       if (!file) return;
+
+      if (!isAllowedUploadFile(file)) {
+        showAlert('Formato no permitido. Use JPG, PNG o SVG.', 'error');
+        fileInput.value = '';
+        return;
+      }
 
       const fd = new FormData();
       fd.append('image', file);
