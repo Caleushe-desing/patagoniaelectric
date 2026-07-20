@@ -117,6 +117,16 @@
             <span><%= String(i + 1).padStart(2, '0') %></span>
             <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'divisions', index: i }) %>><%= item.title %></h3>
             <p <%- cmsAttr('portafolio', 'text', { arrayField: 'divisions', index: i }) %>><%= item.text %></p>
+            <%
+              const divHighlights = Array.isArray(item.highlights)
+                ? item.highlights
+                : String(item.highlights || '').split(',').map((s) => s.trim()).filter(Boolean);
+            %>
+            <% if (divHighlights.length) { %>
+            <ul class="pf-tags">
+              <% divHighlights.forEach((h) => { %><li><%= h %></li><% }) %>
+            </ul>
+            <% } %>
           </div>
         </article>
         <% }) %>
@@ -162,6 +172,9 @@
             <p <%- cmsAttr('portafolio', 'text', { arrayField: 'projects', index: i }) %>><%= item.text %></p>
             <% if (item.scope) { %>
             <p class="pf-project__scope" <%- cmsAttr('portafolio', 'scope', { arrayField: 'projects', index: i }) %>><%= item.scope %></p>
+            <% } %>
+            <% if (item.results) { %>
+            <p class="pf-project__result" <%- cmsAttr('portafolio', 'results', { arrayField: 'projects', index: i }) %>><strong>Resultado:</strong> <%= item.results %></p>
             <% } %>
           </div>
         </article>

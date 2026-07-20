@@ -92,6 +92,9 @@
             box-shadow: none !important;
             background: #ffffff !important;
           }
+          .dossier-page--ribbon {
+            padding-bottom: 118px !important;
+          }
         `;
         doc.head.appendChild(style);
       },
