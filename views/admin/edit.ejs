@@ -113,7 +113,7 @@
             <p class="admin-repeater__hint" style="margin-top:0.75rem;">
               Los proyectos son los mismos de la web y el portafolio. Gestionelos en
               <a href="/admin/edit/proyectos">Proyectos</a>.
-              En el inicio se muestran los tres primeros.
+              En el inicio se muestran los cuatro primeros.
             </p>
           </fieldset>
 
@@ -206,7 +206,7 @@
           </fieldset>
           <fieldset><legend>Galería de proyectos</legend>
             <div class="admin-repeater" data-field="items" data-item-label="Proyecto">
-              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Misma lista para /proyectos, inicio (3 primeros) y portafolio comercial', field: 'items' }) %>
+              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Misma lista para /proyectos, inicio (4 primeros) y portafolio comercial', field: 'items' }) %>
               <% data.items.forEach((p, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
