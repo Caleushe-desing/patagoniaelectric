@@ -18,10 +18,13 @@
       <p class="section__subtitle" <%- cmsAttr('proyectos', 'subtitle') %>><%= p.subtitle %></p>
     </div>
     <div class="projects" <%- cmsList('proyectos', 'items') %>>
-      <% p.items.forEach((item, i) => { %>
+      <% (p.items || []).forEach((item, i) => { %>
       <article class="project-card" data-cms-item="<%= i %>">
         <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
         <div class="project-card__overlay">
+          <% if (item.category) { %>
+          <p class="project-card__meta" <%- cmsAttr('proyectos', 'category', { arrayField: 'items', index: i }) %>><%= item.category %></p>
+          <% } %>
           <h4 class="project-card__title" <%- cmsAttr('proyectos', 'title', { arrayField: 'items', index: i }) %>><%= item.title %></h4>
           <p class="project-card__desc" <%- cmsAttr('proyectos', 'text', { arrayField: 'items', index: i }) %>><%= item.text %></p>
         </div>

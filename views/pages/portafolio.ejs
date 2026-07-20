@@ -157,24 +157,25 @@
         <h2 class="pf-title" <%- cmsAttr('portafolio', 'projectsTitle') %>><%= p.projectsTitle %></h2>
         <p class="pf-lead" <%- cmsAttr('portafolio', 'projectsSubtitle') %>><%= p.projectsSubtitle %></p>
       </div>
-      <div class="pf-projects" <%- cmsList('portafolio', 'projects') %>>
-        <% (p.projects || []).forEach((item, i) => { %>
+      <% const sharedProjects = (c.proyectos && c.proyectos.items) ? c.proyectos.items : []; %>
+      <div class="pf-projects" <%- cmsList('proyectos', 'items') %>>
+        <% sharedProjects.forEach((item, i) => { %>
         <article class="pf-project" data-cms-item="<%= i %>">
           <div class="pf-project__image">
-            <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('portafolio', 'image', { arrayField: 'projects', index: i, type: 'image' }) %>>
+            <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
           </div>
           <div class="pf-project__body">
             <p class="pf-project__meta">
-              <span <%- cmsAttr('portafolio', 'category', { arrayField: 'projects', index: i }) %>><%= item.category %></span>
-              <% if (item.client) { %> · <span <%- cmsAttr('portafolio', 'client', { arrayField: 'projects', index: i }) %>><%= item.client %></span><% } %>
+              <span <%- cmsAttr('proyectos', 'category', { arrayField: 'items', index: i }) %>><%= item.category || 'Proyecto' %></span>
+              <% if (item.client) { %> · <span <%- cmsAttr('proyectos', 'client', { arrayField: 'items', index: i }) %>><%= item.client %></span><% } %>
             </p>
-            <h3 <%- cmsAttr('portafolio', 'title', { arrayField: 'projects', index: i }) %>><%= item.title %></h3>
-            <p <%- cmsAttr('portafolio', 'text', { arrayField: 'projects', index: i }) %>><%= item.text %></p>
+            <h3 <%- cmsAttr('proyectos', 'title', { arrayField: 'items', index: i }) %>><%= item.title %></h3>
+            <p <%- cmsAttr('proyectos', 'text', { arrayField: 'items', index: i }) %>><%= item.text %></p>
             <% if (item.scope) { %>
-            <p class="pf-project__scope" <%- cmsAttr('portafolio', 'scope', { arrayField: 'projects', index: i }) %>><%= item.scope %></p>
+            <p class="pf-project__scope" <%- cmsAttr('proyectos', 'scope', { arrayField: 'items', index: i }) %>><%= item.scope %></p>
             <% } %>
             <% if (item.results) { %>
-            <p class="pf-project__result" <%- cmsAttr('portafolio', 'results', { arrayField: 'projects', index: i }) %>><strong>Resultado:</strong> <%= item.results %></p>
+            <p class="pf-project__result" <%- cmsAttr('proyectos', 'results', { arrayField: 'items', index: i }) %>><strong>Resultado:</strong> <%= item.results %></p>
             <% } %>
           </div>
         </article>
