@@ -98,13 +98,14 @@
       <h2 class="section__title" <%- cmsAttr('home', 'projectsTitle') %>><%= h.projectsTitle %></h2>
       <p class="section__subtitle" <%- cmsAttr('home', 'projectsSubtitle') %>><%= h.projectsSubtitle %></p>
     </div>
-    <div class="projects" <%- cmsList('home', 'projectsPreview') %>>
-      <% h.projectsPreview.forEach((p, i) => { %>
+    <div class="projects">
+      <% const homeProjects = ((c.proyectos && c.proyectos.items) || []).slice(0, 3); %>
+      <% homeProjects.forEach((p, i) => { %>
       <article class="project-card" data-cms-item="<%= i %>">
-        <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy" <%- cmsAttr('home', 'image', { arrayField: 'projectsPreview', index: i, type: 'image' }) %>>
+        <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
         <div class="project-card__overlay">
-          <h4 class="project-card__title" <%- cmsAttr('home', 'title', { arrayField: 'projectsPreview', index: i }) %>><%= p.title %></h4>
-          <p class="project-card__desc" <%- cmsAttr('home', 'text', { arrayField: 'projectsPreview', index: i }) %>><%= p.text %></p>
+          <h4 class="project-card__title" <%- cmsAttr('proyectos', 'title', { arrayField: 'items', index: i }) %>><%= p.title %></h4>
+          <p class="project-card__desc" <%- cmsAttr('proyectos', 'text', { arrayField: 'items', index: i }) %>><%= p.text %></p>
         </div>
       </article>
       <% }) %>

@@ -793,6 +793,15 @@ ul { list-style: none; }
 
 .project-card__desc { font-size: 0.82rem; color: var(--text-muted); }
 
+.project-card__meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--neon, #00a800);
+  font-weight: 600;
+}
+
 /* ── Clients ── */
 .clients-banner {
   position: relative;

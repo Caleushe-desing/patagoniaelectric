@@ -12,13 +12,12 @@
   <link rel="stylesheet" href="/css/portfolio-dossier.css">
 </head>
 <body class="dossier<%= typeof autoPrint !== 'undefined' && autoPrint ? ' dossier--auto' : '' %>">
+<% const p = c.portafolio || {}; %>
+<% const projects = (c.proyectos && Array.isArray(c.proyectos.items)) ? c.proyectos.items : []; %>
+<% const perPage = 2; %>
+<% const projectPages = []; %>
+<% for (let i = 0; i < projects.length; i += perPage) projectPages.push(projects.slice(i, i + perPage)); %>
 <%
-  const p = c.portafolio || {};
-  const projects = p.projects || [];
-  const perPage = 2;
-  const projectPages = [];
-  for (let i = 0; i < projects.length; i += perPage) projectPages.push(projects.slice(i, i + perPage));
-
   /* Páginas: 1 portada, 2 empresa, 3 misión/visión, 4 divisiones, 5 capacidades, 6.. proyectos, última cierre */
   const totalPages = 5 + projectPages.length + 1;
   let pageCounter = 0;

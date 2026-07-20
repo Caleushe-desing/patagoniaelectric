@@ -110,19 +110,11 @@
           <fieldset><legend>Proyectos (vista previa)</legend>
             <label>Título<input name="projectsTitle" value="<%= data.projectsTitle %>"></label>
             <label>Subtítulo<input name="projectsSubtitle" value="<%= data.projectsSubtitle %>"></label>
-            <div class="admin-repeater" data-field="projectsPreview" data-item-label="Proyecto">
-              <%- include('partials/repeater-header', { title: 'Proyectos destacados', hint: 'Vista previa en la página de inicio', field: 'projectsPreview' }) %>
-              <% data.projectsPreview.forEach((p, i) => { %>
-              <div class="admin-repeater__item">
-                <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
-                <label>Título<input name="title" value="<%= p.title %>"></label>
-                <label>Texto<textarea name="text" rows="2"><%= p.text %></textarea></label>
-                <%- include('partials/image-field', { name: 'image', value: p.image, label: 'Imagen' }) %>
-                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
-              </div>
-              <% }) %>
-              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar proyecto</button>
-            </div>
+            <p class="admin-repeater__hint" style="margin-top:0.75rem;">
+              Los proyectos son los mismos de la web y el portafolio. Gestionelos en
+              <a href="/admin/edit/proyectos">Proyectos</a>.
+              En el inicio se muestran los tres primeros.
+            </p>
           </fieldset>
 
           <fieldset><legend>Clientes (banner inicio)</legend>
@@ -214,12 +206,16 @@
           </fieldset>
           <fieldset><legend>Galería de proyectos</legend>
             <div class="admin-repeater" data-field="items" data-item-label="Proyecto">
-              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Agregue o elimine proyectos de la galería', field: 'items' }) %>
+              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Misma lista para /proyectos, inicio (3 primeros) y portafolio comercial', field: 'items' }) %>
               <% data.items.forEach((p, i) => { %>
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= p.title %>"></label>
-                <label>Descripción<textarea name="text" rows="2"><%= p.text %></textarea></label>
+                <label>Descripción<textarea name="text" rows="3"><%= p.text %></textarea></label>
+                <label>Categoría<input name="category" value="<%= p.category || '' %>"></label>
+                <label>Cliente<input name="client" value="<%= p.client || '' %>"></label>
+                <label>Alcance<input name="scope" value="<%= p.scope || '' %>" placeholder="Fuerza · Control · Puesta en marcha"></label>
+                <label>Resultado<textarea name="results" rows="2"><%= p.results || '' %></textarea></label>
                 <%- include('partials/image-field', { name: 'image', value: p.image, label: 'Imagen' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
@@ -396,23 +392,11 @@
           <fieldset><legend>Proyectos destacados</legend>
             <label>Título sección<input name="projectsTitle" value="<%= data.projectsTitle %>"></label>
             <label>Subtítulo<input name="projectsSubtitle" value="<%= data.projectsSubtitle %>"></label>
-            <div class="admin-repeater" data-field="projects" data-item-label="Proyecto">
-              <%- include('partials/repeater-header', { title: 'Proyectos', hint: 'Categoría, cliente, alcance e imagen', field: 'projects' }) %>
-              <% (data.projects || []).forEach((item, i) => { %>
-              <div class="admin-repeater__item">
-                <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
-                <label>Título<input name="title" value="<%= item.title %>"></label>
-                <label>Descripción<textarea name="text" rows="3"><%= item.text %></textarea></label>
-                <label>Categoría<input name="category" value="<%= item.category || '' %>"></label>
-                <label>Cliente<input name="client" value="<%= item.client || '' %>"></label>
-                <label>Alcance<input name="scope" value="<%= item.scope || '' %>" placeholder="Fuerza · Control · Puesta en marcha"></label>
-                <label>Resultado<textarea name="results" rows="2"><%= item.results || '' %></textarea></label>
-                <%- include('partials/image-field', { name: 'image', value: item.image, label: 'Fotografía del proyecto' }) %>
-                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
-              </div>
-              <% }) %>
-              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar proyecto</button>
-            </div>
+            <p class="admin-repeater__hint" style="margin-top:0.75rem;">
+              Los proyectos son los mismos de la web. Gestionelos en
+              <a href="/admin/edit/proyectos">Proyectos</a>
+              o en la edición visual de proyectos / portafolio.
+            </p>
           </fieldset>
 
           <fieldset><legend>Clientes del portafolio</legend>

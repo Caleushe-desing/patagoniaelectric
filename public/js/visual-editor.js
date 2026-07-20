@@ -163,10 +163,9 @@
     if (arrayField === 'solutions') return `${page} — Servicio ${index + 1} (imagen)`;
     if (arrayField === 'features') return `${page} — Ventaja ${index + 1} (imagen)`;
     if (arrayField === 'values') return `${page} — Valor ${index + 1} (imagen)`;
-    if (arrayField === 'items' && section === 'proyectos') return `${page} — Proyecto ${index + 1}`;
+    if (arrayField === 'items' && section === 'proyectos') return `Proyecto ${index + 1}`;
     if (arrayField === 'items' && section === 'clientes') return `Cliente ${index + 1} — Logo`;
     if (section === 'portafolio' && arrayField === 'strengths') return `Portafolio — Fortaleza ${index + 1} (foto)`;
-    if (section === 'portafolio' && arrayField === 'projects') return `Portafolio — Proyecto ${index + 1} (foto)`;
     if (section === 'portafolio' && arrayField === 'divisions') return `Portafolio — División ${index + 1} (foto)`;
 
     const fieldLabel = FIELD_NAMES[field] || 'Imagen';
@@ -526,7 +525,7 @@
   }
 
   function initLists() {
-    const IMAGE_ARRAY_FIELDS = new Set(['divisions', 'projectsPreview', 'solutions', 'items', 'features', 'values', 'clients']);
+    const IMAGE_ARRAY_FIELDS = new Set(['divisions', 'solutions', 'items', 'features', 'values', 'clients']);
 
     document.querySelectorAll('[data-cms-list]').forEach((list) => {
       const section = list.dataset.cmsSection;
