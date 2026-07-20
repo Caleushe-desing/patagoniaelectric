@@ -508,6 +508,19 @@
   font-size: 0.85rem !important;
 }
 
+.pf-project__result {
+  margin-top: 0.65rem !important;
+  padding: 0.55rem 0.65rem;
+  border-left: 3px solid var(--pf-neon);
+  background: rgba(0, 168, 0, 0.08);
+  color: var(--pf-ink) !important;
+  font-size: 0.88rem !important;
+}
+
+.pf-project__result strong {
+  color: var(--pf-neon);
+}
+
 /* Clients */
 .pf-clients {
   display: grid;
