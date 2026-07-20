@@ -554,20 +554,6 @@
     ],
     "clientsTitle": "Clientes que confían en nosotros",
     "clientsSubtitle": "Marcas y operaciones que respaldan nuestra trayectoria.",
-    "clients": [
-      {
-        "name": "Nestlé",
-        "logo": "/images/cliente-nestle.png"
-      },
-      {
-        "name": "Papa John's",
-        "logo": "/images/cliente-papajohns.png"
-      },
-      {
-        "name": "Zero Corp",
-        "logo": "/images/cliente-zero.png"
-      }
-    ],
     "closingTitle": "Construyamos su próximo proyecto eléctrico",
     "closingText": "Cuéntenos su desafío industrial, solar o habitacional. Preparamos una propuesta técnica clara y ejecutable.",
     "contactNote": "contacto@patagoniaelectric.com · +56 9 6227 4047 · Frutillar, Región de los Lagos",
