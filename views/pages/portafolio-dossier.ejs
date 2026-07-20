@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es-CL">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,14 +28,14 @@
   }
 
   const ribbonPhrases = [
-    'Las energías renovables impulsan la competitividad industrial y el futuro energético de Chile.',
-    'Cada kilovatio limpio reduce costos operativos y fortalece la sostenibilidad del país.',
+    'Las energías renovables impulsan la competitividad industrial y el futuro energético.',
+    'Cada kilovatio limpio reduce costos operativos y fortalece la sostenibilidad.',
     'La transición energética exige ingeniería confiable, segura y preparada para el largo plazo.',
     'Solar, eólica e hidrógeno verde: pilares de una matriz energética más limpia y resiliente.',
     'Invertir en renovables hoy es asegurar continuidad productiva y menor huella ambiental mañana.',
     'La eficiencia energética y la generación limpia son ventajas estratégicas para la industria.',
     'Patagonia Electric transforma energía renovable en infraestructura confiable y de alto valor.',
-    'Una red eléctrica moderna y renovable es la base del desarrollo industrial sustentable.'
+    'Una red eléctrica moderna y renovable es la base del desarrollo industrial sostenible.'
   ];
 
   /* Franja solo en hojas intermedias: no portada (1), no segunda (2), no última */
@@ -165,7 +165,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M8 15c0-4 8-4 8 0v2H8v-2z" fill="#66BB6A"/><circle cx="12" cy="9" r="3" fill="#2E7D32"/></svg>
-            Acompañamiento de punta a punta
+            Acompañamiento integral
           </li>
         </ul>
       </article>
@@ -186,7 +186,7 @@
         <ul class="dossier-illo-list">
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#ECEFF1"/><circle cx="12" cy="12" r="4" fill="#43A047"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#455A64" stroke-width="1.5" stroke-linecap="round"/></svg>
-            Referencia técnica en el sur de Chile
+            Referencia técnica de excelencia
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M12 5l1.5 5H19l-4 3 1.5 5L12 15l-4.5 3L9 13 5 10h5.5L12 5z" fill="#66BB6A"/></svg>
@@ -248,10 +248,7 @@
           <% if (item.image) { %>
           <img src="<%= item.image %>" alt="">
           <% } else { %>
-          <div class="dossier-div-row__placeholder"></div>
-          <% } %>
-          <span class="dossier-num"><%= String(i + 1).padStart(2, '0') %></span>
-          <div class="dossier-div-row__icon" aria-hidden="true">
+          <div class="dossier-div-row__icon dossier-div-row__icon--solo" aria-hidden="true">
             <% if (i === 0) { %>
             <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="12" height="22" rx="1" fill="#455A64"/><rect x="24" y="10" width="16" height="30" rx="1" fill="#607D8B"/><path d="M12 28h4M12 34h4M28 18h8M28 24h8M28 30h8" stroke="#ECEFF1" stroke-width="1.5"/><circle cx="38" cy="8" r="4" fill="#43A047"/></svg>
             <% } else if (i === 1) { %>
@@ -260,6 +257,8 @@
             <svg viewBox="0 0 48 48" fill="none"><path d="M8 38V22l16-12 16 12v16H8z" fill="#CFD8DC" stroke="#546E7A" stroke-width="2"/><rect x="20" y="26" width="8" height="12" fill="#455A64"/><path d="M14 20l10-8 10 8" stroke="#43A047" stroke-width="2" fill="none"/><circle cx="34" cy="14" r="3" fill="#66BB6A"/></svg>
             <% } %>
           </div>
+          <% } %>
+          <span class="dossier-num"><%= String(i + 1).padStart(2, '0') %></span>
         </div>
         <div class="dossier-div-row__body">
           <h3 class="dossier-h3"><%= item.title %></h3>
