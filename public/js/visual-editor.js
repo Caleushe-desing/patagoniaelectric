@@ -186,6 +186,7 @@
     if (el.closest('.pf-client')) return el.closest('.pf-client');
     if (el.closest('.clients-logos__item')) return el.closest('.clients-logos__item');
     if (el.closest('.dossier-client')) return el.closest('.dossier-client');
+    if (el.closest('.project-card')) return el.closest('.project-card');
 
     if (el.dataset.cmsType === 'bg-image') {
       return el.closest('.page-hero, .clients-banner') || el;

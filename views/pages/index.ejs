@@ -102,8 +102,10 @@
       <% const homeProjects = ((c.proyectos && c.proyectos.items) || []).slice(0, 3); %>
       <% homeProjects.forEach((p, i) => { %>
       <article class="project-card" data-cms-item="<%= i %>">
-        <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
-        <div class="project-card__overlay">
+        <div class="project-card__media">
+          <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
+        </div>
+        <div class="project-card__body">
           <h4 class="project-card__title" <%- cmsAttr('proyectos', 'title', { arrayField: 'items', index: i }) %>><%= p.title %></h4>
           <p class="project-card__desc" <%- cmsAttr('proyectos', 'text', { arrayField: 'items', index: i }) %>><%= p.text %></p>
         </div>

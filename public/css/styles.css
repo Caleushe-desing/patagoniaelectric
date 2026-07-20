@@ -740,61 +740,81 @@ ul { list-style: none; }
 /* ── Projects ── */
 .projects {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
 }
 
 .project-card {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   border-radius: 4px;
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  transition: all var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
   background: var(--white);
 }
 
 .project-card:hover {
   border-color: var(--border-bright);
-  box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
-  transform: scale(1.02);
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.12);
+  transform: translateY(-2px);
 }
 
+.project-card__media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-alt, #f3f5f7);
+}
+
+.project-card__media img,
 .project-card img {
-  width: 100%; height: 260px;
+  width: 100%;
+  height: 240px;
   object-fit: cover;
-  filter: saturate(0.9) brightness(0.95);
-  transition: all 0.6s ease;
+  display: block;
+  filter: saturate(0.95) brightness(0.98);
+  transition: transform 0.55s ease, filter 0.55s ease;
 }
 
+.project-card:hover .project-card__media img,
 .project-card:hover img {
   filter: saturate(1) brightness(1);
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
+.project-card__body,
 .project-card__overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(5,8,16,0.95) 0%, rgba(5,8,16,0.3) 50%, transparent 100%);
+  position: static;
+  inset: auto;
+  background: var(--white);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.5rem;
+  justify-content: flex-start;
+  padding: 1.25rem 1.35rem 1.45rem;
+  flex: 1;
 }
 
 .project-card__title {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--neon);
-  margin-bottom: 0.25rem;
+  color: var(--ink, #111);
+  margin: 0 0 0.45rem;
 }
 
-.project-card__desc { font-size: 0.82rem; color: var(--text-muted); }
+.project-card__desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
 
 .project-card__meta {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.4rem;
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;

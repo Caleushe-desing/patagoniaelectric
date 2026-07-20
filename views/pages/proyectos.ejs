@@ -20,8 +20,10 @@
     <div class="projects" <%- cmsList('proyectos', 'items') %>>
       <% (p.items || []).forEach((item, i) => { %>
       <article class="project-card" data-cms-item="<%= i %>">
-        <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
-        <div class="project-card__overlay">
+        <div class="project-card__media">
+          <img src="<%= item.image %>" alt="<%= item.title %>" loading="lazy" <%- cmsAttr('proyectos', 'image', { arrayField: 'items', index: i, type: 'image' }) %>>
+        </div>
+        <div class="project-card__body">
           <% if (item.category) { %>
           <p class="project-card__meta" <%- cmsAttr('proyectos', 'category', { arrayField: 'items', index: i }) %>><%= item.category %></p>
           <% } %>
