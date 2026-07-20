@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portafolio corporativo PDF | Patagonia Electric</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="/images/logo-color.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/portfolio-dossier.css">
+</head>
+<body class="dossier<%= typeof autoPrint !== 'undefined' && autoPrint ? ' dossier--auto' : '' %>">
+<% const p = c.portafolio; %>
+<% const projects = p.projects || []; %>
+<% const perPage = 2; %>
+<% const projectPages = []; %>
+<% for (let i = 0; i < projects.length; i += perPage) projectPages.push(projects.slice(i, i + perPage)); %>
+
+<div class="dossier-toolbar no-print">
+  <div>
+    <strong>Portafolio corporativo — plantilla PDF</strong>
+    <p data-dossier-status>Documento A4 editorial independiente de la vista web.</p>
+  </div>
+  <div class="dossier-toolbar__actions">
+    <button type="button" class="dossier-btn dossier-btn--primary" data-dossier-download>Descargar PDF</button>
+    <button type="button" class="dossier-btn" onclick="window.print()">Imprimir</button>
+    <a class="dossier-btn" href="/portafolio">Volver al portafolio</a>
+  </div>
+</div>
+
+<main class="dossier-doc" id="dossier-doc">
+  <!-- 1. Portada -->
+  <section class="dossier-page dossier-page--cover" data-dossier-page>
+    <header class="dossier-cover__brand">
+      <img src="<%= c.general.logoHeader || '/images/logo-color.png' %>" alt="" class="dossier-cover__logo" width="72" height="82">
+      <div class="dossier-cover__wordmark">
+        <span class="dossier-cover__name">Patagonia</span>
+        <span class="dossier-cover__name dossier-cover__name--muted">Electric</span>
+      </div>
+    </header>
+
+    <div class="dossier-cover__body">
+      <% if (p.coverBadge) { %><p class="dossier-eyebrow"><%= p.coverBadge %></p><% } %>
+      <% if (p.coverYear) { %><p class="dossier-year"><%= p.coverYear %></p><% } %>
+      <h1 class="dossier-cover__title"><%= p.coverTitle %></h1>
+      <p class="dossier-cover__lead"><%= p.coverSubtitle %></p>
+    </div>
+
+    <footer class="dossier-cover__foot">
+      <div>
+        <p class="dossier-label">Contacto</p>
+        <p class="dossier-contact"><%= p.contactNote || (site.email + ' · ' + site.phone) %></p>
+      </div>
+      <div class="dossier-cover__meta">
+        <p>Portafolio corporativo</p>
+        <p><%= site.address?.city || c.general.city || 'Frutillar' %>, Chile</p>
+      </div>
+    </footer>
+  </section>
+
+  <!-- 2. Empresa -->
+  <section class="dossier-page" data-dossier-page>
+    <p class="dossier-eyebrow">Empresa</p>
+    <h2 class="dossier-h2"><%= p.introTitle %></h2>
+    <p class="dossier-lead"><%= p.introLead %></p>
+
+    <div class="dossier-two">
+      <div class="dossier-prose">
+        <% (p.introParagraphs || []).slice(0, 2).forEach((para) => { %>
+        <p><%= para %></p>
+        <% }) %>
+      </div>
+      <% if (p.introImage) { %>
+      <figure class="dossier-figure">
+        <img src="<%= p.introImage %>" alt="<%= p.introTitle %>">
+      </figure>
+      <% } %>
+    </div>
+
+    <div class="dossier-mv">
+      <article class="dossier-card dossier-card--soft">
+        <h3 class="dossier-h3"><%= p.missionTitle %></h3>
+        <p><%= p.missionText %></p>
+      </article>
+      <article class="dossier-card dossier-card--soft">
+        <h3 class="dossier-h3"><%= p.visionTitle %></h3>
+        <p><%= p.visionText %></p>
+      </article>
+    </div>
+
+    <% if ((p.stats || []).length) { %>
+    <div class="dossier-stats">
+      <% p.stats.forEach((item) => { %>
+      <div class="dossier-stat">
+        <strong><%= item.value %></strong>
+        <span><%= item.label %></span>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </section>
+
+  <!-- 3. Capacidades / divisiones -->
+  <section class="dossier-page" data-dossier-page>
+    <p class="dossier-eyebrow">Capacidades</p>
+    <h2 class="dossier-h2"><%= p.divisionsTitle || 'Nuestras divisiones' %></h2>
+    <p class="dossier-lead"><%= p.divisionsSubtitle || '' %></p>
+
+    <div class="dossier-grid dossier-grid--3">
+      <% (p.divisions || []).forEach((item, i) => { %>
+      <article class="dossier-card dossier-card--media">
+        <% if (item.image) { %><img src="<%= item.image %>" alt="<%= item.title %>"><% } %>
+        <div class="dossier-card__body">
+          <span class="dossier-num"><%= String(i + 1).padStart(2, '0') %></span>
+          <h3 class="dossier-h3"><%= item.title %></h3>
+          <p><%= item.text %></p>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+
+    <% if ((p.services || []).length) { %>
+    <h3 class="dossier-h3 dossier-h3--section"><%= p.servicesTitle || 'Capacidades técnicas' %></h3>
+    <div class="dossier-grid dossier-grid--2">
+      <% p.services.slice(0, 4).forEach((item) => { %>
+      <article class="dossier-card dossier-card--soft">
+        <h4 class="dossier-h4"><%= item.title %></h4>
+        <p><%= item.text %></p>
+      </article>
+      <% }) %>
+    </div>
+    <% } %>
+  </section>
+
+  <!-- 4+. Proyectos (2 por página) -->
+  <% projectPages.forEach((chunk, pageIndex) => { %>
+  <section class="dossier-page" data-dossier-page>
+    <p class="dossier-eyebrow">Proyectos</p>
+    <h2 class="dossier-h2"><%= pageIndex === 0 ? (p.projectsTitle || 'Proyectos destacados') : 'Proyectos destacados (cont.)' %></h2>
+    <% if (pageIndex === 0 && p.projectsSubtitle) { %>
+    <p class="dossier-lead"><%= p.projectsSubtitle %></p>
+    <% } %>
+
+    <div class="dossier-grid dossier-grid--projects">
+      <% chunk.forEach((item) => { %>
+      <article class="dossier-card dossier-card--project">
+        <% if (item.image) { %>
+        <div class="dossier-card__media">
+          <img src="<%= item.image %>" alt="<%= item.title %>">
+        </div>
+        <% } %>
+        <div class="dossier-card__body">
+          <p class="dossier-meta">
+            <%= item.category || 'Proyecto' %><% if (item.client) { %> · <%= item.client %><% } %>
+          </p>
+          <h3 class="dossier-h3"><%= item.title %></h3>
+          <p><%= item.text %></p>
+          <% if (item.scope) { %><p class="dossier-scope"><%= item.scope %></p><% } %>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+  <% }) %>
+
+  <!-- Clientes + cierre -->
+  <section class="dossier-page dossier-page--closing" data-dossier-page>
+    <% if ((p.clients || []).length) { %>
+    <p class="dossier-eyebrow">Clientes</p>
+    <h2 class="dossier-h2"><%= p.clientsTitle || 'Clientes' %></h2>
+    <% if (p.clientsSubtitle) { %><p class="dossier-lead"><%= p.clientsSubtitle %></p><% } %>
+    <div class="dossier-clients">
+      <% p.clients.forEach((item) => { %>
+      <figure class="dossier-client">
+        <% if (item.logo) { %><img src="<%= item.logo %>" alt="<%= item.name %>"><% } %>
+        <figcaption><%= item.name %></figcaption>
+      </figure>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <div class="dossier-closing">
+      <h2 class="dossier-h2"><%= p.closingTitle %></h2>
+      <p class="dossier-lead"><%= p.closingText %></p>
+      <p class="dossier-contact dossier-contact--strong"><%= p.contactNote %></p>
+      <p class="dossier-closing__brand">Patagonia Electric</p>
+    </div>
+  </section>
+</main>
+
+<script src="/js/portfolio-dossier-pdf.js" defer></script>
+</body>
+</html>

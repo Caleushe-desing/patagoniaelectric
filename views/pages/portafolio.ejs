@@ -1,21 +1,6 @@
-<% const isPrint = Boolean(typeof printMode !== 'undefined' && printMode); %>
 <%- include('../partials/head') %>
-<% if (!isPrint) { %><%- include('../partials/header') %><% } %>
+<%- include('../partials/header') %>
 <% const p = c.portafolio; %>
-
-<% if (isPrint) { %>
-<div class="pf-export-toolbar no-print">
-  <div>
-    <strong>Exportar PDF vertical (A4)</strong>
-    <p data-pf-pdf-status>PDF A4 claro (fondo blanco): apto para imprimir y compartir con clientes.</p>
-  </div>
-  <div class="pf-export-toolbar__actions">
-    <button type="button" class="pf-btn pf-btn--neon" data-pf-pdf-download>Descargar PDF</button>
-    <button type="button" class="pf-btn pf-btn--ghost-dark" onclick="window.print()">Imprimir (respaldo)</button>
-    <a class="pf-btn pf-btn--ghost-dark" href="/portafolio">Volver al portafolio</a>
-  </div>
-</div>
-<% } %>
 
 <article class="pf">
   <section class="pf-hero">
@@ -28,12 +13,8 @@
       <h1 class="pf-hero__title" <%- cmsAttr('portafolio', 'coverTitle') %>><%= p.coverTitle %></h1>
       <p class="pf-hero__subtitle" <%- cmsAttr('portafolio', 'coverSubtitle') %>><%= p.coverSubtitle %></p>
       <div class="pf-hero__actions">
-        <button type="button" class="pf-btn pf-btn--neon no-print" data-pf-pdf-download><span <%- cmsAttr('portafolio', 'coverCta') %>><%= p.coverCta || 'Descargar PDF' %></span></button>
-        <% if (!isPrint) { %>
+        <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener"><span <%- cmsAttr('portafolio', 'coverCta') %>><%= p.coverCta || 'Descargar PDF' %></span></a>
         <a href="/contacto" class="pf-btn pf-btn--ghost">Hablar con un ingeniero</a>
-        <% } else { %>
-        <a href="<%= site.url %>/contacto" class="pf-btn pf-btn--ghost">Hablar con un ingeniero</a>
-        <% } %>
       </div>
     </div>
   </section>
@@ -216,19 +197,14 @@
         <p class="pf-cta__note" <%- cmsAttr('portafolio', 'contactNote') %>><%= p.contactNote %></p>
       </div>
       <div class="pf-cta__actions">
-        <button type="button" class="pf-btn pf-btn--neon no-print" data-pf-pdf-download>Descargar PDF</button>
-        <a href="<%= isPrint ? site.url + '/contacto' : '/contacto' %>" class="pf-btn pf-btn--ghost">Ir a contacto</a>
-        <% if (!isPrint) { %>
-        <button type="button" class="pf-btn pf-btn--ghost pf-share no-print" data-share-url="<%= site.url %>/portafolio">Copiar enlace</button>
-        <% } %>
+        <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener">Descargar PDF</a>
+        <a href="/contacto" class="pf-btn pf-btn--ghost">Ir a contacto</a>
+        <button type="button" class="pf-btn pf-btn--ghost pf-share" data-share-url="<%= site.url %>/portafolio">Copiar enlace</button>
       </div>
     </div>
   </section>
 </article>
 
-<script src="/js/portfolio-pdf.js" defer></script>
-
-<% if (!isPrint) { %>
 <script>
 document.querySelectorAll('.pf-share').forEach((btn) => {
   btn.addEventListener('click', async () => {
@@ -249,10 +225,3 @@ document.querySelectorAll('.pf-share').forEach((btn) => {
 <%- include('../partials/scripts') %>
 </body>
 </html>
-<% } else { %>
-<script>
-  document.querySelectorAll('.pf img').forEach((img) => { img.loading = 'eager'; });
-</script>
-</body>
-</html>
-<% } %>

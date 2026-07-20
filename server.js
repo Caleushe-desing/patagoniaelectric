@@ -78,8 +78,14 @@ async function renderPortfolioExport(req, res, { autoPrint = false } = {}) {
   if (!content.portafolio?.published && !isAdmin) {
     return res.status(404).send('Portafolio no publicado');
   }
-  // Misma plantilla y CSS que la web, en modo exportación PDF
-  return renderPage(res, 'portafolio', { printMode: true, autoPrint });
+  // Plantilla dossier A4 independiente de la vista web
+  const site = mergeSiteConfig(staticSite, content.general);
+  return res.render('pages/portafolio-dossier', {
+    site,
+    content,
+    c: content,
+    autoPrint: Boolean(autoPrint),
+  });
 }
 
 app.get('/portafolio/imprimir', (req, res) => renderPortfolioExport(req, res, { autoPrint: false }));
