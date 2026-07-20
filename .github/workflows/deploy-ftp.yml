@@ -56,11 +56,22 @@ jobs:
                   return True
               if path.suffix in EXCLUDE_SUFFIXES:
                   return True
+              # Contenido CMS vivo en el hosting: no sobrescribir auth/mensajes
               if path.parts[0] == "data" and path.name in {"auth.json", "messages.json"}:
+                  return True
+              # content.json se maneja aparte (solo sembrar si no existe)
+              if path.parts[0] == "data" and path.name == "content.json":
                   return True
               if path.parts[:2] == ("public", "uploads") and path.name != ".gitkeep":
                   return True
               return False
+
+          def remote_exists(ftp, remote_path):
+              try:
+                  ftp.size(remote_path)
+                  return True
+              except Exception:
+                  return False
 
           def connect():
               ftp = ftplib.FTP(timeout=TIMEOUT)
@@ -80,21 +91,36 @@ jobs:
                       if not str(error).startswith("550"):
                           raise
 
+          def upload_file(ftp, local_file, remote_path):
+              with local_file.open("rb") as file:
+                  print(f"Subiendo {local_file} -> {remote_path}")
+                  ftp.storbinary(f"STOR {remote_path}", file)
+
           def upload_dir(ftp, local_dir, remote_dir):
               ensure_dir(ftp, remote_dir)
               for item in sorted(local_dir.iterdir()):
-                  if should_skip(item.relative_to(local_root)):
-                      continue
+                  rel = item.relative_to(local_root)
                   remote_path = f"{remote_dir.rstrip('/')}/{item.name}"
+
+                  # Semilla CMS: solo subir content.json si aún no existe en el servidor
+                  if tuple(rel.parts) == ("data", "content.json"):
+                      ensure_dir(ftp, remote_dir)
+                      if remote_exists(ftp, remote_path):
+                          print(f"Preservando contenido del editor: no sobrescribir {remote_path}")
+                      else:
+                          print(f"Sembrando contenido inicial (primera vez): {remote_path}")
+                          upload_file(ftp, item, remote_path)
+                      continue
+
+                  if should_skip(rel):
+                      continue
                   if item.is_symlink():
                       print(f"Omitiendo symlink {item}")
                       continue
                   if item.is_dir():
                       upload_dir(ftp, item, remote_path)
                       continue
-                  with item.open("rb") as file:
-                      print(f"Subiendo {item} -> {remote_path}")
-                      ftp.storbinary(f"STOR {remote_path}", file)
+                  upload_file(ftp, item, remote_path)
 
           def deploy():
               ftp = connect()
