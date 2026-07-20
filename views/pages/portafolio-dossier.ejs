@@ -12,11 +12,40 @@
   <link rel="stylesheet" href="/css/portfolio-dossier.css">
 </head>
 <body class="dossier<%= typeof autoPrint !== 'undefined' && autoPrint ? ' dossier--auto' : '' %>">
-<% const p = c.portafolio; %>
-<% const projects = p.projects || []; %>
-<% const perPage = 2; %>
-<% const projectPages = []; %>
-<% for (let i = 0; i < projects.length; i += perPage) projectPages.push(projects.slice(i, i + perPage)); %>
+<%
+  const p = c.portafolio || {};
+  const projects = p.projects || [];
+  const perPage = 2;
+  const projectPages = [];
+  for (let i = 0; i < projects.length; i += perPage) projectPages.push(projects.slice(i, i + perPage));
+
+  /* Páginas: 1 portada, 2 empresa, 3 misión/visión, 4 divisiones, 5 capacidades, 6.. proyectos, última cierre */
+  const totalPages = 5 + projectPages.length + 1;
+  let pageCounter = 0;
+  function nextPage() { pageCounter += 1; return pageCounter; }
+  function pageLabel(n) {
+    return String(n).padStart(2, '0') + ' / ' + String(totalPages).padStart(2, '0');
+  }
+
+  const ribbonPhrases = [
+    'Las energías renovables impulsan la competitividad industrial y el futuro energético de Chile.',
+    'Cada kilovatio limpio reduce costos operativos y fortalece la sostenibilidad del país.',
+    'La transición energética exige ingeniería confiable, segura y preparada para el largo plazo.',
+    'Solar, eólica e hidrógeno verde: pilares de una matriz energética más limpia y resiliente.',
+    'Invertir en renovables hoy es asegurar continuidad productiva y menor huella ambiental mañana.',
+    'La eficiencia energética y la generación limpia son ventajas estratégicas para la industria.',
+    'Patagonia Electric transforma energía renovable en infraestructura confiable y de alto valor.',
+    'Una red eléctrica moderna y renovable es la base del desarrollo industrial sustentable.'
+  ];
+
+  /* Franja solo en hojas intermedias: no portada (1), no segunda (2), no última */
+  function showRibbon(n) {
+    return n > 2 && n < totalPages;
+  }
+  function ribbonPhrase(n) {
+    return ribbonPhrases[(n - 3) % ribbonPhrases.length];
+  }
+%>
 
 <div class="dossier-toolbar no-print">
   <div>
@@ -31,8 +60,9 @@
 </div>
 
 <main class="dossier-doc" id="dossier-doc">
+  <% const p1 = nextPage(); %>
   <!-- 1. Portada -->
-  <section class="dossier-page dossier-page--cover" data-dossier-page>
+  <section class="dossier-page dossier-page--cover" data-dossier-page data-page="<%= p1 %>">
     <header class="dossier-cover__brand">
       <img src="<%= c.general.logoHeader || '/images/logo-color.png' %>" alt="" class="dossier-cover__logo" width="72" height="82">
       <div class="dossier-cover__wordmark">
@@ -60,15 +90,19 @@
     </footer>
   </section>
 
-  <!-- 2. Empresa -->
-  <section class="dossier-page" data-dossier-page>
-    <p class="dossier-eyebrow">Empresa</p>
+  <% const p2 = nextPage(); %>
+  <!-- 2. Empresa (sin franja) -->
+  <section class="dossier-page" data-dossier-page data-page="<%= p2 %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Empresa</p>
+      <span class="dossier-page-num"><%= pageLabel(p2) %></span>
+    </div>
     <h2 class="dossier-h2"><%= p.introTitle %></h2>
     <p class="dossier-lead"><%= p.introLead %></p>
 
     <div class="dossier-two">
       <div class="dossier-prose">
-        <% (p.introParagraphs || []).slice(0, 2).forEach((para) => { %>
+        <% (p.introParagraphs || []).forEach((para) => { %>
         <p><%= para %></p>
         <% }) %>
       </div>
@@ -77,17 +111,6 @@
         <img src="<%= p.introImage %>" alt="<%= p.introTitle %>">
       </figure>
       <% } %>
-    </div>
-
-    <div class="dossier-mv">
-      <article class="dossier-card dossier-card--soft">
-        <h3 class="dossier-h3"><%= p.missionTitle %></h3>
-        <p><%= p.missionText %></p>
-      </article>
-      <article class="dossier-card dossier-card--soft">
-        <h3 class="dossier-h3"><%= p.visionTitle %></h3>
-        <p><%= p.visionText %></p>
-      </article>
     </div>
 
     <% if ((p.stats || []).length) { %>
@@ -100,50 +123,233 @@
       <% }) %>
     </div>
     <% } %>
+
+    <footer class="dossier-page-foot">
+      <span>Patagonia Electric</span>
+      <span>www.patagoniaelectric.com</span>
+    </footer>
   </section>
 
-  <!-- 3. Capacidades / divisiones -->
-  <section class="dossier-page" data-dossier-page>
-    <p class="dossier-eyebrow">Capacidades</p>
+  <% const p3 = nextPage(); %>
+  <!-- 3. Misión y visión + monitos -->
+  <section class="dossier-page<%= showRibbon(p3) ? ' dossier-page--ribbon' : '' %>" data-dossier-page data-page="<%= p3 %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Identidad</p>
+      <span class="dossier-page-num"><%= pageLabel(p3) %></span>
+    </div>
+    <h2 class="dossier-h2">Misión y visión</h2>
+    <p class="dossier-lead">Propósito corporativo y horizonte estratégico que guían cada proyecto eléctrico.</p>
+
+    <div class="dossier-mv dossier-mv--rich">
+      <article class="dossier-mv-card">
+        <div class="dossier-illo" aria-hidden="true">
+          <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="34" fill="#E8F5E9"/>
+            <path d="M22 46c5-12 12-19 14-22 2 3 9 10 14 22" stroke="#2E7D32" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="36" cy="24" r="6" fill="#43A047"/>
+            <path d="M20 52h32" stroke="#1B5E20" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M28 38h16M30 43h12" stroke="#66BB6A" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="54" cy="18" r="4" fill="#A5D6A7"/>
+          </svg>
+        </div>
+        <h3 class="dossier-h3"><%= p.missionTitle || 'Misión' %></h3>
+        <p><%= p.missionText %></p>
+        <ul class="dossier-illo-list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M7 12l3.5 3.5L17 9" stroke="#2E7D32" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            Seguridad y cumplimiento normativo
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M12 6v6l4 2" stroke="#455A64" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            Continuidad operativa y eficiencia
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M8 15c0-4 8-4 8 0v2H8v-2z" fill="#66BB6A"/><circle cx="12" cy="9" r="3" fill="#2E7D32"/></svg>
+            Acompañamiento de punta a punta
+          </li>
+        </ul>
+      </article>
+      <article class="dossier-mv-card">
+        <div class="dossier-illo" aria-hidden="true">
+          <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="34" fill="#ECEFF1"/>
+            <path d="M14 44l12-16 9 9 11-18 12 25" stroke="#37474F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="26" cy="28" r="3.5" fill="#43A047"/>
+            <circle cx="35" cy="37" r="3.5" fill="#2E7D32"/>
+            <circle cx="46" cy="25" r="3.5" fill="#1B5E20"/>
+            <path d="M18 54h36" stroke="#90A4AE" stroke-width="2" stroke-linecap="round"/>
+            <path d="M48 16l4-6 4 6h-8z" fill="#FDD835"/>
+          </svg>
+        </div>
+        <h3 class="dossier-h3"><%= p.visionTitle || 'Visión' %></h3>
+        <p><%= p.visionText %></p>
+        <ul class="dossier-illo-list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#ECEFF1"/><circle cx="12" cy="12" r="4" fill="#43A047"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#455A64" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Referencia técnica en el sur de Chile
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E8F5E9"/><path d="M12 5l1.5 5H19l-4 3 1.5 5L12 15l-4.5 3L9 13 5 10h5.5L12 5z" fill="#66BB6A"/></svg>
+            Transición energética responsable
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#ECEFF1"/><rect x="6" y="10" width="12" height="8" rx="1" fill="#78909C"/><path d="M9 10V8a3 3 0 016 0v2" stroke="#2E7D32" stroke-width="1.5"/></svg>
+            Confianza de largo plazo con clientes
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="dossier-pillars">
+      <div class="dossier-pillar">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#E8F5E9"/><path d="M12 26V16l8-6 8 6v10" stroke="#2E7D32" stroke-width="2" fill="none"/><rect x="17" y="22" width="6" height="4" fill="#43A047"/></svg>
+        <span>Ingeniería aplicada</span>
+      </div>
+      <div class="dossier-pillar">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FFF8E1"/><circle cx="20" cy="20" r="7" fill="#FFEB3B" stroke="#F9A825" stroke-width="1.5"/><path d="M20 8v3M20 29v3M8 20h3M29 20h3" stroke="#F9A825" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Energía limpia</span>
+      </div>
+      <div class="dossier-pillar">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#ECEFF1"/><path d="M10 28V18l10-8 10 8v10H10z" fill="#CFD8DC" stroke="#546E7A" stroke-width="1.5"/><rect x="17" y="22" width="6" height="6" fill="#455A64"/></svg>
+        <span>Habitacional seguro</span>
+      </div>
+    </div>
+
+    <% if (showRibbon(p3)) { %>
+    <footer class="dossier-ribbon">
+      <div class="dossier-ribbon__bars" aria-hidden="true">
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--green"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--black"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--gray"></span>
+      </div>
+      <p class="dossier-ribbon__text"><%= ribbonPhrase(p3) %></p>
+    </footer>
+    <% } %>
+  </section>
+
+  <% const p4 = nextPage(); %>
+  <!-- 4. Divisiones -->
+  <section class="dossier-page<%= showRibbon(p4) ? ' dossier-page--ribbon' : '' %>" data-dossier-page data-page="<%= p4 %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Líneas de negocio</p>
+      <span class="dossier-page-num"><%= pageLabel(p4) %></span>
+    </div>
     <h2 class="dossier-h2"><%= p.divisionsTitle || 'Nuestras divisiones' %></h2>
     <p class="dossier-lead"><%= p.divisionsSubtitle || '' %></p>
 
-    <div class="dossier-grid dossier-grid--3">
-      <% (p.divisions || []).forEach((item, i) => { %>
-      <article class="dossier-card dossier-card--media">
-        <% if (item.image) { %><img src="<%= item.image %>" alt="<%= item.title %>"><% } %>
-        <div class="dossier-card__body">
+    <div class="dossier-div-list">
+          <% (p.divisions || []).forEach((item, i) => {
+        const highlights = Array.isArray(item.highlights)
+          ? item.highlights
+          : String(item.highlights || '').split(',').map((s) => s.trim()).filter(Boolean);
+      %>
+      <article class="dossier-div-row">
+        <div class="dossier-div-row__media">
+          <% if (item.image) { %>
+          <img src="<%= item.image %>" alt="">
+          <% } else { %>
+          <div class="dossier-div-row__placeholder"></div>
+          <% } %>
           <span class="dossier-num"><%= String(i + 1).padStart(2, '0') %></span>
+          <div class="dossier-div-row__icon" aria-hidden="true">
+            <% if (i === 0) { %>
+            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="12" height="22" rx="1" fill="#455A64"/><rect x="24" y="10" width="16" height="30" rx="1" fill="#607D8B"/><path d="M12 28h4M12 34h4M28 18h8M28 24h8M28 30h8" stroke="#ECEFF1" stroke-width="1.5"/><circle cx="38" cy="8" r="4" fill="#43A047"/></svg>
+            <% } else if (i === 1) { %>
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="22" r="9" fill="#FFF59D" stroke="#F9A825" stroke-width="2"/><path d="M24 8v3M24 33v3M10 22h3M35 22h3M13 13l2 2M33 31l2 2M13 31l2-2M33 13l2-2" stroke="#F9A825" stroke-width="2" stroke-linecap="round"/><path d="M14 38c5-9 15-9 20 0" stroke="#2E7D32" stroke-width="2.5" fill="none"/></svg>
+            <% } else { %>
+            <svg viewBox="0 0 48 48" fill="none"><path d="M8 38V22l16-12 16 12v16H8z" fill="#CFD8DC" stroke="#546E7A" stroke-width="2"/><rect x="20" y="26" width="8" height="12" fill="#455A64"/><path d="M14 20l10-8 10 8" stroke="#43A047" stroke-width="2" fill="none"/><circle cx="34" cy="14" r="3" fill="#66BB6A"/></svg>
+            <% } %>
+          </div>
+        </div>
+        <div class="dossier-div-row__body">
           <h3 class="dossier-h3"><%= item.title %></h3>
           <p><%= item.text %></p>
+          <% if (highlights.length) { %>
+          <ul class="dossier-tags">
+            <% highlights.forEach((h) => { %><li><%= h %></li><% }) %>
+          </ul>
+          <% } %>
         </div>
       </article>
       <% }) %>
     </div>
 
-    <% if ((p.services || []).length) { %>
-    <h3 class="dossier-h3 dossier-h3--section"><%= p.servicesTitle || 'Capacidades técnicas' %></h3>
-    <div class="dossier-grid dossier-grid--2">
-      <% p.services.slice(0, 4).forEach((item) => { %>
-      <article class="dossier-card dossier-card--soft">
-        <h4 class="dossier-h4"><%= item.title %></h4>
+    <% if (showRibbon(p4)) { %>
+    <footer class="dossier-ribbon">
+      <div class="dossier-ribbon__bars" aria-hidden="true">
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--green"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--black"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--gray"></span>
+      </div>
+      <p class="dossier-ribbon__text"><%= ribbonPhrase(p4) %></p>
+    </footer>
+    <% } %>
+  </section>
+
+  <% const p5 = nextPage(); %>
+  <!-- 5. Capacidades técnicas (todas) -->
+  <section class="dossier-page<%= showRibbon(p5) ? ' dossier-page--ribbon' : '' %>" data-dossier-page data-page="<%= p5 %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Ingeniería aplicada</p>
+      <span class="dossier-page-num"><%= pageLabel(p5) %></span>
+    </div>
+    <h2 class="dossier-h2"><%= p.servicesTitle || 'Capacidades técnicas' %></h2>
+    <p class="dossier-lead"><%= p.servicesSubtitle || '' %></p>
+
+    <div class="dossier-cap-grid">
+      <% (p.services || []).forEach((item, i) => { %>
+      <article class="dossier-cap-card">
+        <div class="dossier-cap-card__head">
+          <span class="dossier-num"><%= String(i + 1).padStart(2, '0') %></span>
+          <div class="dossier-cap-card__glyph" aria-hidden="true">
+            <% if (i === 0) { %>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="6" width="24" height="20" rx="2" stroke="#2E7D32" stroke-width="2"/><path d="M8 12h16M8 16h12M8 20h8" stroke="#66BB6A" stroke-width="1.5"/></svg>
+            <% } else if (i === 1) { %>
+            <svg viewBox="0 0 32 32" fill="none"><path d="M8 24V12l8-6 8 6v12" stroke="#455A64" stroke-width="2" fill="none"/><path d="M14 24v-6h4v6" fill="#43A047"/></svg>
+            <% } else if (i === 2) { %>
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="#2E7D32" stroke-width="2"/><path d="M16 10v6l4 2" stroke="#455A64" stroke-width="2" stroke-linecap="round"/></svg>
+            <% } else if (i === 3) { %>
+            <svg viewBox="0 0 32 32" fill="none"><path d="M6 22h20M10 22V10h4v12M18 22V14h4v8" stroke="#455A64" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="2" fill="#43A047"/></svg>
+            <% } else if (i === 4) { %>
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="7" fill="#FFF59D" stroke="#F9A825" stroke-width="1.5"/><path d="M16 6v2M16 24v2M6 16h2M24 16h2" stroke="#F9A825" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <% } else { %>
+            <svg viewBox="0 0 32 32" fill="none"><path d="M8 24V14l8-6 8 6v10H8z" stroke="#455A64" stroke-width="2" fill="#ECEFF1"/><rect x="14" y="18" width="4" height="6" fill="#43A047"/></svg>
+            <% } %>
+          </div>
+        </div>
+        <h3 class="dossier-h4"><%= item.title %></h3>
         <p><%= item.text %></p>
       </article>
       <% }) %>
     </div>
+
+    <% if (showRibbon(p5)) { %>
+    <footer class="dossier-ribbon">
+      <div class="dossier-ribbon__bars" aria-hidden="true">
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--green"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--black"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--gray"></span>
+      </div>
+      <p class="dossier-ribbon__text"><%= ribbonPhrase(p5) %></p>
+    </footer>
     <% } %>
   </section>
 
-  <!-- 4+. Proyectos (2 por página) -->
-  <% projectPages.forEach((chunk, pageIndex) => { %>
-  <section class="dossier-page" data-dossier-page>
-    <p class="dossier-eyebrow">Proyectos</p>
+  <!-- 6+. Proyectos (2 por página) -->
+  <% projectPages.forEach((chunk, pageIndex) => {
+    const pn = nextPage();
+  %>
+  <section class="dossier-page<%= showRibbon(pn) ? ' dossier-page--ribbon' : '' %>" data-dossier-page data-page="<%= pn %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Experiencia</p>
+      <span class="dossier-page-num"><%= pageLabel(pn) %></span>
+    </div>
     <h2 class="dossier-h2"><%= pageIndex === 0 ? (p.projectsTitle || 'Proyectos destacados') : 'Proyectos destacados (cont.)' %></h2>
     <% if (pageIndex === 0 && p.projectsSubtitle) { %>
     <p class="dossier-lead"><%= p.projectsSubtitle %></p>
     <% } %>
 
-    <div class="dossier-grid dossier-grid--projects">
+    <div class="dossier-grid dossier-grid--projects dossier-grid--projects-rich">
       <% chunk.forEach((item) => { %>
       <article class="dossier-card dossier-card--project">
         <% if (item.image) { %>
@@ -158,17 +364,44 @@
           <h3 class="dossier-h3"><%= item.title %></h3>
           <p><%= item.text %></p>
           <% if (item.scope) { %><p class="dossier-scope"><%= item.scope %></p><% } %>
+          <% if (item.results) { %>
+          <div class="dossier-result">
+            <strong>Resultado</strong>
+            <p><%= item.results %></p>
+          </div>
+          <% } %>
         </div>
       </article>
       <% }) %>
     </div>
+
+    <% if (showRibbon(pn)) { %>
+    <footer class="dossier-ribbon">
+      <div class="dossier-ribbon__bars" aria-hidden="true">
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--green"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--black"></span>
+        <span class="dossier-ribbon__bar dossier-ribbon__bar--gray"></span>
+      </div>
+      <p class="dossier-ribbon__text"><%= ribbonPhrase(pn) %></p>
+    </footer>
+    <% } else { %>
+    <footer class="dossier-page-foot">
+      <span>Patagonia Electric</span>
+      <span>www.patagoniaelectric.com</span>
+    </footer>
+    <% } %>
   </section>
   <% }) %>
 
-  <!-- Clientes + cierre -->
-  <section class="dossier-page dossier-page--closing" data-dossier-page>
+  <% const pLast = nextPage(); %>
+  <!-- Última: Clientes + cierre (sin franja) -->
+  <section class="dossier-page dossier-page--closing" data-dossier-page data-page="<%= pLast %>">
+    <div class="dossier-page__top">
+      <p class="dossier-eyebrow">Cierre</p>
+      <span class="dossier-page-num"><%= pageLabel(pLast) %></span>
+    </div>
+
     <% if ((p.clients || []).length) { %>
-    <p class="dossier-eyebrow">Clientes</p>
     <h2 class="dossier-h2"><%= p.clientsTitle || 'Clientes' %></h2>
     <% if (p.clientsSubtitle) { %><p class="dossier-lead"><%= p.clientsSubtitle %></p><% } %>
     <div class="dossier-clients">
@@ -187,6 +420,11 @@
       <p class="dossier-contact dossier-contact--strong"><%= p.contactNote %></p>
       <p class="dossier-closing__brand">Patagonia Electric</p>
     </div>
+
+    <footer class="dossier-page-foot">
+      <span>Patagonia Electric</span>
+      <span>www.patagoniaelectric.com</span>
+    </footer>
   </section>
 </main>
 

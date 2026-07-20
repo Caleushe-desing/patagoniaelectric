@@ -317,9 +317,9 @@
 
           <fieldset><legend>Misión y visión</legend>
             <label>Título misión<input name="missionTitle" value="<%= data.missionTitle || '' %>"></label>
-            <label>Texto misión<textarea name="missionText" rows="3"><%= data.missionText || '' %></textarea></label>
+            <label>Texto misión<textarea name="missionText" rows="5"><%= data.missionText || '' %></textarea></label>
             <label>Título visión<input name="visionTitle" value="<%= data.visionTitle || '' %>"></label>
-            <label>Texto visión<textarea name="visionText" rows="3"><%= data.visionText || '' %></textarea></label>
+            <label>Texto visión<textarea name="visionText" rows="5"><%= data.visionText || '' %></textarea></label>
           </fieldset>
 
           <fieldset><legend>Fortalezas</legend>
@@ -349,7 +349,7 @@
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Servicio <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
-                <label>Texto<textarea name="text" rows="2"><%= item.text %></textarea></label>
+                <label>Texto<textarea name="text" rows="3"><%= item.text %></textarea></label>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
               <% }) %>
@@ -366,7 +366,8 @@
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>División <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
-                <label>Texto<textarea name="text" rows="3"><%= item.text %></textarea></label>
+                <label>Texto<textarea name="text" rows="4"><%= item.text %></textarea></label>
+                <label>Destacados (separados por coma)<input name="highlights" value="<%= Array.isArray(item.highlights) ? item.highlights.join(', ') : (item.highlights || '') %>" placeholder="Tableros BT/MT, Montaje en planta"></label>
                 <%- include('partials/image-field', { name: 'image', value: item.image || '/images/portfolio/pf-industrial.jpg', label: 'Fotografía de la división' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>
@@ -401,10 +402,11 @@
               <div class="admin-repeater__item">
                 <div class="admin-repeater__item-header"><h4>Proyecto <span class="admin-item-num"><%= i + 1 %></span></h4></div>
                 <label>Título<input name="title" value="<%= item.title %>"></label>
-                <label>Descripción<textarea name="text" rows="2"><%= item.text %></textarea></label>
+                <label>Descripción<textarea name="text" rows="3"><%= item.text %></textarea></label>
                 <label>Categoría<input name="category" value="<%= item.category || '' %>"></label>
                 <label>Cliente<input name="client" value="<%= item.client || '' %>"></label>
                 <label>Alcance<input name="scope" value="<%= item.scope || '' %>" placeholder="Fuerza · Control · Puesta en marcha"></label>
+                <label>Resultado<textarea name="results" rows="2"><%= item.results || '' %></textarea></label>
                 <%- include('partials/image-field', { name: 'image', value: item.image, label: 'Fotografía del proyecto' }) %>
                 <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
               </div>

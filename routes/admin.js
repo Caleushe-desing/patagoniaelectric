@@ -154,6 +154,18 @@ router.post('/api/content/:section', requireAuth, async (req, res) => {
     if (key === 'portafolio') {
       payload.showInNav = false;
       payload.published = Boolean(payload.published);
+      if (Array.isArray(payload.divisions)) {
+        payload.divisions = payload.divisions.map((item) => {
+          const next = { ...item };
+          if (typeof next.highlights === 'string') {
+            next.highlights = next.highlights
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean);
+          }
+          return next;
+        });
+      }
     }
     await updateSection(key, payload);
     res.json({ ok: true, message: 'Contenido guardado correctamente' });
