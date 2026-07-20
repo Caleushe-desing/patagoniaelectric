@@ -13,15 +13,18 @@
     jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
   };
   const VERTICAL_CAPTURE_CSS = `
-    .pf-pdf-bg-img {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      z-index: 0 !important;
+    .pf-pdf-bg-img { display: none !important; }
+    .pf-hero__media, .pf-hero__veil, .pf-hero__grid,
+    .pf-cta__media, .pf-cta__veil { display: none !important; }
+
+    .pf, .pf > section, .pf-hero, .pf-stats, .pf-section,
+    .pf-section--dark, .pf-section--soft, .pf-cta, .pf-mission,
+    .pf-about, .pf-process, .container {
+      background: #ffffff !important;
+      background-image: none !important;
+      color: #111111 !important;
     }
-    .pf-hero__media, .pf-cta__media { background-image: none !important; }
+
     .pf-stats__grid,
     .pf-strengths,
     .pf-services,
@@ -34,29 +37,77 @@
     .pf-clients {
       grid-template-columns: 1fr !important;
     }
-    .pf-hero {
-      min-height: 480px !important;
-      align-items: flex-end !important;
+
+    .pf-hero, .pf-cta {
+      min-height: 0 !important;
+      border: 1px solid #e5e7eb !important;
+      color: #111111 !important;
     }
-    .pf-hero__title {
-      max-width: none !important;
-      font-size: 2.35rem !important;
+    .pf-hero__content, .pf-cta__inner {
+      position: relative !important;
+      z-index: 1 !important;
+      padding: 1.5rem 0 !important;
     }
-    .pf-hero__content { padding: 2.2rem 0 1.8rem !important; }
-    .pf-section { padding: 1.6rem 0 !important; }
-    .pf-stats { padding: 1.3rem 0 !important; }
-    .pf-division { min-height: 260px !important; }
-    .pf-project__image { min-height: 180px !important; }
-    .pf-cta { min-height: 280px !important; }
-    .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
+    .pf-hero__title { max-width: none !important; font-size: 2.2rem !important; color: #111111 !important; }
+    .pf-hero__badge {
+      opacity: 1 !important; animation: none !important; transform: none !important;
+      background: #f3f7f4 !important; border-color: #b7e0b9 !important; color: #0a6b0a !important;
+    }
+    .pf-hero__year, .pf-hero__subtitle, .pf-hero__actions {
+      opacity: 1 !important; animation: none !important; transform: none !important;
+    }
+    .pf-hero__year { color: #0a6b0a !important; }
+    .pf-hero__subtitle { color: #333333 !important; }
+    .pf-hero__actions .pf-btn--ghost,
+    .pf-cta__actions .pf-btn--ghost {
+      border-color: #111111 !important; color: #111111 !important;
+    }
+
+    .pf-section { padding: 1.4rem 0 !important; }
+    .pf-stats {
+      padding: 1.2rem 0 !important;
+      border-top: 2px solid #00a800 !important;
+      border-bottom: 1px solid #e5e7eb !important;
+    }
+
+    .pf-kicker, .pf-title, .pf-title--light { color: #111111 !important; }
+    .pf-kicker { color: #0a6b0a !important; }
+    .pf-lead, .pf-lead--muted, .pf-prose p { color: #333333 !important; }
+
+    .pf-stat, .pf-mission__card, .pf-mission__card--alt, .pf-strength,
+    .pf-service, .pf-division, .pf-project, .pf-client, .pf-process__list > li {
+      background: #f9f9f9 !important;
+      background-image: none !important;
+      border: 1px solid #e5e7eb !important;
+      box-shadow: none !important;
+      color: #111111 !important;
+    }
+    .pf-stat strong, .pf-mission__card h3, .pf-service__num,
+    .pf-division__body span, .pf-process__list li::before,
+    .pf-project__meta, .pf-cta__note { color: #0a6b0a !important; }
+    .pf-stat span, .pf-mission__card p, .pf-strength p, .pf-service p,
+    .pf-division__body p, .pf-process__list span, .pf-project__body p,
+    .pf-client figcaption, .pf-cta__text { color: #333333 !important; }
+    .pf-strength h3, .pf-service h3, .pf-division__body h3,
+    .pf-project__body h3, .pf-process__list strong,
+    .pf-cta__title, .pf-project__scope { color: #111111 !important; }
+
+    .pf-division { min-height: 0 !important; position: relative !important; overflow: hidden !important; }
+    .pf-division img {
+      position: relative !important; inset: auto !important;
+      width: 100% !important; height: auto !important; max-height: 220px !important;
+      object-fit: cover !important;
+    }
+    .pf-division__body {
+      position: relative !important; inset: auto !important;
+      padding: 0.9rem !important; background: transparent !important;
+    }
+    .pf-project__image { min-height: 160px !important; }
     .pf-about__visual img { aspect-ratio: 16/10 !important; }
-    .pf-hero__badge, .pf-hero__year, .pf-hero__title,
-    .pf-hero__subtitle, .pf-hero__actions {
-      opacity: 1 !important;
-      animation: none !important;
-      transform: none !important;
-    }
-    .pf-hero__media { animation: none !important; transform: none !important; }
+    .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
+    .pf-process__list > li { border-top: 3px solid #00a800 !important; }
+    .pf-client img { filter: none !important; opacity: 1 !important; }
+
     .no-print, .pf-export-toolbar, [data-pf-pdf-download], .pf-share {
       display: none !important;
     }
@@ -230,7 +281,7 @@
       scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: null,
+      backgroundColor: '#ffffff',
       windowWidth: CAPTURE_WIDTH,
       scrollX: 0,
       scrollY: -window.scrollY,

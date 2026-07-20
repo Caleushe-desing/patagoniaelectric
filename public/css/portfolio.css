@@ -707,7 +707,7 @@ body.pf-pdf-capturing .pf-hero__media {
   transform: none !important;
 }
 
-/* ── Impresión / PDF profesional ── */
+/* ── Impresión / PDF profesional (fondo claro, apto papel) ── */
 @media print {
   @page {
     size: A4 portrait;
@@ -715,7 +715,9 @@ body.pf-pdf-capturing .pf-hero__media {
   }
 
   html, body {
-    background: #fff !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #111111 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
@@ -737,31 +739,48 @@ body.pf-pdf-capturing .pf-hero__media {
 
   body.pf-print-mode,
   body.theme-future {
-    background: #fff !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #111111 !important;
   }
 
   .pf {
     width: 100% !important;
     max-width: none !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #111111 !important;
   }
 
   .pf,
-  .pf *,
-  .pf-hero__media,
-  .pf-cta__media,
-  .pf-section--dark,
-  .pf-section--soft,
-  .pf-stats,
-  .pf-mission__card,
-  .pf-strength,
-  .pf-service,
-  .pf-division,
-  .pf-project,
-  .pf-client,
-  .pf-process__list li {
+  .pf * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+  }
+
+  /* Contenedores principales → fondo blanco */
+  .pf > section,
+  .pf-hero,
+  .pf-stats,
+  .pf-section,
+  .pf-section--dark,
+  .pf-section--soft,
+  .pf-cta,
+  .pf-mission,
+  .pf-about,
+  .pf-process,
+  .container {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+  }
+
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   /* Layout vertical de lectura para A4 */
@@ -778,13 +797,6 @@ body.pf-pdf-capturing .pf-hero__media {
     grid-template-columns: 1fr !important;
   }
 
-  .container {
-    width: 100% !important;
-    max-width: none !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   /* Cada sección clave empieza en hoja nueva */
   .pf > section {
     break-before: page;
@@ -798,10 +810,175 @@ body.pf-pdf-capturing .pf-hero__media {
     page-break-before: auto;
   }
 
-  .pf-hero {
+  /* Tipografía: texto claro → oscuro de alto contraste */
+  .pf-kicker,
+  .pf-title,
+  .pf-title--light,
+  .pf-lead,
+  .pf-lead--muted,
+  .pf-prose p,
+  .pf-stat strong,
+  .pf-stat span,
+  .pf-mission__card h3,
+  .pf-mission__card p,
+  .pf-strength h3,
+  .pf-strength p,
+  .pf-service h3,
+  .pf-service p,
+  .pf-service__num,
+  .pf-division__body,
+  .pf-division__body span,
+  .pf-division__body h3,
+  .pf-division__body p,
+  .pf-process__list strong,
+  .pf-process__list span,
+  .pf-process__list li::before,
+  .pf-project__meta,
+  .pf-project__body h3,
+  .pf-project__body p,
+  .pf-project__scope,
+  .pf-client figcaption,
+  .pf-cta__title,
+  .pf-cta__text,
+  .pf-cta__note,
+  .pf-hero__badge,
+  .pf-hero__year,
+  .pf-hero__title,
+  .pf-hero__subtitle {
+    color: #111111 !important;
+  }
+
+  .pf-kicker,
+  .pf-hero__year,
+  .pf-hero__badge,
+  .pf-stat strong,
+  .pf-mission__card h3,
+  .pf-service__num,
+  .pf-division__body span,
+  .pf-process__list li::before,
+  .pf-project__meta,
+  .pf-cta__note {
+    color: #0a6b0a !important; /* acento corporativo legible en papel */
+  }
+
+  .pf-lead,
+  .pf-lead--muted,
+  .pf-prose p,
+  .pf-stat span,
+  .pf-mission__card p,
+  .pf-strength p,
+  .pf-service p,
+  .pf-division__body p,
+  .pf-process__list span,
+  .pf-project__body p,
+  .pf-client figcaption,
+  .pf-cta__text,
+  .pf-hero__subtitle {
+    color: #333333 !important;
+  }
+
+  /* Hero / CTA: sin foto de fondo oscura; plano claro */
+  .pf-hero,
+  .pf-cta {
     min-height: 0 !important;
+    color: #111111 !important;
+    border: 1px solid #e5e7eb !important;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  .pf-hero__media,
+  .pf-hero__veil,
+  .pf-hero__grid,
+  .pf-cta__media,
+  .pf-cta__veil {
+    display: none !important;
+  }
+
+  .pf-hero__content,
+  .pf-cta__inner {
+    position: relative !important;
+    z-index: 1 !important;
+    padding: 8mm 0 !important;
+  }
+
+  .pf-hero__badge {
+    background: #f3f7f4 !important;
+    border-color: #b7e0b9 !important;
+  }
+
+  .pf-hero__actions .pf-btn--ghost,
+  .pf-cta__actions .pf-btn--ghost {
+    border-color: #111111 !important;
+    color: #111111 !important;
+  }
+
+  /* Tarjetas y bloques: blanco / gris suave, bordes sutiles */
+  .pf-stats {
+    border-top: 2px solid #00a800 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .pf-stat,
+  .pf-mission__card,
+  .pf-mission__card--alt,
+  .pf-strength,
+  .pf-service,
+  .pf-division,
+  .pf-project,
+  .pf-client,
+  .pf-process__list > li {
+    background: #f9f9f9 !important;
+    background-image: none !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    color: #111111 !important;
+  }
+
+  .pf-mission__card,
+  .pf-mission__card--alt {
+    background: #f9f9f9 !important;
+  }
+
+  .pf-division {
+    min-height: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .pf-division img {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 55mm !important;
+    object-fit: cover !important;
+  }
+
+  .pf-division__body {
+    position: relative !important;
+    inset: auto !important;
+    padding: 4mm !important;
+    background: transparent !important;
+  }
+
+  .pf-strength:hover,
+  .pf-service:hover,
+  .pf-division:hover img,
+  .pf-client:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .pf-process__list > li {
+    border-top: 3px solid #00a800 !important;
+  }
+
+  .pf-section,
+  .pf-stats,
+  .pf-cta {
+    padding-top: 8mm !important;
+    padding-bottom: 8mm !important;
   }
 
   .pf-hero__media {
@@ -817,13 +994,6 @@ body.pf-pdf-capturing .pf-hero__media {
     opacity: 1 !important;
     animation: none !important;
     transform: none !important;
-  }
-
-  .pf-section,
-  .pf-stats,
-  .pf-cta {
-    padding-top: 8mm !important;
-    padding-bottom: 8mm !important;
   }
 
   /* Encabezados de sección no quedan huérfanos */
@@ -852,12 +1022,6 @@ body.pf-pdf-capturing .pf-hero__media {
     page-break-inside: avoid;
   }
 
-  .pf-cta {
-    min-height: 0 !important;
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
   .pf-about__visual img,
   .pf-strength__media img,
   .pf-division img,
@@ -866,6 +1030,11 @@ body.pf-pdf-capturing .pf-hero__media {
     max-width: 100%;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  .pf-client img {
+    filter: none !important;
+    opacity: 1 !important;
   }
 
   a {
