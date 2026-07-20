@@ -406,7 +406,11 @@
     <div class="dossier-clients">
       <% p.clients.forEach((item) => { %>
       <figure class="dossier-client">
-        <% if (item.logo) { %><img src="<%= item.logo %>" alt="<%= item.name %>"><% } %>
+        <% if (item.logo) { %>
+        <div class="dossier-client__logo">
+          <img src="<%= item.logo %>" alt="<%= item.name %>">
+        </div>
+        <% } %>
         <figcaption><%= item.name %></figcaption>
       </figure>
       <% }) %>

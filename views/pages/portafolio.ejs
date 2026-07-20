@@ -192,7 +192,9 @@
       <div class="pf-clients" <%- cmsList('portafolio', 'clients') %>>
         <% (p.clients || []).forEach((item, i) => { %>
         <figure class="pf-client" data-cms-item="<%= i %>">
-          <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('portafolio', 'logo', { arrayField: 'clients', index: i, type: 'image' }) %>>
+          <div class="pf-client__logo">
+            <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('portafolio', 'logo', { arrayField: 'clients', index: i, type: 'image' }) %>>
+          </div>
           <figcaption <%- cmsAttr('portafolio', 'name', { arrayField: 'clients', index: i }) %>><%= item.name %></figcaption>
         </figure>
         <% }) %>
