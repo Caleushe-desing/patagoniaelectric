@@ -92,6 +92,14 @@ jobs:
           def deploy():
               ftp = connect()
               try:
+                  print(f"FTP pwd inicial: {ftp.pwd()}")
+                  try:
+                      print("Listado raíz FTP:")
+                      ftp.retrlines("LIST", lambda line: print(f"  {line}"))
+                  except Exception as list_error:
+                      print(f"No se pudo listar raíz FTP: {list_error}")
+
+                  print(f"Usando remote_root={remote_root}")
                   upload_dir(ftp, local_root, remote_root)
                   # Reinicia Phusion Passenger para cargar el nuevo código Node
                   restart_dir = f"{remote_root.rstrip('/')}/tmp"
@@ -112,6 +120,19 @@ jobs:
                           f"Los archivos no quedaron en la ruta esperada ({marker}): {verify_error}. "
                           "Revise el secret FTP_SERVER_DIR."
                       )
+
+                  # Marcador único para correlacionar carpeta FTP vs sitio público
+                  stamp = f"deploy-stamp-{int(time.time())}.txt"
+                  stamp_payload = f"patagonia-deploy {time.time()}\n".encode("utf-8")
+                  for candidate in [
+                      f"{remote_root.rstrip('/')}/public/{stamp}",
+                      f"{remote_root.rstrip('/')}/{stamp}",
+                  ]:
+                      try:
+                          ftp.storbinary(f"STOR {candidate}", BytesIO(stamp_payload))
+                          print(f"Stamp subido: {candidate} (probar https://www.patagoniaelectric.com/{stamp})")
+                      except Exception as stamp_error:
+                          print(f"No se pudo subir stamp {candidate}: {stamp_error}")
               finally:
                   try:
                       ftp.quit()
