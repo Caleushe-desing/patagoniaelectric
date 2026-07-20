@@ -607,3 +607,168 @@
   .pf-division { min-height: 320px; }
   .pf-project__image { min-height: 220px; }
 }
+
+/* ── Modo exportación PDF (misma web, sin chrome del sitio) ── */
+body.pf-print-mode {
+  background: #fff;
+}
+
+body.pf-print-mode .fx-bg,
+body.pf-print-mode .header,
+body.pf-print-mode .footer,
+body.pf-print-mode .whatsapp-float {
+  display: none !important;
+}
+
+.pf-export-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.95rem 1.25rem;
+  background: #0d141c;
+  color: #fff;
+  border-bottom: 3px solid var(--pf-neon, #00a800);
+}
+
+.pf-export-toolbar p {
+  margin: 0.25rem 0 0;
+  color: rgba(255,255,255,0.72);
+  font-size: 0.9rem;
+}
+
+.pf-export-toolbar__actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.pf-btn--ghost-dark {
+  border: 1px solid rgba(255,255,255,0.45);
+  color: #fff;
+  background: transparent;
+}
+
+.pf-btn--ghost-dark:hover {
+  border-color: #00a800;
+  color: #9dff9d;
+}
+
+body.pf-print-mode .pf-hero__badge,
+body.pf-print-mode .pf-hero__year,
+body.pf-print-mode .pf-hero__title,
+body.pf-print-mode .pf-hero__subtitle,
+body.pf-print-mode .pf-hero__actions {
+  opacity: 1;
+  animation: none;
+}
+
+body.pf-print-mode .pf-hero__media {
+  animation: none;
+  transform: none;
+}
+
+/* ── Impresión: conservar layout, colores e imágenes de la web ── */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  html, body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .no-print,
+  .pf-export-toolbar,
+  .header,
+  .footer,
+  .whatsapp-float,
+  .fx-bg,
+  .menu-toggle {
+    display: none !important;
+  }
+
+  body.pf-print-mode,
+  body.theme-future {
+    background: #fff !important;
+  }
+
+  .pf,
+  .pf * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Forzar grillas de escritorio (igual que la web) */
+  .pf-stats__grid { grid-template-columns: repeat(4, 1fr) !important; }
+  .pf-strengths { grid-template-columns: repeat(4, 1fr) !important; }
+  .pf-services { grid-template-columns: repeat(3, 1fr) !important; }
+  .pf-divisions { grid-template-columns: repeat(3, 1fr) !important; }
+  .pf-process__list { grid-template-columns: repeat(5, 1fr) !important; }
+  .pf-projects { grid-template-columns: repeat(2, 1fr) !important; }
+  .pf-about__grid { grid-template-columns: 1.1fr 0.9fr !important; }
+  .pf-mission__grid { grid-template-columns: 1fr 1fr !important; }
+  .pf-project { grid-template-columns: 0.9fr 1.1fr !important; }
+
+  .pf-hero {
+    min-height: 170mm;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .pf-hero__media {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .pf-hero__badge,
+  .pf-hero__year,
+  .pf-hero__title,
+  .pf-hero__subtitle,
+  .pf-hero__actions {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .pf-stats,
+  .pf-section,
+  .pf-cta {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .pf-section { padding: 12mm 0; }
+  .pf-stats { padding: 8mm 0; }
+
+  .pf-division,
+  .pf-strength,
+  .pf-project,
+  .pf-service {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .pf-cta {
+    min-height: 110mm;
+    page-break-before: always;
+  }
+
+  .pf-about__visual img,
+  .pf-strength__media img,
+  .pf-division img,
+  .pf-project__image img,
+  .pf-client img {
+    max-width: 100%;
+  }
+
+  a { text-decoration: none !important; color: inherit !important; }
+}

@@ -1,6 +1,21 @@
+<% const isPrint = Boolean(typeof printMode !== 'undefined' && printMode); %>
+<% const doAutoPrint = Boolean(typeof autoPrint !== 'undefined' && autoPrint); %>
 <%- include('../partials/head') %>
-<%- include('../partials/header') %>
+<% if (!isPrint) { %><%- include('../partials/header') %><% } %>
 <% const p = c.portafolio; %>
+
+<% if (isPrint) { %>
+<div class="pf-export-toolbar no-print">
+  <div>
+    <strong>Exportar PDF — misma vista que la web</strong>
+    <p>En el diálogo elija “Guardar como PDF”. Active “Gráficos de fondo” si su navegador lo pide.</p>
+  </div>
+  <div class="pf-export-toolbar__actions">
+    <button type="button" class="pf-btn pf-btn--neon" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <a class="pf-btn pf-btn--ghost-dark" href="/portafolio">Volver al portafolio</a>
+  </div>
+</div>
+<% } %>
 
 <article class="pf">
   <section class="pf-hero">
@@ -12,7 +27,7 @@
       <p class="pf-hero__year" <%- cmsAttr('portafolio', 'coverYear') %>><%= p.coverYear %></p>
       <h1 class="pf-hero__title" <%- cmsAttr('portafolio', 'coverTitle') %>><%= p.coverTitle %></h1>
       <p class="pf-hero__subtitle" <%- cmsAttr('portafolio', 'coverSubtitle') %>><%= p.coverSubtitle %></p>
-      <div class="pf-hero__actions">
+      <div class="pf-hero__actions<%= isPrint ? ' no-print' : '' %>">
         <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener"><span <%- cmsAttr('portafolio', 'coverCta') %>><%= p.coverCta || 'Descargar PDF' %></span></a>
         <a href="/contacto" class="pf-btn pf-btn--ghost">Hablar con un ingeniero</a>
       </div>
@@ -196,7 +211,7 @@
         <p class="pf-cta__text" <%- cmsAttr('portafolio', 'closingText') %>><%= p.closingText %></p>
         <p class="pf-cta__note" <%- cmsAttr('portafolio', 'contactNote') %>><%= p.contactNote %></p>
       </div>
-      <div class="pf-cta__actions">
+      <div class="pf-cta__actions<%= isPrint ? ' no-print' : '' %>">
         <a href="/portafolio.pdf" class="pf-btn pf-btn--neon" target="_blank" rel="noopener">Exportar PDF</a>
         <a href="/contacto" class="pf-btn pf-btn--ghost">Ir a contacto</a>
         <button type="button" class="pf-btn pf-btn--ghost pf-share" data-share-url="<%= site.url %>/portafolio">Copiar enlace</button>
@@ -205,6 +220,7 @@
   </section>
 </article>
 
+<% if (!isPrint) { %>
 <script>
 document.querySelectorAll('.pf-share').forEach((btn) => {
   btn.addEventListener('click', async () => {
@@ -223,5 +239,18 @@ document.querySelectorAll('.pf-share').forEach((btn) => {
 <%- include('../partials/footer') %>
 <%- include('../partials/whatsapp') %>
 <%- include('../partials/scripts') %>
+<% } else { %>
+<script>
+  document.querySelectorAll('img').forEach((img) => {
+    if (img.complete) return;
+    img.loading = 'eager';
+  });
+  <% if (doAutoPrint) { %>
+  window.addEventListener('load', () => {
+    setTimeout(() => window.print(), 700);
+  });
+  <% } %>
+</script>
+<% } %>
 </body>
 </html>

@@ -65,28 +65,25 @@ app.get('/portafolio', async (req, res) => {
       cmsList: () => '',
       visualPages: [],
       scrollTo: null,
+      printMode: false,
+      autoPrint: false,
     });
   }
-  return renderPage(res, 'portafolio');
+  return renderPage(res, 'portafolio', { printMode: false, autoPrint: false });
 });
 
-async function renderPortfolioPrint(req, res, { autoPrint = false } = {}) {
+async function renderPortfolioExport(req, res, { autoPrint = false } = {}) {
   const content = await getContent();
   const isAdmin = Boolean(req.session?.admin);
   if (!content.portafolio?.published && !isAdmin) {
     return res.status(404).send('Portafolio no publicado');
   }
-  const site = mergeSiteConfig(staticSite, content.general);
-  return res.render('pages/portafolio-print', {
-    site,
-    content,
-    c: content,
-    autoPrint,
-  });
+  // Misma plantilla y CSS que la web, en modo exportación PDF
+  return renderPage(res, 'portafolio', { printMode: true, autoPrint });
 }
 
-app.get('/portafolio/imprimir', (req, res) => renderPortfolioPrint(req, res, { autoPrint: false }));
-app.get('/portafolio.pdf', (req, res) => renderPortfolioPrint(req, res, { autoPrint: true }));
+app.get('/portafolio/imprimir', (req, res) => renderPortfolioExport(req, res, { autoPrint: false }));
+app.get('/portafolio.pdf', (req, res) => renderPortfolioExport(req, res, { autoPrint: true }));
 
 app.use('/admin', adminRoutes);
 

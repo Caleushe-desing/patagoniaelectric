@@ -48,10 +48,12 @@
   <% } %>
   <%- include('schema') %>
 </head>
-<body class="theme-future<%= typeof editMode !== 'undefined' && editMode ? ' cms-edit-mode' : '' %>">
+<body class="theme-future<%= typeof editMode !== 'undefined' && editMode ? ' cms-edit-mode' : '' %><%= typeof printMode !== 'undefined' && printMode ? ' pf-print-mode' : '' %>">
+  <% if (!(typeof printMode !== 'undefined' && printMode)) { %>
   <div class="fx-bg" aria-hidden="true">
     <canvas id="fx-canvas"></canvas>
     <div class="fx-bg__grid"></div>
     <div class="fx-bg__glow fx-bg__glow--1"></div>
     <div class="fx-bg__glow fx-bg__glow--2"></div>
   </div>
+  <% } %>
