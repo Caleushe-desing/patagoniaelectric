@@ -189,13 +189,14 @@
         <h2 class="pf-title" <%- cmsAttr('portafolio', 'clientsTitle') %>><%= p.clientsTitle %></h2>
         <p class="pf-lead" <%- cmsAttr('portafolio', 'clientsSubtitle') %>><%= p.clientsSubtitle %></p>
       </div>
-      <div class="pf-clients" <%- cmsList('portafolio', 'clients') %>>
-        <% (p.clients || []).forEach((item, i) => { %>
+      <% const clientLogos = (c.clientes && c.clientes.items) ? c.clientes.items : []; %>
+      <div class="pf-clients" <%- cmsList('clientes', 'items') %>>
+        <% clientLogos.forEach((item, i) => { %>
         <figure class="pf-client" data-cms-item="<%= i %>">
           <div class="pf-client__logo">
-            <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('portafolio', 'logo', { arrayField: 'clients', index: i, type: 'image' }) %>>
+            <img src="<%= item.logo %>" alt="<%= item.name %>" loading="lazy" <%- cmsAttr('clientes', 'logo', { arrayField: 'items', index: i, type: 'image' }) %>>
           </div>
-          <figcaption <%- cmsAttr('portafolio', 'name', { arrayField: 'clients', index: i }) %>><%= item.name %></figcaption>
+          <figcaption <%- cmsAttr('clientes', 'name', { arrayField: 'items', index: i }) %>><%= item.name %></figcaption>
         </figure>
         <% }) %>
       </div>

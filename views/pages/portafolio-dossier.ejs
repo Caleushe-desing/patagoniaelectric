@@ -400,11 +400,12 @@
       <span class="dossier-page-num"><%= pageLabel(pLast) %></span>
     </div>
 
-    <% if ((p.clients || []).length) { %>
+    <% const clientLogos = (c.clientes && Array.isArray(c.clientes.items)) ? c.clientes.items : []; %>
+    <% if (clientLogos.length) { %>
     <h2 class="dossier-h2"><%= p.clientsTitle || 'Clientes' %></h2>
     <% if (p.clientsSubtitle) { %><p class="dossier-lead"><%= p.clientsSubtitle %></p><% } %>
     <div class="dossier-clients">
-      <% p.clients.forEach((item) => { %>
+      <% clientLogos.forEach((item) => { %>
       <figure class="dossier-client">
         <% if (item.logo) { %>
         <div class="dossier-client__logo">

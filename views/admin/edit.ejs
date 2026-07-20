@@ -418,18 +418,11 @@
           <fieldset><legend>Clientes del portafolio</legend>
             <label>Título sección<input name="clientsTitle" value="<%= data.clientsTitle %>"></label>
             <label>Subtítulo<input name="clientsSubtitle" value="<%= data.clientsSubtitle %>"></label>
-            <div class="admin-repeater" data-field="clients" data-item-label="Cliente">
-              <%- include('partials/repeater-header', { title: 'Clientes', hint: 'Logos del portafolio comercial', field: 'clients' }) %>
-              <% (data.clients || []).forEach((item, i) => { %>
-              <div class="admin-repeater__item">
-                <div class="admin-repeater__item-header"><h4>Cliente <span class="admin-item-num"><%= i + 1 %></span></h4></div>
-                <label>Nombre<input name="name" value="<%= item.name %>"></label>
-                <%- include('partials/image-field', { name: 'logo', value: item.logo, label: 'Logo / fotografía del cliente' }) %>
-                <div class="admin-repeater__actions"><button type="button" class="admin-btn admin-btn--danger admin-btn--sm admin-remove">Eliminar</button></div>
-              </div>
-              <% }) %>
-              <button type="button" class="admin-btn admin-btn--sm admin-btn--outline admin-add">+ Agregar cliente</button>
-            </div>
+            <p class="admin-repeater__hint" style="margin-top:0.75rem;">
+              Los logos son los mismos de la web. Gestionelos en
+              <a href="/admin/edit/clientes">Clientes</a>
+              o en la edición visual de la sección de clientes.
+            </p>
           </fieldset>
 
           <fieldset><legend>Cierre / contacto</legend>

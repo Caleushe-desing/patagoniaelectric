@@ -167,7 +167,6 @@
     if (arrayField === 'items' && section === 'clientes') return `Cliente ${index + 1} — Logo`;
     if (section === 'portafolio' && arrayField === 'strengths') return `Portafolio — Fortaleza ${index + 1} (foto)`;
     if (section === 'portafolio' && arrayField === 'projects') return `Portafolio — Proyecto ${index + 1} (foto)`;
-    if (section === 'portafolio' && arrayField === 'clients') return `Portafolio — Cliente ${index + 1} (logo)`;
     if (section === 'portafolio' && arrayField === 'divisions') return `Portafolio — División ${index + 1} (foto)`;
 
     const fieldLabel = FIELD_NAMES[field] || 'Imagen';
