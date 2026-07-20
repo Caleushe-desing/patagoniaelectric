@@ -14,7 +14,9 @@
           >
           <span class="brand-name" aria-label="Patagonia Electric">
             <span class="brand-name__patagonia">Patagonia</span>
-            <span class="brand-name__electric">Electric</span>
+            <span class="brand-name__electric" aria-hidden="true">
+              <span>E</span><span>l</span><span>e</span><span>c</span><span>t</span><span>r</span><span>i</span><span>c</span>
+            </span>
           </span>
         </a>
         <p><%= typeof c !== 'undefined' ? c.general.footerText : site.legalName %></p>
