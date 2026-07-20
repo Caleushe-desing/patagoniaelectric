@@ -131,9 +131,14 @@ ul { list-style: none; }
   gap: 1.5rem;
 }
 
-.logo img {
+.logo img,
+.logo__img {
   height: 48px;
   width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
   filter: drop-shadow(0 0 12px var(--neon-glow));
   transition: filter var(--transition);
 }
@@ -1073,8 +1078,14 @@ ul { list-style: none; }
   margin-bottom: 2.5rem;
 }
 
-.footer__brand img {
-  height: 44px;
+.footer__brand img,
+.footer__logo {
+  display: block;
+  height: 72px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  object-position: left center;
   margin-bottom: 1rem;
   filter: drop-shadow(0 0 10px var(--neon-glow));
 }

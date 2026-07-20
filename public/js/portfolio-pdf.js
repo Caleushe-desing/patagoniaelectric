@@ -1,15 +1,61 @@
 /**
- * Genera un PDF vertical (A4 portrait) del portafolio.
- * Misma identidad visual (colores, tipografía, fotos) que la web,
- * pero en layout de una columna para lectura en formato vertical.
+ * Genera un PDF vertical (A4) del portafolio.
+ * Cada sección del portafolio empieza en una hoja nueva;
+ * no se corta contenido a mitad de página entre secciones.
  */
 (function () {
-  // Ancho tipo móvil/tablet: activa grillas verticales del CSS (@media max-width: 1000px)
   const CAPTURE_WIDTH = 794;
   const SCRIPT_SRCS = {
     html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
     jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
   };
+  const VERTICAL_CAPTURE_CSS = `
+    .pf-pdf-bg-img {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      z-index: 0 !important;
+    }
+    .pf-hero__media, .pf-cta__media { background-image: none !important; }
+    .pf-stats__grid,
+    .pf-strengths,
+    .pf-services,
+    .pf-divisions,
+    .pf-process__list,
+    .pf-projects,
+    .pf-about__grid,
+    .pf-mission__grid,
+    .pf-project,
+    .pf-clients {
+      grid-template-columns: 1fr !important;
+    }
+    .pf-hero {
+      min-height: 520px !important;
+      align-items: flex-end !important;
+    }
+    .pf-hero__title {
+      max-width: none !important;
+      font-size: 2.4rem !important;
+    }
+    .pf-hero__content { padding: 2.5rem 0 2rem !important; }
+    .pf-section { padding: 2.2rem 0 !important; }
+    .pf-stats { padding: 1.6rem 0 !important; }
+    .pf-division { min-height: 280px !important; }
+    .pf-project__image { min-height: 200px !important; }
+    .pf-cta { min-height: 320px !important; }
+    .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
+    .pf-about__visual img { aspect-ratio: 16/10 !important; }
+    .pf-hero__badge, .pf-hero__year, .pf-hero__title,
+    .pf-hero__subtitle, .pf-hero__actions {
+      opacity: 1 !important;
+      animation: none !important;
+      transform: none !important;
+    }
+    .pf-hero__media { animation: none !important; transform: none !important; }
+    .no-print, .pf-export-toolbar { display: none !important; }
+  `;
 
   let busy = false;
 
@@ -53,9 +99,7 @@
     await Promise.all(
       imgs.map((img) => {
         img.loading = 'eager';
-        if (img.decode) {
-          return img.decode().catch(() => undefined);
-        }
+        if (img.decode) return img.decode().catch(() => undefined);
         if (img.complete) return Promise.resolve();
         return new Promise((resolve) => {
           img.addEventListener('load', resolve, { once: true });
@@ -83,7 +127,6 @@
     }
   }
 
-  /** html2canvas a veces falla con background-image en CSS; clona a <img> temporales. */
   function materializeBackgrounds(root) {
     const created = [];
     root.querySelectorAll('.pf-hero__media, .pf-cta__media').forEach((node) => {
@@ -106,6 +149,64 @@
     imgs.forEach((img) => img.remove());
   }
 
+  function getPortfolioSections(root) {
+    return [...root.children].filter(
+      (el) => el.tagName === 'SECTION' && !el.classList.contains('no-print')
+    );
+  }
+
+  function applyCloneStyles(doc, sectionEl) {
+    sectionEl.style.width = CAPTURE_WIDTH + 'px';
+    sectionEl.style.maxWidth = CAPTURE_WIDTH + 'px';
+    sectionEl.style.margin = '0';
+    sectionEl.style.boxSizing = 'border-box';
+    const style = doc.createElement('style');
+    style.textContent = VERTICAL_CAPTURE_CSS;
+    doc.head.appendChild(style);
+  }
+
+  async function captureSection(section) {
+    return window.html2canvas(section, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      windowWidth: CAPTURE_WIDTH,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      logging: false,
+      imageTimeout: 15000,
+      onclone: (doc, el) => applyCloneStyles(doc, el),
+    });
+  }
+
+  /**
+   * Añade un canvas al PDF empezando siempre en hoja nueva.
+   * Si la sección es más alta que una hoja, continúa en hojas siguientes
+   * sin mezclar con otra sección.
+   */
+  function addSectionCanvasToPdf(pdf, canvas, pageWidth, pageHeight) {
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
+
+    // Primera hoja de la sección
+    let y = 0;
+    let remaining = imgHeight;
+    let first = true;
+
+    while (remaining > 0.5) {
+      if (!first) pdf.addPage();
+      first = false;
+
+      // Dibuja el tramo visible de esta hoja (recorte por desplazamiento Y)
+      pdf.addImage(dataUrl, 'JPEG', 0, y, imgWidth, imgHeight, undefined, 'FAST');
+
+      remaining -= pageHeight;
+      y -= pageHeight;
+    }
+  }
+
   async function exportPortfolioPdf() {
     if (busy) return;
     const target = document.querySelector('.pf');
@@ -114,8 +215,14 @@
       return;
     }
 
+    const sections = getPortfolioSections(target);
+    if (!sections.length) {
+      setStatus('No hay secciones para exportar.');
+      return;
+    }
+
     setBusy(true);
-    setStatus('Preparando PDF vertical (A4)…');
+    setStatus('Preparando PDF por secciones…');
 
     const prevTitle = document.title;
     let bgImgs = [];
@@ -127,81 +234,6 @@
       await waitForImages(target);
 
       document.body.classList.add('pf-pdf-capturing');
-      setStatus('Capturando fotos, colores y layout vertical…');
-
-      const canvas = await window.html2canvas(target, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        windowWidth: CAPTURE_WIDTH,
-        scrollX: 0,
-        scrollY: 0,
-        logging: false,
-        imageTimeout: 15000,
-        onclone: (doc) => {
-          const cloned = doc.querySelector('.pf');
-          if (!cloned) return;
-          cloned.style.width = CAPTURE_WIDTH + 'px';
-          cloned.style.maxWidth = CAPTURE_WIDTH + 'px';
-          cloned.style.margin = '0 auto';
-          const style = doc.createElement('style');
-          style.textContent = `
-            .pf-pdf-bg-img {
-              position: absolute !important;
-              inset: 0 !important;
-              width: 100% !important;
-              height: 100% !important;
-              object-fit: cover !important;
-              z-index: 0 !important;
-            }
-            .pf-hero__media, .pf-cta__media { background-image: none !important; }
-
-            /* Layout vertical (a diferencia de la web de escritorio) */
-            .pf-stats__grid,
-            .pf-strengths,
-            .pf-services,
-            .pf-divisions,
-            .pf-process__list,
-            .pf-projects,
-            .pf-about__grid,
-            .pf-mission__grid,
-            .pf-project,
-            .pf-clients {
-              grid-template-columns: 1fr !important;
-            }
-
-            .pf-hero {
-              min-height: 520px !important;
-              align-items: flex-end !important;
-            }
-            .pf-hero__title {
-              max-width: none !important;
-              font-size: 2.4rem !important;
-            }
-            .pf-hero__content { padding: 2.5rem 0 2rem !important; }
-            .pf-section { padding: 2.4rem 0 !important; }
-            .pf-stats { padding: 1.6rem 0 !important; }
-            .pf-division { min-height: 280px !important; }
-            .pf-project__image { min-height: 200px !important; }
-            .pf-cta { min-height: 320px !important; }
-            .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
-            .pf-about__visual img { aspect-ratio: 16/10 !important; }
-
-            .pf-hero__badge, .pf-hero__year, .pf-hero__title,
-            .pf-hero__subtitle, .pf-hero__actions {
-              opacity: 1 !important;
-              animation: none !important;
-              transform: none !important;
-            }
-            .pf-hero__media { animation: none !important; transform: none !important; }
-            .no-print, .pf-export-toolbar { display: none !important; }
-          `;
-          doc.head.appendChild(style);
-        },
-      });
-
-      setStatus('Componiendo PDF vertical…');
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({
@@ -210,28 +242,18 @@
         format: 'a4',
         compress: true,
       });
-
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * pageWidth) / canvas.width;
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
 
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 1) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-        heightLeft -= pageHeight;
+      for (let i = 0; i < sections.length; i += 1) {
+        setStatus(`Capturando sección ${i + 1} de ${sections.length}…`);
+        if (i > 0) pdf.addPage();
+        const canvas = await captureSection(sections[i]);
+        addSectionCanvasToPdf(pdf, canvas, pageWidth, pageHeight);
       }
 
       pdf.save('Patagonia-Electric-Portafolio.pdf');
-      setStatus('PDF vertical descargado (A4).');
+      setStatus('PDF descargado: una sección por hoja.');
     } catch (err) {
       console.error(err);
       setStatus('No se pudo generar el PDF automático. Use Imprimir → Guardar como PDF.');

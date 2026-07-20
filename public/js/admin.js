@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParagraphLists();
   initForm();
   initPortfolioToolbar();
+  initSectionPanels();
   document.querySelectorAll('.admin-repeater').forEach(updateRepeaterCount);
 });
 
@@ -298,3 +299,115 @@ function initPortfolioToolbar() {
     }
   });
 }
+
+/** Paneles plegables + índice de secciones para organizar el formulario admin. */
+function initSectionPanels() {
+  const form = document.getElementById('admin-form');
+  if (!form) return;
+  const fieldsets = [...form.querySelectorAll(':scope > fieldset')];
+  if (fieldsets.length < 2) return;
+
+  const sectionKey = form.dataset.section || 'section';
+  const storageKey = `admin-panels:${sectionKey}`;
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(storageKey) || '{}') || {};
+  } catch {
+    saved = {};
+  }
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'admin-section-toolbar';
+  toolbar.innerHTML = `
+    <div class="admin-section-toolbar__copy">
+      <strong>Secciones editables</strong>
+      <span>Abra solo lo que necesite. El índice permite saltar a cada bloque.</span>
+    </div>
+    <div class="admin-section-toolbar__actions">
+      <button type="button" class="admin-btn admin-btn--sm admin-btn--ghost" data-admin-expand-all>Expandir todo</button>
+      <button type="button" class="admin-btn admin-btn--sm admin-btn--ghost" data-admin-collapse-all>Contraer todo</button>
+    </div>
+  `;
+
+  const nav = document.createElement('nav');
+  nav.className = 'admin-section-nav';
+  nav.setAttribute('aria-label', 'Índice de secciones');
+
+  const intro = form.querySelector('.admin-form__intro');
+  if (intro) intro.after(toolbar);
+  else form.prepend(toolbar);
+  toolbar.after(nav);
+
+  function persist() {
+    const state = {};
+    fieldsets.forEach((fs, i) => {
+      state[String(i)] = !fs.classList.contains('is-collapsed');
+    });
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  }
+
+  function setOpen(fs, open) {
+    fs.classList.toggle('is-collapsed', !open);
+    const btn = fs.querySelector('.admin-section__toggle');
+    if (btn) {
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.querySelector('.admin-section__chevron').textContent = open ? '▾' : '▸';
+    }
+    const id = fs.dataset.adminSectionId;
+    const chip = nav.querySelector(`[data-jump="${id}"]`);
+    if (chip) chip.classList.toggle('is-active', open);
+  }
+
+  fieldsets.forEach((fs, index) => {
+    const legend = fs.querySelector(':scope > legend');
+    if (!legend) return;
+
+    const id = `admin-sec-${sectionKey}-${index}`;
+    fs.dataset.adminSectionId = id;
+    fs.id = id;
+    fs.classList.add('admin-section');
+
+    const title = (legend.textContent || `Sección ${index + 1}`).trim();
+    legend.classList.add('admin-section__legend');
+    legend.innerHTML = '';
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'admin-section__toggle';
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.innerHTML = `<span class="admin-section__chevron">▾</span><span class="admin-section__title">${title}</span>`;
+    legend.appendChild(toggle);
+
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'admin-section-nav__chip';
+    chip.dataset.jump = id;
+    chip.textContent = title;
+    chip.addEventListener('click', () => {
+      setOpen(fs, true);
+      persist();
+      fs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    nav.appendChild(chip);
+
+    toggle.addEventListener('click', () => {
+      setOpen(fs, fs.classList.contains('is-collapsed'));
+      persist();
+    });
+
+    // Por defecto: primera abierta; el resto contraídas (salvo preferencia guardada)
+    const preferred = saved[String(index)];
+    const open = preferred === undefined ? index === 0 : Boolean(preferred);
+    setOpen(fs, open);
+  });
+
+  toolbar.querySelector('[data-admin-expand-all]')?.addEventListener('click', () => {
+    fieldsets.forEach((fs) => setOpen(fs, true));
+    persist();
+  });
+  toolbar.querySelector('[data-admin-collapse-all]')?.addEventListener('click', () => {
+    fieldsets.forEach((fs) => setOpen(fs, false));
+    persist();
+  });
+}
+

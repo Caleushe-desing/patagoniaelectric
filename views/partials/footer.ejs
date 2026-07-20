@@ -2,7 +2,15 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img src="<%= (typeof c !== 'undefined' && c.general.logoFooter) ? c.general.logoFooter : '/images/logo.png' %>" alt="Patagonia Electric" width="120" height="48" loading="lazy" <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoFooter', { type: 'image' }) : '' %>>
+        <img
+          src="<%= (typeof c !== 'undefined' && c.general.logoFooter) ? c.general.logoFooter : '/images/logo.png' %>"
+          alt="Patagonia Electric"
+          class="footer__logo"
+          width="106"
+          height="120"
+          loading="lazy"
+          <%- typeof cmsAttr !== 'undefined' ? cmsAttr('general', 'logoFooter', { type: 'image' }) : '' %>
+        >
         <p><%= typeof c !== 'undefined' ? c.general.footerText : site.legalName %></p>
       </div>
       <div>

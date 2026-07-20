@@ -754,10 +754,20 @@ body.pf-pdf-capturing .pf-hero__media {
     grid-template-columns: 1fr !important;
   }
 
+  .pf > section {
+    page-break-before: always;
+    break-before: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .pf > section:first-child {
+    page-break-before: auto;
+    break-before: auto;
+  }
+
   .pf-hero {
     min-height: 70vh;
-    page-break-after: always;
-    break-after: page;
   }
 
   .pf-hero__media {
