@@ -687,7 +687,8 @@ body.pf-pdf-capturing .pf-export-toolbar,
 body.pf-pdf-capturing .header,
 body.pf-pdf-capturing .footer,
 body.pf-pdf-capturing .whatsapp-float,
-body.pf-pdf-capturing .fx-bg {
+body.pf-pdf-capturing .fx-bg,
+body.pf-pdf-capturing .no-print {
   display: none !important;
 }
 
@@ -706,27 +707,42 @@ body.pf-pdf-capturing .pf-hero__media {
   transform: none !important;
 }
 
-/* ── Impresión de respaldo: conservar colores e imágenes ── */
+/* ── Impresión / PDF profesional ── */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 15mm;
   }
 
   html, body {
+    background: #fff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
 
+  /* Limpieza visual: no sale en el documento */
   .no-print,
   .pf-export-toolbar,
   .header,
   .footer,
   .whatsapp-float,
+  .whatsapp-bubble,
   .fx-bg,
-  .menu-toggle {
+  .menu-toggle,
+  .pf-share,
+  [data-pf-pdf-download] {
     display: none !important;
+  }
+
+  body.pf-print-mode,
+  body.theme-future {
+    background: #fff !important;
+  }
+
+  .pf {
+    width: 100% !important;
+    max-width: none !important;
   }
 
   .pf,
@@ -734,13 +750,21 @@ body.pf-pdf-capturing .pf-hero__media {
   .pf-hero__media,
   .pf-cta__media,
   .pf-section--dark,
-  .pf-stats {
+  .pf-section--soft,
+  .pf-stats,
+  .pf-mission__card,
+  .pf-strength,
+  .pf-service,
+  .pf-division,
+  .pf-project,
+  .pf-client,
+  .pf-process__list li {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
 
-  /* Forzar layout vertical (PDF ≠ web escritorio) */
+  /* Layout vertical de lectura para A4 */
   .pf-stats__grid,
   .pf-strengths,
   .pf-services,
@@ -754,20 +778,30 @@ body.pf-pdf-capturing .pf-hero__media {
     grid-template-columns: 1fr !important;
   }
 
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Cada sección clave empieza en hoja nueva */
   .pf > section {
-    page-break-before: always;
     break-before: page;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    page-break-before: always;
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .pf > section:first-child {
-    page-break-before: auto;
     break-before: auto;
+    page-break-before: auto;
   }
 
   .pf-hero {
-    min-height: 70vh;
+    min-height: 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .pf-hero__media {
@@ -782,21 +816,46 @@ body.pf-pdf-capturing .pf-hero__media {
   .pf-hero__actions {
     opacity: 1 !important;
     animation: none !important;
+    transform: none !important;
   }
 
-  .pf-stats,
   .pf-section,
+  .pf-stats,
   .pf-cta {
-    page-break-inside: avoid;
-    break-inside: avoid;
+    padding-top: 8mm !important;
+    padding-bottom: 8mm !important;
   }
 
-  .pf-division,
-  .pf-strength,
-  .pf-project,
-  .pf-service {
-    page-break-inside: avoid;
+  /* Encabezados de sección no quedan huérfanos */
+  .pf-section__head,
+  .pf-stats .pf-kicker,
+  .pf-about__copy,
+  .pf-cta__inner > div:first-child {
+    break-after: avoid-page;
+    page-break-after: avoid;
     break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Bloques atómicos: no se parten a mitad de página */
+  .pf-stat,
+  .pf-mission__card,
+  .pf-strength,
+  .pf-service,
+  .pf-division,
+  .pf-project,
+  .pf-client,
+  .pf-process__list > li,
+  .pf-about__visual,
+  .pf-prose p {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .pf-cta {
+    min-height: 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .pf-about__visual img,
@@ -805,7 +864,12 @@ body.pf-pdf-capturing .pf-hero__media {
   .pf-project__image img,
   .pf-client img {
     max-width: 100%;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
-  a { text-decoration: none !important; }
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
 }

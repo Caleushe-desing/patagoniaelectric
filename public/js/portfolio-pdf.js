@@ -1,10 +1,13 @@
 /**
- * Genera un PDF vertical (A4) del portafolio.
- * Cada sección del portafolio empieza en una hoja nueva;
- * no se corta contenido a mitad de página entre secciones.
+ * Exportación PDF profesional del portafolio (A4 vertical).
+ * - Cada sección clave empieza en hoja nueva.
+ * - Tarjetas/bloques no se cortan a mitad de página.
+ * - Márgenes 15mm y colores corporativos conservados.
  */
 (function () {
   const CAPTURE_WIDTH = 794;
+  const PAGE_MARGIN_MM = 15;
+  const BLOCK_GAP_MM = 3;
   const SCRIPT_SRCS = {
     html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
     jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
@@ -32,19 +35,19 @@
       grid-template-columns: 1fr !important;
     }
     .pf-hero {
-      min-height: 520px !important;
+      min-height: 480px !important;
       align-items: flex-end !important;
     }
     .pf-hero__title {
       max-width: none !important;
-      font-size: 2.4rem !important;
+      font-size: 2.35rem !important;
     }
-    .pf-hero__content { padding: 2.5rem 0 2rem !important; }
-    .pf-section { padding: 2.2rem 0 !important; }
-    .pf-stats { padding: 1.6rem 0 !important; }
-    .pf-division { min-height: 280px !important; }
-    .pf-project__image { min-height: 200px !important; }
-    .pf-cta { min-height: 320px !important; }
+    .pf-hero__content { padding: 2.2rem 0 1.8rem !important; }
+    .pf-section { padding: 1.6rem 0 !important; }
+    .pf-stats { padding: 1.3rem 0 !important; }
+    .pf-division { min-height: 260px !important; }
+    .pf-project__image { min-height: 180px !important; }
+    .pf-cta { min-height: 280px !important; }
     .pf-cta__inner { flex-direction: column !important; align-items: flex-start !important; }
     .pf-about__visual img { aspect-ratio: 16/10 !important; }
     .pf-hero__badge, .pf-hero__year, .pf-hero__title,
@@ -54,8 +57,21 @@
       transform: none !important;
     }
     .pf-hero__media { animation: none !important; transform: none !important; }
-    .no-print, .pf-export-toolbar { display: none !important; }
+    .no-print, .pf-export-toolbar, [data-pf-pdf-download], .pf-share {
+      display: none !important;
+    }
   `;
+
+  const CARD_SELECTORS = [
+    '.pf-stat',
+    '.pf-mission__card',
+    '.pf-strength',
+    '.pf-service',
+    '.pf-division',
+    '.pf-project',
+    '.pf-client',
+    '.pf-process__list > li',
+  ].join(',');
 
   let busy = false;
 
@@ -155,56 +171,137 @@
     );
   }
 
-  function applyCloneStyles(doc, sectionEl) {
-    sectionEl.style.width = CAPTURE_WIDTH + 'px';
-    sectionEl.style.maxWidth = CAPTURE_WIDTH + 'px';
-    sectionEl.style.margin = '0';
-    sectionEl.style.boxSizing = 'border-box';
+  /**
+   * Parte cada sección en unidades atómicas (encabezado + tarjetas)
+   * para poder empaquetarlas sin cortar bloques.
+   */
+  function collectUnits(root) {
+    const units = [];
+    const sections = getPortfolioSections(root);
+
+    sections.forEach((section, sectionIndex) => {
+      const cards = [...section.querySelectorAll(CARD_SELECTORS)].filter((card) => {
+        // Evitar anidar (p.ej. stats dentro de otra cosa)
+        return !card.parentElement?.closest(CARD_SELECTORS);
+      });
+
+      if (cards.length >= 2) {
+        const headParts = [];
+        const head = section.querySelector('.pf-section__head');
+        const kickerOnly = section.querySelector(':scope > .container > .pf-kicker');
+        if (head) headParts.push(head);
+        else if (kickerOnly) headParts.push(kickerOnly);
+
+        if (headParts.length) {
+          units.push({
+            els: headParts,
+            breakBefore: sectionIndex > 0,
+            background: getComputedStyle(section).backgroundColor || '#ffffff',
+          });
+        } else {
+          // Sin head explícito: primera tarjeta abre sección
+          units.push({
+            els: [cards[0]],
+            breakBefore: sectionIndex > 0,
+            background: '#ffffff',
+          });
+          cards.slice(1).forEach((card) => {
+            units.push({ els: [card], breakBefore: false, background: '#ffffff' });
+          });
+          return;
+        }
+
+        cards.forEach((card) => {
+          units.push({ els: [card], breakBefore: false, background: '#ffffff' });
+        });
+        return;
+      }
+
+      // Sección completa (hero, about, mission corta, cta…)
+      units.push({
+        els: [section],
+        breakBefore: sectionIndex > 0,
+        background: '#ffffff',
+      });
+    });
+
+    return units;
+  }
+
+  function applyCloneStyles(doc, el) {
+    const target = el;
+    target.style.width = CAPTURE_WIDTH + 'px';
+    target.style.maxWidth = CAPTURE_WIDTH + 'px';
+    target.style.margin = '0';
+    target.style.boxSizing = 'border-box';
     const style = doc.createElement('style');
     style.textContent = VERTICAL_CAPTURE_CSS;
     doc.head.appendChild(style);
   }
 
-  async function captureSection(section) {
-    return window.html2canvas(section, {
+  async function captureElement(el) {
+    return window.html2canvas(el, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: '#ffffff',
+      backgroundColor: null,
       windowWidth: CAPTURE_WIDTH,
       scrollX: 0,
       scrollY: -window.scrollY,
       logging: false,
       imageTimeout: 15000,
-      onclone: (doc, el) => applyCloneStyles(doc, el),
+      onclone: (doc, cloned) => applyCloneStyles(doc, cloned),
     });
   }
 
-  /**
-   * Añade un canvas al PDF empezando siempre en hoja nueva.
-   * Si la sección es más alta que una hoja, continúa en hojas siguientes
-   * sin mezclar con otra sección.
-   */
-  function addSectionCanvasToPdf(pdf, canvas, pageWidth, pageHeight) {
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * pageWidth) / canvas.width;
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
-
-    // Primera hoja de la sección
-    let y = 0;
-    let remaining = imgHeight;
-    let first = true;
-
-    while (remaining > 0.5) {
-      if (!first) pdf.addPage();
-      first = false;
-
-      // Dibuja el tramo visible de esta hoja (recorte por desplazamiento Y)
-      pdf.addImage(dataUrl, 'JPEG', 0, y, imgWidth, imgHeight, undefined, 'FAST');
-
-      remaining -= pageHeight;
-      y -= pageHeight;
+  async function captureUnit(unit) {
+    if (unit.els.length === 1) {
+      return captureElement(unit.els[0]);
     }
+
+    // Varios nodos (p.ej. head): capturar contenedor temporal
+    const wrap = document.createElement('div');
+    wrap.className = 'pf-pdf-unit-wrap';
+    wrap.style.cssText = `width:${CAPTURE_WIDTH}px;background:#fff;padding:8px 0;`;
+    const clones = unit.els.map((el) => el.cloneNode(true));
+    clones.forEach((c) => wrap.appendChild(c));
+    document.body.appendChild(wrap);
+    try {
+      await waitForImages(wrap);
+      return await captureElement(wrap);
+    } finally {
+      wrap.remove();
+    }
+  }
+
+  function placeCanvas(pdf, canvas, pageWidth, pageHeight, cursor) {
+    const contentW = pageWidth - PAGE_MARGIN_MM * 2;
+    const contentH = pageHeight - PAGE_MARGIN_MM * 2;
+    let drawW = contentW;
+    let drawH = (canvas.height * contentW) / canvas.width;
+
+    // Si un bloque entero no cabe en una hoja, se escala para no cortarlo
+    if (drawH > contentH) {
+      const scale = contentH / drawH;
+      drawH = contentH;
+      drawW = drawW * scale;
+    }
+
+    let { y, needsNewPage } = cursor;
+
+    if (needsNewPage || (y > PAGE_MARGIN_MM && y + drawH > pageHeight - PAGE_MARGIN_MM)) {
+      pdf.addPage();
+      y = PAGE_MARGIN_MM;
+    }
+
+    const x = PAGE_MARGIN_MM + (contentW - drawW) / 2;
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
+    pdf.addImage(dataUrl, 'JPEG', x, y, drawW, drawH, undefined, 'FAST');
+
+    return {
+      y: y + drawH + BLOCK_GAP_MM,
+      needsNewPage: false,
+    };
   }
 
   async function exportPortfolioPdf() {
@@ -215,14 +312,14 @@
       return;
     }
 
-    const sections = getPortfolioSections(target);
-    if (!sections.length) {
-      setStatus('No hay secciones para exportar.');
+    const units = collectUnits(target);
+    if (!units.length) {
+      setStatus('No hay contenido para exportar.');
       return;
     }
 
     setBusy(true);
-    setStatus('Preparando PDF por secciones…');
+    setStatus('Preparando PDF profesional (A4)…');
 
     const prevTitle = document.title;
     let bgImgs = [];
@@ -232,7 +329,6 @@
       await waitForFonts();
       bgImgs = materializeBackgrounds(target);
       await waitForImages(target);
-
       document.body.classList.add('pf-pdf-capturing');
 
       const { jsPDF } = window.jspdf;
@@ -245,15 +341,22 @@
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      for (let i = 0; i < sections.length; i += 1) {
-        setStatus(`Capturando sección ${i + 1} de ${sections.length}…`);
-        if (i > 0) pdf.addPage();
-        const canvas = await captureSection(sections[i]);
-        addSectionCanvasToPdf(pdf, canvas, pageWidth, pageHeight);
+      let cursor = { y: PAGE_MARGIN_MM, needsNewPage: false };
+
+      for (let i = 0; i < units.length; i += 1) {
+        const unit = units[i];
+        setStatus(`Componiendo bloque ${i + 1} de ${units.length}…`);
+
+        if (unit.breakBefore && i > 0) {
+          cursor = { y: PAGE_MARGIN_MM, needsNewPage: true };
+        }
+
+        const canvas = await captureUnit(unit);
+        cursor = placeCanvas(pdf, canvas, pageWidth, pageHeight, cursor);
       }
 
       pdf.save('Patagonia-Electric-Portafolio.pdf');
-      setStatus('PDF descargado: una sección por hoja.');
+      setStatus('PDF descargado con saltos limpios y sin cortes de bloques.');
     } catch (err) {
       console.error(err);
       setStatus('No se pudo generar el PDF automático. Use Imprimir → Guardar como PDF.');
